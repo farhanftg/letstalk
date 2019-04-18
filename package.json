@@ -1,0 +1,48 @@
+{
+  "name": "insurance_b2c",
+  "version": "0.0.1",
+  "description": "B2C Insurance for Girnarsoft",
+  "dependencies": {
+    "async": "^2.6.1",
+    "aws-sdk": "^2.361.0",
+    "bluebird": "^3.5.3",
+    "body-parser": "^1.18.3",
+    "connect-flash": "^0.1.1",
+    "connect-timeout": "^1.9.0",
+    "cors": "^2.8.5",
+    "crashreporter": "^1.1.0",
+    "csv": "^2.0.0",
+    "express": "4.16.2",
+    "express-device": "^0.4.2",
+    "express-layout": "^0.1.0",
+    "express-session": "^1.15.6",
+    "md5": "^2.2.1",
+    "moment": "^2.22.2",
+    "mongoose": "^5.3.13",
+    "mongoose-unique-validator": "^2.0.2",
+    "morgan": "^1.9.1",
+    "multer": "^1.4.1",
+    "mysql": "^2.16.0",
+    "node-cron": "^2.0.3",
+    "redis": "^2.8.0",
+    "request": "^2.88.0",
+    "rotating-file-stream": "^1.3.9",
+    "socket.io": "2.0.4",
+    "striptags": "^3.1.1",
+    "useragent": "^2.3.0",
+    "util": "^0.10.4"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "main": "server.js",
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://anandgupta567@bitbucket.org/girnarsoftware/girnarsoft-parivahan.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/girnarsoftware/girnarsoft-parivahan#readme",
+  "keywords": []
+}
