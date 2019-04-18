@@ -1,8 +1,6 @@
 var uniqueValidator     = require('mongoose-unique-validator');
 var validationHelper    = require(HELPER_PATH+'validationHelper');
 var commonHelper        = require(HELPER_PATH+'commonHelper');
-var selectedQuoteLogModel = require('../models/selectedQuoteLogModel.js');
-var mismatchSelectedQuoteLogModel = require('../models/mismatchSelectedQuoteLogModel.js');
 
 var RegistrationSchema = new Schema({
     registration_number         : {type: String, validate:[validationHelper.validateRegistrationNumber,'{VALUE} is not valid']}, 
@@ -90,9 +88,9 @@ Registration.addRegistration =  function(data){
         registration.rto_city_name              = data.rto_city_name?data.rto_city_name:''; 
         registration.status                     = data.status?data.status:'';  
         registration.sub_status                 = data.sub_status?data.sub_status:'';
-        registration.autodb_registration_id     = data.lms_ref_id?data.lms_ref_id:'';  
-        registration.pushed_to_autodb           = data.pushed_to_lms?data.pushed_to_lms:'';     
-        registration.pushed_to_autodb_by        = data.pushed_to_lms_by?data.pushed_to_lms_by:''; 
+        registration.autodb_registration_id     = '';  
+        registration.pushed_to_autodb           = 0    
+        registration.pushed_to_autodb_by        = ''; 
         registration.source                     = data.source?data.source:'';
         registration.sub_source                 = data.sub_source?data.sub_source:'';
         registration.updated_by                 = data.updated_by?data.updated_by:'';
@@ -100,7 +98,7 @@ Registration.addRegistration =  function(data){
          
         try{
             let result = await registration.saveAsync();
-            resolve(result._id);
+            resolve(result);
         }catch(e){
             reject(e);
         }
