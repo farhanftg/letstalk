@@ -71,7 +71,7 @@ module.exports = {
         }
         if(errors){
             if(typeof errors === 'string'){
-                error = module.exports.formatError('B2C400', 'error', errors);
+                error = module.exports.formatError('ERR400', 'error', errors);
                 errors= new Array(error);
             }
             response.errors = errors;

@@ -3,7 +3,7 @@ var validationHelper    = require(HELPER_PATH+'validationHelper');
 var commonHelper        = require(HELPER_PATH+'commonHelper');
 
 var RegistrationSchema = new Schema({
-    registration_number         : {type: String, validate:[validationHelper.validateRegistrationNumber,'{VALUE} is not valid']}, 
+    registration_number         : {type: String, validate:[validationHelper.validateRegistrationNumber,'{VALUE} is not valid'], unique:true}, 
     maker_model                 : {type: String},
     central_make_id             : {type: String},
     central_model_id            : {type: String}, 
@@ -16,7 +16,9 @@ var RegistrationSchema = new Schema({
     registration_date           : {type: Date},
     registration_year           : String,
     owner_name                  : {type: String, required:true},  
+    vehicle_class               : {type: String},
     vehicle_category            : {type: String},
+    vehicle_category_code       : {type: Number},
     fuel_type                   : {type: String},
     cc                          : String,
     rto_code                    : {type: String},
@@ -28,8 +30,8 @@ var RegistrationSchema = new Schema({
     pushed_to_autodb_by         : String,
     source                      : {type: String, required:true},
     sub_source                  : {type: String},
-    status                      : String,   
-    sub_status                  : String,   
+    status                      : Number,   
+    sub_status                  : Number,   
     updated_by                  : String,
     created_at                  : {type: Date},
     updated_at                  : {type: Date, default: Date.now}
@@ -86,8 +88,8 @@ Registration.addRegistration =  function(data){
         registration.rto_name                   = data.rto_name?data.rto_name:'';
         registration.rto_city_id                = data.rto_city_id?data.rto_city_id:'';
         registration.rto_city_name              = data.rto_city_name?data.rto_city_name:''; 
-        registration.status                     = data.status?data.status:'';  
-        registration.sub_status                 = data.sub_status?data.sub_status:'';
+        registration.status                     = 1;  
+        registration.sub_status                 = 1;
         registration.autodb_registration_id     = '';  
         registration.pushed_to_autodb           = 0    
         registration.pushed_to_autodb_by        = ''; 
