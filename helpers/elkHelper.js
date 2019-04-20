@@ -4,7 +4,7 @@ var async   = require('async');
 var moment  = require('moment');
 var exec    = require('child_process').exec;
 
-rfs('b2c_api.json', {
+rfs('vahan_scrapper.json', {
     size: '100M',
     maxFiles: 5,
     history: LOG_PATH+'rotate_history.txt',

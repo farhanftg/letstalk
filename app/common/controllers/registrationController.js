@@ -44,7 +44,7 @@ RegistrationController.getRegistration = async function(req, res){
                 });   
             }
             if(registration.status == 3){
-                this.sendResponse(req, res, 200, false, data, false);
+                this.sendResponse(req, res, 200, false, registration, false);
             }else{
                 throw ERROR.REGISTRATION_DETAILS_NOT_VERIFIED;
             }
