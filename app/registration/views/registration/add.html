@@ -1,0 +1,266 @@
+<!-- page content -->
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_content">
+                        <div class="row">  		                
+                            <div class=" col-xs-3 ">        
+                                <div class="title_left">
+                                    <h3>Add Registration</h3>
+                                </div>
+                            </div>    
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <div class="x_panel">
+                                    <div class="x_content">
+                                        <br />
+                                        <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left" action="/registration/add" method="POST">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="vehicle_category">Vehicle Category
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <select id="vehicle_category" name="vehicle_category" class="form-control">
+                                                        <option value="">Select</option>                                
+                                                        <option value="Two Wheeler">Two Wheeler</option>
+                                                        <option value="Four Wheeler">Four Wheeler</option>   
+                                                    </select>
+                                                </div>
+                                            </div>   
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="registration-number">Registration Number
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="registration_number" name="registration_number" class="form-control col-md-7 col-xs-12" value="<%=registration.registration_number%>"/>
+                                                </div>
+                                            </div>
+                                            <!--<div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="registration-year">Registration Year
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <select id="registration_year" name="registration_year" class="form-control">
+                                                        <option value="0">Select</option>
+                                                        <% for(var i=1980; i <=2017; i++){ %>
+                                                        <option value="<%=i%>"><%=i%></option>
+                                                        <% } %>
+                                                    </select>
+                                                </div>
+                                            </div>-->
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="make">Make
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <select id="make" name="make" class="form-control" >
+                                                        <option value="0">Select Make</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="model">Model
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <select id="model" name="model" class="form-control" >
+                                                        <option value="0">Select Model</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="model">Variant
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <select id="variant" name="variant" class="form-control" >
+                                                        <option value="0">Select Variant</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="registration_date">Registration Date
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="registration_date" name="registration_date" class="form-control col-md-7 col-xs-12 datepicker" value="<%=registration.registration_date%>"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fuel_type">Fuel Type
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <select id="fuel_type" name="fuel_type" class="form-control">
+                                                        <option value="">Select</option>                                
+                                                        <option value="Petrol">Petrol</option>
+                                                        <option value="Petrol/CNG">Petrol/CNG</option> 
+                                                        <option value="Petrol/LPG">Petrol/LPG</option> 
+                                                        <option value="Diesel">Diesel</option>                                                      
+                                                    </select>
+                                                </div>
+                                            </div>  
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="chassis_number">Chassis Number
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="chassis_number" name="chassis_number" class="form-control col-md-7 col-xs-12" value="<%=registration.chassis_number%>"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="engine_number">Engine Number
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="engine_number" name="engine_number" class="form-control col-md-7 col-xs-12" value="<%=registration.engine_number%>"/>
+                                                </div>
+                                            </div> 
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="owner_name">Owner Name
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="owner_name" name="owner_name" class="form-control col-md-7 col-xs-12" value="<%=registration.owner_name%>"/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="owner_mobile">Owner Mobile No.
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="owner_mobile" name="owner_mobile" class="form-control col-md-7 col-xs-12" value="<%=registration.owner_mobile%>"/>
+                                                </div>
+                                            </div>  
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="owner_email">Owner Email
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="owner_email" name="owner_email" class="form-control col-md-7 col-xs-12" value="<%=registration.owner_email%>"/>
+                                                </div>
+                                            </div>                                                   
+                                            <div class="form-group">
+                                                <button type="submit" class="btn btn-primary">Save</button>
+                                                <button type="button" class="btn btn-default">Cancel</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $(document).on("change", "#vehicle_category", function () {
+            var makeId      = $('#make').val();
+            var modelId     = $('#model').val();
+            var variantId   = $('#variant').val();
+            var category    = $('#vehicle_category').val();
+           
+            if(category === 'Two Wheeler'){
+                resetBikeMake();
+                resetBikeModel(makeId);
+                resetBikeVariant(modelId);
+            }else{
+                resetCarMake();
+                resetCarModel(makeId);
+                resetCarVariant(modelId);
+            }
+        });
+
+        $(document).on("change", "#make", function () { 
+            var category    = $('#vehicle_category').val();
+            var makeId      = $('#make').val();
+            if(category == 'Two Wheeler'){
+                resetBikeModel(makeId);
+            }else{
+                resetCarModel(makeId);
+            }
+            $('#make').val(makeId);
+        });
+
+        $(document).on("change", "#model", function () { 
+            var category    = $('#vehicle_category').val();
+            var modelId     = $('#model').val();
+            if(category == 'Two Wheeler'){
+                resetBikeVariant(modelId);
+            }else{
+                resetCarVariant(modelId);
+            }
+            $('#model').val(modelId);
+        });
+        $('.datepicker').datepicker();
+    });
+    
+    function resetCarMake(){
+        $('#make').empty();
+        $('#model').empty();
+        $('#variant').empty();
+        $('#make').append('<option value="0">Select Make</option>');
+        $('#model').append('<option value="0">Select Model</option>');
+        $('#variant').append('<option value="0">Select Variant</option>');
+        <% for(var i=0; i<carData.makes.length; i++){%>
+                $('#make').append('<option value="<%=carData.makes[i].make_id%>"><%=carData.makes[i].make_name%></option>');
+        <% } %>
+    }
+    
+    function resetCarModel(makeId){   
+        $('#model').empty();
+        $('#variant').empty();
+        $('#model').append('<option value="0">Select Model</option>');
+        $('#variant').append('<option value="0">Select Variant</option>');
+        <% for(var i=0; i<carData.models.length; i++){%>
+                var modelMakeId = <%=carData.models[i].make_id%>
+                if(makeId == modelMakeId){
+                    $('#model').append('<option value="<%=carData.models[i].model_id%>"><%=carData.models[i].model_short_name%></option>');
+                }
+        <% } %>
+    }
+
+    function resetCarVariant(modelId){   
+        $('#variant').empty();
+        $('#variant').append('<option value="0">Select Variant</option>');
+        <% for(var i=0; i<carData.variants.length; i++){%>
+                var variantModelId = <%=carData.variants[i].model_id%>
+                if(modelId == variantModelId){
+                    $('#variant').append('<option value="<%=carData.variants[i].version_id%>"><%=carData.variants[i].varient_name%></option>');
+                }
+        <% } %>
+    }
+    
+    function resetBikeMake(){
+        $('#make').empty();
+        $('#model').empty();
+        $('#variant').empty();
+        $('#make').append('<option value="0">Select Make</option>');
+        $('#model').append('<option value="0">Select Model</option>');
+        $('#variant').append('<option value="0">Select Variant</option>');
+        <% for(var i=0; i<bikeData.makes.length; i++){%>
+                $('#make').append('<option value="<%=bikeData.makes[i].id%>"><%=bikeData.makes[i].name%></option>');
+        <% } %>
+    }
+    
+    function resetBikeModel(makeId){   
+        $('#model').empty();
+        $('#variant').empty();
+        $('#model').append('<option value="0">Select Model</option>');
+        $('#variant').append('<option value="0">Select Variant</option>');
+        <% for(var i=0; i<bikeData.models.length; i++){%>
+                var modelMakeId = <%=bikeData.models[i].make_id%>
+                if(makeId == modelMakeId){
+                    $('#model').append('<option value="<%=bikeData.models[i].id%>"><%=bikeData.models[i].short_name%></option>');
+                }
+        <% } %>
+    }
+
+    function resetBikeVariant(modelId){   
+        $('#variant').empty();
+        $('#variant').append('<option value="0">Select Variant</option>');
+        <% for(var i=0; i<bikeData.variants.length; i++){%>
+                var variantModelId = <%=bikeData.variants[i].model_id%>
+                if(modelId == variantModelId){
+                    $('#variant').append('<option value="<%=bikeData.variants[i].id%>"><%=bikeData.variants[i].name%></option>');
+                }
+        <% } %>
+    }
+</script>

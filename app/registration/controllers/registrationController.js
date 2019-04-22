@@ -1,4 +1,4 @@
-var ApiController           = require('./apiController');
+var ApiController           = require('../../common/controllers/apiController');
 var registrationModel       = require('../models/registrationModel');
 var registrationTextModel   = require('../models/registrationTextModel');
 var commonHelper            = require(HELPER_PATH+'commonHelper.js');

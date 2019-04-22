@@ -7,7 +7,7 @@ var awsHelper = require(HELPER_PATH+'awsHelper');
 
 // Require controller modules
 var commonController        = require('../app/common/controllers/commonController');
-var registrationController  = require('../app/common/controllers/registrationController');
+var registrationController  = require('../app/registration/controllers/registrationController');
 
 var storage = multer.diskStorage({
 //    destination: function (req, file, callback) {
@@ -40,17 +40,32 @@ router.get('/common/get-mapped-data', function (req, res) {
     commonController.getMappedData(req, res);
 });
 
+router.get('/common/get-car-make', function (req, res) {	
+    commonController.getCarMake(req, res);
+});
+
+router.get('/common/get-car-model', function (req, res) {	
+    commonController.getCarModel(req, res);
+});
+
+router.get('/common/get-car-variant', function (req, res) {	
+    commonController.getCarVariant(req, res);
+});
+
+router.get('/common/get-bike-make', function (req, res) {	
+    commonController.getBikeMake(req, res);
+});
+
+router.get('/common/get-bike-model', function (req, res) {	
+    commonController.getBikeModel(req, res);
+});
+
+router.get('/common/get-bike-variant', function (req, res) {	
+    commonController.getBikeVariant(req, res);
+});
 
 router.get('/file/:registrationNumber/:fileName', function (req, res) {
     awsHelper.readFile(req, res);
-});
-
-router.get('/make', function (req, res) {	
-    commonController.getMakeContent(req, res);
-});
-
-router.get('/home', function (req, res) {	
-    commonController.getHomeContent(req, res);
 });
 
 router.get('/registration', function (req, res) {	

@@ -32,14 +32,14 @@ CommonController.getCity = async function(req, res){
     query.subSource = req.query.sub_source?req.query.sub_source:config.subSource.insuranceDekho;
     
     try{
-        let allCities = await redisHelper.getJSON('allCities');
-        if(!allCities){
+        let cities = await redisHelper.getJSON('cities');
+        if(!cities){
             let result = await commonHelper.sendGetRequestToBrokerage(query, '/api/v1/motor/getBkgMasterData');
-            allCities = await redisHelper.setJSON('allCities',result);     
+            cities = await redisHelper.setJSON('cities',result);     
             this.sendResponse(req, res, 200, false, result, false);                      
         }else{
             req.cached = true;
-            this.sendResponse(req, res, 200, false, allCities, false);
+            this.sendResponse(req, res, 200, false, cities, false);
         }
     }catch(e){
         this.sendResponse(req, res, 400, false, false, e);
@@ -132,40 +132,155 @@ CommonController.sendRequestToBrokerage = async function(req, res){
     }           
 }
 
-CommonController.getAllMakes = async function(req, res){ 
-
-    req.query.source    = req.query.source?req.query.source:config.source.b2c.toLowerCase();
-    req.query.subSource = req.query.sub_source?req.query.sub_source:config.subSource.insuranceDekho;
+CommonController.getCarMake = async function(req, res){ 
+    var query = {};
+    query.fetchData = 'all_make';
+    query.sortBy    = 'popularity';
+    query.tags      = 'make,make_id,popularity_rank';
+    query.source    = 'autodb'; 
+    query.subSource = 'vahanScrapper';
 
     try{
-        let allMakes = await redisHelper.getJSON('allMakes');
-        if(!allMakes){
-            let result = await commonHelper.sendGetRequestToBrokerage(req.query, req.path);
-            result.forEach(function(make) {
-                if(make.make_id && config.hiddenMakes.includes(make.make_id)){
-                    result = result.filter(item => item != make);
-                }
-            });
-            allMakes = await redisHelper.setJSON('allMakes',result);     
+        let makes = await redisHelper.getJSON('car_makes');
+        if(!makes){
+            let path    = '/api/v1/motor/getBkgMasterData';
+            let result  = await commonHelper.sendGetRequestToBrokerage(query, path);
+            makes = await redisHelper.setJSON('car_makes',result);     
             this.sendResponse(req, res, 200, false, result, false);    
         }else{
             req.cached = true;
-            this.sendResponse(req, res, 200, false, allMakes, false);
+            this.sendResponse(req, res, 200, false, makes, false);
         }
     }catch(e){
         this.sendResponse(req, res, 400, false, false, e);
     }
 }
 
-CommonController.checkMongoConnection = function(req, res){
-    var response  = new Object();
-    var status = 500;
-    if(mongoose.connection.readyState === 1){
-        status = 200;
+CommonController.getCarModel = async function(req, res){ 
+    var query = {};
+    query.fetchData = 'all_parent_model';
+    query.sortBy    = 'modelPopularity';
+    query.tags      = 'make,make_id,model,model_id,model_display_name,model_popularity_rank,status';
+    query.makeId    = req.query.make_id;
+    query.source    = 'autodb'; 
+    query.subSource = 'vahanScrapper';
+
+    try{
+        let models = await redisHelper.getJSON('car_models_'+query.makeId);
+        if(!models){
+            let path    = '/api/v1/motor/getBkgMasterData';
+            let result  = await commonHelper.sendGetRequestToBrokerage(query, path);   
+            models = await redisHelper.setJSON('car_models_'+query.makeId,result);     
+            this.sendResponse(req, res, 200, false, result, false);    
+        }else{
+            req.cached = true;
+            this.sendResponse(req, res, 200, false, models, false);
+        }
+    }catch(e){
+        this.sendResponse(req, res, 400, false, false, e);
     }
-    response.status = status;
-    response.message= authHelper.getMessage(status);
-    res.status(status).send(response);
+}
+
+CommonController.getCarVariant = async function(req, res){ 
+    var query = {};
+    query.fetchData = 'all_variant_by_parent';
+    query.sortBy    = 'modelPopularity';
+    query.tags      = 'make,make_id,model,model_id,version,version_id,version_display_name,cc,status,fuel';
+    query.modelId    = req.query.model_id;;
+    query.source    = 'autodb'; 
+    query.subSource = 'vahanScrapper';
+
+    try{
+        let variants = await redisHelper.getJSON('car_variants_'+query.modelId);
+        if(!variants){
+            let path    = '/api/v1/motor/getBkgMasterData';
+            let result  = await commonHelper.sendGetRequestToBrokerage(query, path);   
+            variants    = await redisHelper.setJSON('car_variants_'+query.modelId,result);     
+            this.sendResponse(req, res, 200, false, result, false);    
+        }else{
+            req.cached = true;
+            this.sendResponse(req, res, 200, false, variants, false);
+        }
+    }catch(e){
+        this.sendResponse(req, res, 400, false, false, e);
+    }
+}
+
+CommonController.getBikeMake = async function(req, res){ 
+    var query = {};
+    query.fetchData = 'tw_mmv';
+    query.sortBy    = 'popularity';
+    query.tags      = 'make,make_id,popularity_rank';
+    query.fetchOnly = 'all_make';
+    query.source    = 'autodb'; 
+    query.subSource = 'vahanScrapper';
+
+    try{
+        let makes = await redisHelper.getJSON('bike_makes');
+        if(!makes){
+            let path    = '/api/v1/motor/getBkgMasterData';
+            let result  = await commonHelper.sendGetRequestToBrokerage(query, path);
+            makes       = await redisHelper.setJSON('bike_makes',result);     
+            this.sendResponse(req, res, 200, false, result, false);    
+        }else{
+            req.cached = true;
+            this.sendResponse(req, res, 200, false, makes, false);
+        }
+    }catch(e){
+        this.sendResponse(req, res, 400, false, false, e);
+    }
+}
+
+CommonController.getBikeModel = async function(req, res){ 
+    var query = {};
+    query.fetchData = 'tw_mmv';
+    query.sortBy    = 'modelPopularity';
+    query.tags      = 'make,make_id,model,model_id,model_display_name,model_popularity_rank,status';   
+    query.fetchOnly =  'all_model';
+    query.makeId    = req.query.make_id;
+    query.source    = 'autodb'; 
+    query.subSource = 'vahanScrapper';
+
+    try{
+        let models = await redisHelper.getJSON('bike_models_'+query.makeId);
+        if(!models){
+            let path    = '/api/v1/motor/getBkgMasterData';
+            let result  = await commonHelper.sendGetRequestToBrokerage(query, path);   
+            models      = await redisHelper.setJSON('bike_models_'+query.makeId,result);     
+            this.sendResponse(req, res, 200, false, result, false);    
+        }else{
+            req.cached = true;
+            this.sendResponse(req, res, 200, false, models, false);
+        }
+    }catch(e){
+        this.sendResponse(req, res, 400, false, false, e);
+    }
+}
+
+CommonController.getBikeVariant = async function(req, res){ 
+    var query = {};
+    query.fetchData = 'tw_mmv';
+    query.sortBy    = 'modelPopularity';
+    query.tags      = 'make,make_id,model,model_id,version,version_id,version_display_name,cc,status,fuel';
+    query.fetchOnly = 'all_variant';
+    query.modelId    = req.query.model_id;
+    query.source    = 'autodb'; 
+    query.subSource = 'vahanScrapper';
+
+    try{
+        let variants = await redisHelper.getJSON('bike_variants_'+query.modelId);
+        if(!variants){
+            let path    = '/api/v1/motor/getBkgMasterData';
+            let result  = await commonHelper.sendGetRequestToBrokerage(query, path);   
+            variants    = await redisHelper.setJSON('bike_variants_'+query.modelId,result);     
+            this.sendResponse(req, res, 200, false, result, false);    
+        }else{
+            req.cached = true;
+            this.sendResponse(req, res, 200, false, variants, false);
+        }
+    }catch(e){
+        this.sendResponse(req, res, 400, false, false, e);
+    }
 }
 
 module.exports = CommonController;

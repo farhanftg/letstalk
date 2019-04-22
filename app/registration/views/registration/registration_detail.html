@@ -1,0 +1,161 @@
+<!-- page content -->
+<div class="right_col" role="main">
+    <div class="">
+        <div class="page-title">
+            
+        </div>
+        <div class="clearfix"></div>
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_content">
+                        <div class="row">  
+                            <form id="registration_detail_form" name="registration_detail_form" action="/registration/detail" method="GET" > 					                
+                                <div class=" col-xs-3 ">        
+                                    <div class="title_left">
+                                        <h3>Registration Detail</h3>
+                                    </div>
+                                </div>
+                                <div class=" col-xs-3 pull-right form-group">                   
+                                    <div class="input-group">
+                                        <input type="text" id="registration_number" name="registration_number" value="<%=registrationNumber%>" class="form-control" placeholder="Search for..." >
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-primary" type="submit">Search</button>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class=" col-xs-3 pull-right">
+                                </div> 
+                            </form> 
+                        </div>
+                        <% if(registrationNumber){ %>
+                            <% if(registration){%>
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <div class="x_panel">
+                                        <div class="x_content">
+                                          <br />
+                                          <form id="demo-form2" data-parsley-validate class="form-horizontal form-label-left">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="registration-number">Registration Number
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="registration-number" class="form-control col-md-7 col-xs-12" value="<%=registration.registration_number%>" readonly/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="registration-number">Make
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="make" class="form-control col-md-7 col-xs-12" value="<%=registration.make_name%>" readonly/>
+                                                </div>
+                                            </div>  
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="registration-number">Model
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="model" class="form-control col-md-7 col-xs-12" value="<%=registration.model_name%>" readonly/>
+                                                </div>
+                                            </div>   
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="registration-number">Variant
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="registration-number" class="form-control col-md-7 col-xs-12" value="<%=registration.variant_name%>" readonly/>
+                                                </div>
+                                            </div>    
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="registration-year">Registration Year
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="registration-year" class="form-control col-md-7 col-xs-12" value="<%=registration.registration_year%>"readonly/>
+                                                </div>
+                                            </div>  
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="chassis_number">Chassis Number
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="chassis_number" class="form-control col-md-7 col-xs-12" value="<%=registration.chassis_number%>" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="engine_number">Engine Number
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="engine_number" class="form-control col-md-7 col-xs-12" value="<%=registration.engine_number%>" readonly />
+                                                </div>
+                                            </div> 
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="owner_name">Owner Name
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="owner_name" class="form-control col-md-7 col-xs-12" value="<%=registration.owner_name%>" readonly />
+                                                </div>
+                                            </div>  
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="vehicle_class">Vehicle Category
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="vehicle_class" class="form-control col-md-7 col-xs-12" value="<%=registration.vehicle_category%>" readonly />
+                                                </div>
+                                            </div>    
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="fuel_type">Fuel Type
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="fuel_type" class="form-control col-md-7 col-xs-12" value="<%=registration.fuel_type%>" readonly />
+                                                </div>
+                                            </div>      
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="maker_model">Maker Model
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="maker_model" class="form-control col-md-7 col-xs-12" value="<%=registration.maker_model%>" readonly />
+                                                </div>
+                                            </div>   
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="rto_code">RTO Code
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="rto_code" class="form-control col-md-7 col-xs-12" value="<%=registration.rto_code%>" readonly />
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="rto_code">RTO Name
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="rto_code" class="form-control col-md-7 col-xs-12" value="<%=registration.rto_name%>" readonly />
+                                                </div>
+                                            </div>  
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="rto_code">RTO City
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="rto_code" class="form-control col-md-7 col-xs-12" value="<%=registration.rto_city_name%>" readonly />
+                                                </div>
+                                            </div>  
+                                            <div class="form-group">
+                                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="rto_state">RTO State
+                                                </label>
+                                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" id="rto_state" class="form-control col-md-7 col-xs-12" value="<%=registration.rto_state_name%>" readonly />
+                                                </div>
+                                            </div>  
+                                          </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <% }else{ %>
+                                <div>
+                                    No registration found
+                                </div>
+                            <% } %>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
