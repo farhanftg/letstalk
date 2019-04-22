@@ -1,6 +1,9 @@
+var path            = require('path');
+var qs              = require('qs');
 var ApiController           = require('../../common/controllers/apiController');
 var registrationModel       = require('../models/registrationModel');
 var registrationTextModel   = require('../models/registrationTextModel');
+var commonModel             = require('../../common/models/commonModel');
 var commonHelper            = require(HELPER_PATH+'commonHelper.js');
 
 class RegistrationTextController extends ApiController{
@@ -9,8 +12,8 @@ class RegistrationTextController extends ApiController{
     }
 }
 
-RegistrationTextController.getRegistrationText = function(req, res){
-        if(req.isAuthenticated()){
+RegistrationTextController.getRegistrationText = async function(req, res){
+//        if(req.isAuthenticated()){
             var page  = 1;
             var start = 0;
             var limit = 100;
@@ -19,6 +22,7 @@ RegistrationTextController.getRegistrationText = function(req, res){
             var filterText      = '';
             var query = req.query;
             var data = new Object(); 
+            let filterQuery ={};
             if(req.query.page){
                 page  = req.query.page;        
             }
@@ -26,54 +30,31 @@ RegistrationTextController.getRegistrationText = function(req, res){
                 delete query.page;
             }    
             query = qs.stringify(query);   
-            if(req.query.filter_status){
-                filterStatus  = req.query.filter_status;        
+           
+            if(req.query.filter_text){
+                filterText  = req.query.filter_text; 
+                filterQuery.text = filterText;
             }
             if(req.query.filter_category){
-                filterCategory  = req.query.filter_category;        
+                filterCategory  = req.query.filter_category;
+                filterCategory.category = filterCategory;
             }
-            if(req.query.filter_text){
-                filterText  = req.query.filter_text;        
+             if(req.query.filter_status){
+                filterStatus  = req.query.filter_status; 
+                filterQuery.status = filterStatus;
             }
-            start = parseInt((page*limit) - limit);
             
-            async.waterfall([
-                function(callback){                 
-                    bike.getAllMake(function(makes){
-                        bike.getAllModel(function(models){
-                            bike.getAllVariant(function(variants){                             
-                                data.bikeMakes      = makes;
-                                data.bikeModels     = models;
-                                data.bikeVariants   = variants;
-                                callback(null, data);
-                            });
-                        });
-                    });           
-                },
-                function(data, callback){                 
-                    usedCar.getAllMake(function(makes){
-                        usedCar.getAllParentModel(function(models){
-                            usedCar.getAllVariant(function(variants){
-                                data.carMakes   = makes;
-                                data.carModels  = models;
-                                data.carVariants= variants;
-                                callback(null, data);
-                            });
-                        });
-                    });                   
-                }
-            ], function (err, data) {
-                vehicleRegistration.getRegistrationTextCount(filterText, filterCategory, filterStatus,function(recordCount){ 
-                    vehicleRegistration.getRegistrationText(filterText, filterCategory, filterStatus, start, limit,function(rows){ 
-                        res.render(path.join(BASE_DIR, 'views/registration', 'registration_text'),{registrations:rows, bikeMakes:data.bikeMakes, bikeModels:data.bikeModels, bikeVariants:data.bikeVariants, carMakes:data.carMakes, carModels:data.carModels, carVariants:data.carVariants, filterStatus:filterStatus, filterCategory:filterCategory, filterText:filterText, url:'/registration/text', page:page, limit:limit, recordCount:recordCount, query:query});     
-                    });
-                });
-            });   
-        }else{
-            res.redirect('/login');
-        }
+            start = parseInt((page*limit) - limit);
+            let carMakes  = await commonModel.getCarMake();
+            let bikeMakes = await commonModel.getBikeMake();
+            let recordCount = await registrationTextModel.countDocumentsAsync(filterQuery);
+            let rows = await registrationTextModel.find(filterQuery).skip(start).limit(limit).execAsync();
+            res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'registration_text'),{registrations:rows, bikeMakes:bikeMakes, bikeModels:[], bikeVariants:[], carMakes:carMakes, carModels:[], carVariants:[], filterStatus:filterStatus, filterCategory:filterCategory, filterText:filterText, url:'/registration/text', page:page, limit:limit, recordCount:recordCount, query:query});     
+//        }else{
+//            res.redirect('/login');
+//        }
     }
-    
+/*    
 RegistrationTextController.approveRegistrationText = function(req, res){       
         if(req.isAuthenticated()){
             var status      = 3;
@@ -300,9 +281,8 @@ RegistrationTextController.getAutoMapping = function(req, res){
                 }
             }); 
         }); 
-    }
 }
-
+    
 RegistrationTextController.getStatus = function(registration){
     var status = 0; 
     if(registration.make_id != '' && registration.model_id != ''){
@@ -315,6 +295,7 @@ RegistrationTextController.getStatus = function(registration){
         return status;
     }
 }
+*/
 
 module.exports = RegistrationTextController;
 

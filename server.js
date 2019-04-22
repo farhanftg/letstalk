@@ -68,6 +68,22 @@ app.use(express.static('public'));
 app.use(cors({origin: config.corsAllowedOrigin, methods:['GET', 'POST', 'OPTIONS'], optionsSuccessStatus: 200}));
 app.use(device.capture());
 
+
+//app.use(passport.initialize());
+//app.use(passport.session());
+app.use('/gentelella', express.static(__dirname + '/node_modules/gentelella'));
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+
+app.use(function(req, res, next) {
+    res.locals.user = '';
+    if(req.user){
+        res.locals.user = req.user;
+    }
+    next();
+});
+
+
 app.use(function(req, res, next) {
     req.elk = {};
     req.elk.requestTime = moment().format("YYYY-MM-DD HH:mm:ss.SSS");

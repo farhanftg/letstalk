@@ -6,8 +6,9 @@ var router  = express.Router();
 var awsHelper = require(HELPER_PATH+'awsHelper');
 
 // Require controller modules
-var commonController        = require('../app/common/controllers/commonController');
-var registrationController  = require('../app/registration/controllers/registrationController');
+var commonController            = require('../app/common/controllers/commonController');
+var registrationController      = require('../app/registration/controllers/registrationController');
+var registrationTextController  = require('../app/registration/controllers/registrationTextController');
 
 var storage = multer.diskStorage({
 //    destination: function (req, file, callback) {
@@ -64,12 +65,16 @@ router.get('/common/get-bike-variant', function (req, res) {
     commonController.getBikeVariant(req, res);
 });
 
-router.get('/file/:registrationNumber/:fileName', function (req, res) {
-    awsHelper.readFile(req, res);
-});
-
 router.get('/registration', function (req, res) {	
     registrationController.getRegistration(req, res);
+});
+
+router.get('/registration-text', function (req, res) {	
+    registrationTextController.getRegistrationText(req, res);
+});
+
+router.get('/file/:registrationNumber/:fileName', function (req, res) {
+    awsHelper.readFile(req, res);
 });
 
 router.get('/favicon.ico',function (req, res) {	
