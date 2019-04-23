@@ -119,7 +119,7 @@ RegistrationText.updateRegistrationText =  function(data){
             registrationText.updated_by = data.updated_by;
         }
         try{
-            let result = await RegistrationText.findOneAndUpdateAsync({_id:data.id}, registrationText);
+            let result = await RegistrationText.updateManyAsync({_id:{$in:data.id}}, registrationText);
             resolve(result._id);
         }catch(e){
             reject(e);

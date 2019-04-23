@@ -115,7 +115,7 @@
                                             %>
                                             <td><span class="label <%=statusClass%>"><b><%=status%></b></span></td>
                                             <td>
-                                                <a class="btn btn-default btn-xs ico-btn edit_registration" data-toggle="modal" data-target="#myModal" data-id="<%=registrations[i].id%>" data-text="<%=registrations[i].text%>" data-make_id="<%=registrations[i].make_id%>" data-model_id="<%=registrations[i].model_id%>" data-variant_id="<%=registrations[i].variant_id%>" data-category="<%=registrations[i].category%>" data-status="<%=status%>" title="Update"><i class="fa fa-pencil"></i></a>
+                                                <a class="btn btn-default btn-xs ico-btn edit_registration" data-toggle="modal" data-target="#myModal" data-id="<%=registrations[i]._id%>" data-text="<%=registrations[i].text%>" data-make_id="<%=registrations[i].make_id%>" data-model_id="<%=registrations[i].model_id%>" data-variant_id="<%=registrations[i].variant_id%>" data-category="<%=registrations[i].category%>" data-status="<%=status%>" title="Update"><i class="fa fa-pencil"></i></a>
                                                 <!--<a href="#" class="btn btn-default btn-xs ico-btn approve_registration" data-toggle="tooltip" data-id="<%=registrations[i].id%>" title="Approve"><i class="fa fa-check"></i></a>-->
                                             </td>
                                         </tr>
@@ -136,7 +136,7 @@
 <div class="modal fade" id="myModal" role="dialog">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form id="registration_text_detail_form" id="registration_text_detail_form" action="/registration/update-text" method="POST" >
+            <form id="registration_text_detail_form" id="registration_text_detail_form" action="/update-registration-text" method="POST" >
                 <div class="modal-header">
                   <button type="button" class="close" data-dismiss="modal">&times;</button>
                   <h4 class="modal-title">Registration Text</h4>
@@ -210,6 +210,9 @@
                 <input type="hidden" id="filter_text" name="filter_text" value="<%=filterText%>" />
                 <input type="hidden" id="filter_category" name="filter_category" value="<%=filterCategory%>" />
                 <input type="hidden" id="filter_status" name="filter_status" value="<%=filterStatus%>" />
+                <input type="hidden" id="make_name" name="make_name" value="" />
+                <input type="hidden" id="model_name" name="model_name" value="" />
+                <input type="hidden" id="variant_name" name="variant_name" value="" />
                 <input type="hidden" name="page" value="<%=page%>" />
             </form>
         </div>
@@ -218,6 +221,26 @@
 <!-- /page content -->
 <script>
     $(document).ready(function() {
+
+        $(document).on('submit','#registration_text_detail_form',function(){
+            var makeId      = $("#make option:selected").val();            
+            var modelId     = $("#model option:selected").val();
+            var variantId   = $("#variant option:selected").val();
+            
+            if(makeId != 0){
+                var makeName = $("#make option:selected").text();
+                $('#make_name').val(makeName);
+            }
+            if(modelId != 0){
+                var modelName = $("#model option:selected").text();
+                $('#model_name').val(modelName);
+            }
+            if(variantId != 0){
+                var variantName = $("#variant option:selected").text();
+                $('#variant_name').val(variantName);
+            }
+        });
+        
         $(document).on("click", ".edit_registration", function () {
             var id          = $(this).data('id');
             var text        = $(this).data('text');
@@ -239,12 +262,12 @@
                 resetCarVariant(modelId);
             }else{
                 resetAll();
-            }
+            }                     
             $('#myModal #category').val(category);
             $('#myModal #make').val(makeId);
             $('#myModal #model').val(modelId);
             $('#myModal #variant').val(variantId);
-            $('#myModal #status').val(status);    
+            $('#myModal #status').val(status);               
         });
 
         $(document).on("change", ".category", function () { 
@@ -279,7 +302,7 @@
             }
             $('#model').val(modelId);
         });
-
+        
         $('.select_all_registration').change(function(){
             var table = $(this).closest('table');
             if($(this).is(":checked")){
@@ -342,14 +365,14 @@
         
         $('#filter_category').change(function(){
             var filterCategory = $(this).val();
-            window.location = '/registration/text?filter_category='+filterCategory;
+            window.location = '/registration-text?filter_category='+filterCategory;
         });
 
         //$('#datatable_registration_text').dataTable({"bPaginate":true, "lengthChange":false, "pageLength":20,"info":true, "aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 0,6 ] }], "order": [[ 1, "desc" ]]}); 
     });
     
     function redirectToRegistrationText(){
-        var url = '/registration/text?';
+        var url = '/registration-text?';
         var filterText      = $('#filter_text').val();
         var filterCategory  = $('#filter_category').val();
         var filterStatus    = $('#filter_status').val();          
@@ -377,7 +400,7 @@
     function resetCarMake(){   
         resetAll();
         <% for(var i=0; i<carMakes.length; i++){%>    
-            $('#make').append('<option value="<%=carMakes[i].make_id%>"><%=carMakes[i].make_name%></option>');
+            $('#make').append('<option value="<%=carMakes[i].make_id%>"><%=carMakes[i].make%></option>');
         <% } %>
     }
 
@@ -386,23 +409,15 @@
         $('#variant').empty();
         $('#model').append('<option value="0">Select Model</option>');
         $('#variant').append('<option value="0">Select Variant</option>');
-        <% for(var i=0; i<carModels.length; i++){%>
-            var modelMakeId = <%=carModels[i].make_id%>
-            if(makeId == modelMakeId){
-                $('#model').append('<option value="<%=carModels[i].model_id%>"><%=carModels[i].model_short_name%></option>');
-            }
-        <% } %>
+        
+        setCarModel(makeId);
     }
-
+    
     function resetCarVariant(modelId){   
         $('#variant').empty();
         $('#variant').append('<option value="0">Select Variant</option>');
-        <% for(var i=0; i<carVariants.length; i++){%>
-            var variantParentModelId = <%=carVariants[i].parent_model_id%>
-            if(modelId == variantParentModelId){
-                $('#variant').append('<option value="<%=carVariants[i].version_id%>"><%=carVariants[i].varient_name%></option>');
-            }
-        <% } %>
+        
+        setCarVariant(modelId);
     }
     
     function resetBikeMake(){   
@@ -413,7 +428,7 @@
         $('#model').append('<option value="0">Select Model</option>');
         $('#variant').append('<option value="0">Select Variant</option>');
         <% for(var i=0; i<bikeMakes.length; i++){%>
-            $('#make').append('<option value="<%=bikeMakes[i].id%>"><%=bikeMakes[i].short_name%></option>');    
+            $('#make').append('<option value="<%=bikeMakes[i].make_id%>"><%=bikeMakes[i].make%></option>');    
         <% } %>
     }
     
@@ -422,24 +437,82 @@
         $('#variant').empty();
         $('#model').append('<option value="0">Select Model</option>');
         $('#variant').append('<option value="0">Select Variant</option>');
-        <% for(var i=0; i<bikeModels.length; i++){%>
-            var modelMakeId = <%=bikeModels[i].make_id%>
-            if(makeId == modelMakeId){
-                $('#model').append('<option value="<%=bikeModels[i].id%>"><%=bikeModels[i].short_name%></option>');
-            }
-        <% } %>
+        
+        setBikeModel(makeId)
     }
 
     function resetBikeVariant(modelId){   
         $('#variant').empty();
         $('#variant').append('<option value="0">Select Variant</option>');
-        <% for(var i=0; i<bikeVariants.length; i++){%>
-            var variantModelId = <%=bikeVariants[i].model_id%>
-            if(modelId == variantModelId){
-                $('#variant').append('<option value="<%=bikeVariants[i].id%>"><%=bikeVariants[i].name%></option>');
-            }
-        <% } %>
+        
+        setBikeVariant(modelId)
     }
     
+    function setCarModel(makeId){
+        $.ajax({
+            url: "/common/get-car-model?make_id="+makeId,
+            async: false,
+            success: function(result){
+                if(result && result.data){                    
+                    var carModels = result.data;
+                    for(i=0; i < carModels.length; i++){
+                        if(makeId == carModels[i].make_id){
+                            $('#model').append('<option value="'+carModels[i].model_id+'">'+carModels[i].model+'</option>');
+                        }
+                    }
+                }
+            }
+        });
+    }
+     
+    function setCarVariant(modelId){
+        $.ajax({
+            url: "/common/get-car-variant?model_id="+modelId,
+            async: false,
+            success: function(result){
+                if(result && result.data){                    
+                    var carVariants = result.data;
+                    for(i=0; i < carVariants.length; i++){
+                        if(modelId == carVariants[i].model_id){
+                            $('#variant').append('<option value="'+carVariants[i].version_id+'">'+carVariants[i].version+'</option>');
+                        }
+                    }
+                }
+            }
+        });
+    }
     
+    function setBikeModel(makeId){
+        $.ajax({
+            url: "/common/get-bike-model?make_id="+makeId,
+            async: false,
+            success: function(result){
+                if(result && result.data){                    
+                    var bikeModels = result.data;
+                    for(i=0; i < bikeModels.length; i++){
+                        if(makeId == bikeModels[i].make_id){
+                            $('#model').append('<option value="'+bikeModels[i].model_id+'">'+bikeModels[i].model+'</option>');
+                        }
+                    }
+                }
+            }
+        });
+    }
+       
+    function setBikeVariant(modelId){     
+        $.ajax({
+            url: "/common/get-bike-variant?model_id="+modelId,
+            async: false,
+            success: function(result){
+                if(result && result.data){                    
+                    var bikeVariants = result.data;
+                    for(i=0; i < bikeVariants.length; i++){
+                        if(modelId == bikeVariants[i].model_id){
+                            $('#variant').append('<option value="'+bikeVariants[i].version_id+'">'+bikeVariants[i].version+'</option>');
+                        }
+                    }
+                }
+            }
+        });
+    }   
 </script>

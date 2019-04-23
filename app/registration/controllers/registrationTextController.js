@@ -32,7 +32,7 @@ RegistrationTextController.getRegistrationText = async function(req, res){
             query = qs.stringify(query);   
            
             if(req.query.filter_text){
-                filterText  = req.query.filter_text; 
+                filterText  = req.query.filter_text;               
                 filterQuery.text = filterText;
             }
             if(req.query.filter_category){
@@ -94,141 +94,56 @@ RegistrationTextController.approveRegistrationText = function(req, res){
             res.redirect('/login');
         }
     }
+*/    
+RegistrationTextController.updateRegistrationText = function(req, res){  
+    // if(req.isAuthenticated()){
+    let data = {}; 
+    data.id             = req.body.id;
+    data.make_id        = req.body.make;
+    data.make_name      = req.body.make_name;
+    data.model_id       = req.body.model;
+    data.model_name     = req.body.model_name;
+    data.variant_id     = req.body.variant;
+    data.variant_name   = req.body.variant_name;
+    data.variant_display_name    = '';
+    data.category   = req.body.category;
+    data.status     = 3;
+    data.sub_status = 2;
     
-RegistrationTextController.updateRegistrationText = function(req, res){      
-        if(req.isAuthenticated()){
-            async.waterfall([
-                function(callback){
-                    if(req.body.category == 'Two Wheeler'){
-                        bike.getAllMake(function(makes){
-                            bike.getAllModel(function(models){
-                                bike.getAllVariant(function(variants){
-                                    var data = new Object(); 
-                                    data.make_id        = req.body.make;
-                                    data.make_name      = '';
-                                    data.model_id       = req.body.model;
-                                    data.model_name     = '';
-                                    data.variant_id     = req.body.variant;
-                                    data.variant_name   = '';
-                                    data.variant_display_name    = '';
-                                    data.category   = req.body.category;
-                                    data.status     = 3;
-                                    data.sub_status = 2;
-                                    data.updated_at = registrationHelper.getCurrentDateTime();
-                                    for(var i=0; i<makes.length; i++){
-                                        if(data.make_id == makes[i].id){
-                                            data.make_name = makes[i].name;
-                                            break;
-                                        }
-                                    }
-                                    for(var i=0; i<models.length; i++){
-                                        if(data.model_id == models[i].id){
-                                            data.model_name = models[i].short_name;
-                                            break;
-                                        }
-                                    }
-                                    for(var i=0; i<variants.length; i++){
-                                        if(data.variant_id == variants[i].id){
-                                            data.variant_name = variants[i].name;
-                                            data.variant_display_name = variants[i].display_name;
-                                            break;
-                                        }
-                                    }
-                                    callback(null, data);
-                                });
-                            });
-                        }); 
-                    }else  if(req.body.category == 'Four Wheeler'){
-                        usedCar.getAllMake(function(makes){
-                            usedCar.getAllModel(function(models){
-                                usedCar.getAllVariant(function(variants){
-                                    var data = new Object(); 
-                                    data.make_id        = req.body.make;
-                                    data.make_name      = '';
-                                    data.model_id       = req.body.model;
-                                    data.model_name     = '';
-                                    data.variant_id     = req.body.variant;
-                                    data.variant_name   = '';
-                                    data.variant_display_name    = '';
-                                    data.category   = req.body.category;
-                                    data.status     = 3;
-                                    data.sub_status = 2;
-                                    data.updated_at = registrationHelper.getCurrentDateTime();
-                                    for(var i=0; i<makes.length; i++){
-                                        if(data.make_id == makes[i].make_id){
-                                            data.make_name = makes[i].make_name;
-                                            break;
-                                        }
-                                    }
-                                    for(var i=0; i<models.length; i++){
-                                        if(data.model_id == models[i].model_id){
-                                            data.model_name = models[i].model_short_name;
-                                            break;
-                                        }
-                                    }
-                                    for(var i=0; i<variants.length; i++){
-                                        if(data.variant_id == variants[i].version_id){
-                                            data.variant_name = variants[i].varient_name;
-                                            data.variant_display_name = variants[i].varient_name;
-                                            break;
-                                        }
-                                    }  
-                                    callback(null, data);
-                                });
-                            });
-                        }); 
-                    }else{
-                        var data = new Object(); 
-                        data.make_id        = 0;
-                        data.make_name      = '';
-                        data.model_id       = 0;
-                        data.model_name     = '';
-                        data.variant_id     = 0;
-                        data.variant_name   = '';
-                        data.variant_display_name    = '';
-                        data.category   = req.body.category;
-                        data.status     = 0;
-                        data.sub_status = 0;
-                        data.updated_at = registrationHelper.getCurrentDateTime();
-                        callback(null, data);
-                    }
-                }
-            ], function (err, data) {
-                var ids = '';
-                if(isNaN(req.body.id)){
-                   ids = JSON.parse(req.body.id); 
-                }else{
-                   ids = req.body.id;
-                }
-                vehicleRegistration.updateVehicleRegistrationText(ids,data,function(rows){
-                    var filterText      = req.body.filter_text;
-                    var filterCategory  = req.body.filter_category;
-                    var filterStatus    = req.body.filter_status;
-                    var url = '/registration/text';
-                    var query = new Object;
-                    if(filterText){
-                        query.filter_text = filterText; 
-                    }
-                    if(filterCategory){
-                        query.filter_category = filterCategory; 
-                    }
-                    if(filterStatus){
-                        query.filter_status = filterStatus; 
-                    }
-                    if(req.body.page){
-                        query.page = req.body.page; 
-                    }
-                    query = qs.stringify(query);
-                    url += '?'+query;
-                    return res.redirect(url);
-                });   
-            });            
-        }else{
-            res.redirect('/login');
-        }
+    if(req.body.id.length > 24){
+        data.id = JSON.parse(req.body.id);
+        data.id.shift();
+    }else{
+        data.id = req.body.id;
+    }
+    registrationTextModel.updateRegistrationText(data);
+    var filterText      = req.body.filter_text;
+    var filterCategory  = req.body.filter_category;
+    var filterStatus    = req.body.filter_status;
+    var url = '/registration-text';
+    var query = new Object;
+    if(filterText){
+        query.filter_text = filterText; 
+    }
+    if(filterCategory){
+        query.filter_category = filterCategory; 
+    }
+    if(filterStatus){
+        query.filter_status = filterStatus; 
+    }
+    if(req.body.page){
+        query.page = req.body.page; 
+    }
+    query = qs.stringify(query);
+    url += '?'+query;
+    res.redirect(url);     
+          
+//        }else{
+//            res.redirect('/login');
+//        }
     }
     
-    
+/*    
 RegistrationTextController.getAutoMapping = function(req, res){
         var vehicleRegistrations    = new Array();
         var vehicleRegistrationText = new Object();               

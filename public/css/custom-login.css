@@ -1,0 +1,55 @@
+/* ## LOGIN ## */
+.login-box .login_logo {
+    padding-top: 50px;
+    padding-bottom: 30px;
+    display: block;
+}
+.login-box .login_logo img{ display: inline-block;}
+.login_body {  background-color: #f6f6f6 }
+.login-box { width: 100%; margin: 0 auto; padding: 0px; text-align: center; position: relative; }
+.login-box .login_logo { padding-top: 50px; padding-bottom: 30px; display: block }
+.login-box .fcm-login_box { width: 432px; height: auto; background: #fff; box-shadow: 0 3px 11px 0 rgba(0,0,0,0.2); border: 1px solid #ddd; border-radius: 4px; margin: 0 auto; padding: 0px; }
+.login-box .fcm-login_box .fcm-login_header { background: #eaeaea; border-bottom: 1px solid #ddd; border-top-left-radius: 4px;  border-top-right-radius: 4px; padding: 24px 15px; }
+h2.head_txt { font-size: 22px; text-transform: uppercase; color: #444; padding: 0; margin: 0 }
+
+.login-box .fcm-login_box .fcm-login_body { padding: 30px }
+input.login_input { border-bottom: 1px solid #d2d2d2; border-top: 0; border-left: 0; border-right: 0; box-shadow: none; border-radius: 0;  color: #444; font-size: 17px; text-align: left; width: 100% }
+input.login_input:focus { -webkit-outline-width: 0px; -webkit-outline-style: none; border-color: #bbb; -webkit-box-shadow: none; box-shadow: none; }
+
+.login-box .input-group-addon { background-color: #fff; border-radius: 0; border: 0; border-bottom: 1px solid #ccc; color: #999; font-size: 20px }
+
+/*Error Input*/
+.error-msg { border-color:#DB4845; color:#DB4845; }
+.error-msg-login {border-color: #DB4845; color: #DB4845; text-align: left; position: absolute; left: 16px; font-size: 14px}
+.error-msg-login01 {border-color: #DB4845!important;}
+.error-msg-login01::-webkit-input-placeholder {color: #DB4845!important;}
+.error-msg-login01::-moz-placeholder {color: #DB4845!important;}
+.user-id_icon { background: #fff url(../images/user_icon.png) no-repeat left; }
+.pwd_icon { background: #fff url(../images/lock_icon.png) no-repeat left; }
+
+.fcm-login_btn{ background:#e44327 ; color: #fff; border-radius: 3px; border: none; width: 100%; display: block; padding: 15px 28px; font-size: 18px;  font-weight: normal; text-decoration: none; transition: all 0.4s } 
+.fcm-login_btn:hover { color: #fff; box-shadow: 0px 3px 5px 0px rgba(0,0,0,0.5) }
+
+input[type="checkbox"], input[type="radio"] { display:none; }
+input[type="checkbox"] + label span, input[type="radio"] + label span { display:inline-block; width:18px; height:18px; margin:-1px 4px 0 0; vertical-align:middle; background:url(../images/fm-sprite.png) -13px -7px no-repeat; cursor:pointer; }
+input[type="checkbox"] + label:hover span { background-position: -89px -7px; }
+input[type="checkbox"]:checked + label span { background-position: -52px -7px; }
+.ie8 input[type="checkbox" ]{ display:inline-block; }
+.ie8 input[type="checkbox"] + label span { display:none; }
+input[type="checkbox"] + label, input[type="radio"] + label { font-size:12px; font-weight: normal;cursor: pointer; }
+input[type="checkbox"]:checked + label, input[type="radio"]:checked + label { background-image: none; }
+
+input[type="radio"] + label span { background-position: -13px -34px; }
+input[type="radio"] + label:hover span { background-position: -55px -34px; }
+input[type="radio"]:checked + label span { background-position: -35px -34px; }
+input[type="checkbox"] + label, input[type="radio"] + label {
+    font-size: 12px;
+    font-weight: normal;
+    cursor: pointer;
+}
+.mrg-T20 {
+    margin-top: 20px !important;
+}
+.form-group {
+    margin-bottom: 15px;
+}

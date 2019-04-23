@@ -73,6 +73,10 @@ router.get('/registration-text', function (req, res) {
     registrationTextController.getRegistrationText(req, res);
 });
 
+router.post('/update-registration-text', function (req, res) {	
+    registrationTextController.updateRegistrationText(req, res);
+});
+
 router.get('/file/:registrationNumber/:fileName', function (req, res) {
     awsHelper.readFile(req, res);
 });
