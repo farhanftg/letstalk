@@ -54,47 +54,7 @@ RegistrationTextController.getRegistrationText = async function(req, res){
 //            res.redirect('/login');
 //        }
     }
-/*    
-RegistrationTextController.approveRegistrationText = function(req, res){       
-        if(req.isAuthenticated()){
-            var status      = 3;
-            var subStatus   = 2;
-            var textId      = req.body.text_id;
-            var filterText  = req.body.filter_text;
-            var filterCategory  = req.body.filter_category;
-            var filterStatus    = req.body.filter_status;
-           
-            async.each(textId,
-                function(id, callback){
-                    vehicleRegistration.updateVehicleRegistrationTextStatus(id, status, subStatus, function(rows){ 
-                        callback();
-                    }); 
-                },
-                function(err){
-                    var url = '/registration/text';
-                    var query = new Object;
-                     if(filterText){
-                        query.filter_text = filterText; 
-                    }
-                     if(filterCategory){
-                        query.filter_category = filterCategory; 
-                    }
-                    if(filterStatus){
-                        query.filter_status = filterStatus; 
-                    }
-                    if(req.body.page){
-                        query.page=req.body.page; 
-                    }
-                    query = qs.stringify(query);
-                    url += '?'+query;
-                    return res.redirect(url);
-                }
-            );
-        }else{
-            res.redirect('/login');
-        }
-    }
-*/    
+ 
 RegistrationTextController.updateRegistrationText = function(req, res){  
     // if(req.isAuthenticated()){
     let data = {}; 

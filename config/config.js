@@ -49,23 +49,24 @@ config.format.json      = 'JSON';
 config.format.xml       = 'XML';
 
 config.vehicleCategory = {};
-config.vehicleCategory.bike = 'Bike';
-config.vehicleCategory.car  = 'Car';
-config.vehicleCategory.bus  = 'Bus';
-config.vehicleCategory.truck= 'Truck';
-config.vehicleCategory.pcv  = 'PCV';
-config.vehicleCategory.gcv  = 'GCV';
+config.vehicleCategory.twoWheeler   = 'Two Wheeler';
+config.vehicleCategory.fourWheeler  = 'Four Wheeler';
 config.vehicleCategory.other= 'Other';
 
+config.vehicleCategoryCode = {};
+config.vehicleCategoryCode.twoWheeler = 1;
+config.vehicleCategoryCode.fourWheeler= 2;
+
 config.source = {};
-config.source.b2c = 'B2C';
-config.source.itms= 'Itms';
-config.source.lms = 'Lms';
-config.source.b2cUpdatedBy = 2;
+config.source.autodb    = 'autodb';
+config.source.parivahan = 'parivahan';
+config.source.vahan     = 'vahan';
+config.source.rtoVehicle= 'rtoVehicle';
+
 
 config.subSource = {};
-config.subSource.insuranceDekho = 'insuranceDekho';
-config.subSource.renewal = 'renewal';
+config.subSource.vahanScrapper = 'vahanScrapper';
+
 
 config.leadType = {};
 config.leadType.newCar = 'NewCar';
@@ -74,94 +75,6 @@ config.aws      = {};
 config.aws.s3   = {};
 config.aws.s3.enabled   = true;
 config.aws.s3.bucketName= 'girnarsoft-b2c'; 
-
-config.inspection = {};
-config.inspection.timeSlot = {};
-config.inspection.timeSlot[1] = {};
-config.inspection.timeSlot[1].value = '9:00';
-config.inspection.timeSlot[1].displayName = '09:00 AM - 11:00 AM';
-config.inspection.timeSlot[2] = {};
-config.inspection.timeSlot[2].value = '11:00';
-config.inspection.timeSlot[2].displayName = '11:00 AM - 02:00 PM';
-config.inspection.timeSlot[3] = {};
-config.inspection.timeSlot[3].value = '14:00';
-config.inspection.timeSlot[3].displayName = '02:00 PM - 04:00 PM';
-config.inspection.timeSlot[4] = {};
-config.inspection.timeSlot[4].value = '16:00';
-config.inspection.timeSlot[4].displayName = '04:00 PM - 06:00 PM';
-
-config.newsArticleListingSeo = {};
-config.newsArticleListingSeo.title          = "Car Insurance News - Information, Articles & Tips | InsuranceDekho";
-config.newsArticleListingSeo.metaDescription= "Read Car Insurance News in India, helpful tips and Information at InsuranceDekho. Browse through all Car Insurance articles and Keep yourself updated with latest news on Car Insurance.";
-config.newsArticleListingSeo.metaKeywords = '';
-
-config.newsArticleListingPageTitle = 'Car Insurance News';
-config.newsListingCharaterLimit = 100;
-
-
-config.insuranceDekho = {};
-config.insuranceDekho.assetsDomain = 'https://staticstaging.insurancedekho.com'; 
-config.insuranceDekho.topNewsArticlesCount = 6;
-
-config.hiddenMakes = [49,57,67];
-config.hiddenPreviousInsurers = [26];
-
-config.reQuoteVariables = [  
-                "basicODPremium",
-                "biFuelKitPremium",
-                "electricalAccessoriesPremium",
-                "nonElectricalAccessoriesPremium",
-                "loadingPercentage",
-                "loadingPremium",
-                "odDiscountPercentage",
-                "odDiscount",
-                "ncbDiscountPercentage",
-                "ncbDiscount",
-                "voluntaryDiscount",
-                "professionalDiscount",
-                "antiTheftDiscount",
-                "automobileMembershipDiscount",
-                "onlineDiscount",
-                "ageDiscount",
-                "insurerDiscount",
-                "otherDiscount",
-                "otherDiscountPercentage",
-                "basicTPPremium",
-                "ownerDriverPremium",
-                "paidDriverPremium",
-                "biFuelKitLiabilityPremium",
-                "passengerCoverPremium",
-                "addOns.zeroDepreciationCover.premium",
-                "addOns.consumablesCover.premium",
-                "addOns.engineCover.premium",
-                "addOns.ncbProtectionCover.premium",
-                "addOns.roadsideAssistanceCover.premium",
-                "addOns.invoiceCover.premium",
-                "addOns.windShieldCover.premium",
-                "addOns.emergencyAssistanceCover.premium",
-                "addOns.medicalExpensesCover.premium",
-                "addOns.ambulanceChargesCover.premium",
-                "addOns.hydrostaticLockCover.premium",
-                "addOns.hospitalCashCover.premium",
-                "addOns.keyReplacementCover.premium",
-                "addOns.geographicExtensionCover.premium",
-                "addOns.lossOfUseCover.premium",
-                "addOns.lossOfPersonalBelonging.premium",
-                "addOns.emergencyTransportHotelExpenses.premium",
-                "addOns.tyreSecure.premium",
-                "addOns.repairofGlassRubberPlasticParts.premium",
-                "addOns.rimDamageCover.premium",
-                "tpAddOns.ownerDriverCover.premium",
-                "tpAddOns.paidDriverCover.premium",
-                "totalAddOnsPremium",
-                "finalODPremium",
-                "finalTPPremium",
-                "finalAddOnPremium",
-                "totalPremium",
-                "serviceTaxPercentage",
-                "serviceTax",
-                "finalPremium"
-            ];
 
 config.requests = [
     {
@@ -184,12 +97,6 @@ config.accessLog= true;
 config.byPassLog = ['/set-user-status', '/getInsurers', '/home', '/content/home', '/content/make', '/content/plan-confirmation', '/news','/news-article', '/content/privacy-policy', '/api/v1/motor/policyDocument', '/common/get-mapped-data', '/api/v1/motor/mappedMasterData', '/api/v1/motor/insurersMaster', '/api/v1/motor/getBkgMasterData', '/api/v1/motor/policyDocument', '/favicon.ico', 'https://lms.insurancedekho.com/setUserLastOnline','https://lmsstaging.insurancedekho.com/setUserLastOnline'];
 config.hideDetailInErrorResponse    = false;
 config.showDefaultErrorMessage      = false;
-//config.defaultErrorMessage          = 'Some error has occurred. Please try again.';
-//config.defaultLmsErrorMessage       = 'Some error has occurred at LMS.';
-//config.defaultBrokerageErrorMessage = 'Some error has occurred at Brokerage.';
-
-config.allowedBrokeragePath = ['/api/v1/motor/policyDocument', '/api/v1/motor/mappedMasterData', '/api/v1/motor/insurersMaster', '/api/v1/motor/getBkgMasterData'];
-
 
 config.redisKeyExpiryTime = '23:59:59:999';
 config.registrationNumberMaxLength = 15;

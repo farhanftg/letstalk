@@ -19,8 +19,10 @@ var RegistrationSchema = new Schema({
     vehicle_class               : {type: String},
     vehicle_category            : {type: String},
     vehicle_category_code       : {type: Number},
-    fuel_type                   : {type: String},
+    chassis_number              : String,
+    engine_number               : String,
     cc                          : String,
+    fuel_type                   : {type: String},
     rto_code                    : {type: String},
     rto_name                    : String,
     rto_city_id                 : String,
@@ -80,10 +82,13 @@ Registration.addRegistration =  function(data){
         registration.registration_year          = data.registration_year?data.registration_year:'';
         registration.manufacturing_date         = data.manufacturing_date?data.manufacturing_date:'';
         registration.manufacturing_year         = data.manufacturing_year?data.manufacturing_year:'';
-        registration.owner_name                 = data.owner_name?data.owner_name.trim():'';
-        registration.vehicle_category           = data.vehicle_category?data.vehicle_category:'';
-        registration.fuel_type                  = data.fuel_type?data.fuel_type:'';
+        registration.chassis_number             = data.chassis_number?data.chassis_number:'';
+        registration.engine_number              = data.engine_number?data.engine_number:'';
         registration.cc                         = data.cc?data.cc:'';
+        registration.fuel_type                  = data.fuel_type?data.fuel_type:'';
+        registration.vehicle_class              = data.vehicle_class?data.vehicle_class:'';
+        registration.vehicle_category           = data.vehicle_category?data.vehicle_category:'';
+        registration.owner_name                 = data.owner_name?data.owner_name.trim():'';
         registration.rto_code                   = data.rto_code?data.rto_code:'';
         registration.rto_name                   = data.rto_name?data.rto_name:'';
         registration.rto_city_id                = data.rto_city_id?data.rto_city_id:'';
@@ -147,17 +152,26 @@ Registration.updateRegistration =  function(data){
         if(data.hasOwnProperty('manufacturing_year')){
             registration.manufacturing_year = data.manufacturing_year;
         }
-        if(data.hasOwnProperty('owner_name')){            
-            registration.owner_name  = data.owner_name?data.owner_name.trim():'';
+        if(data.hasOwnProperty('chassis_number')){
+            registration.chassis_number = data.chassis_number;
+        }
+        if(data.hasOwnProperty('engine_number')){
+            registration.engine_number = data.engine_number;
+        }
+        if(data.hasOwnProperty('cc')){
+            registration.cc = data.cc;
+        }
+        if(data.hasOwnProperty('fuel_type')){
+            registration.fuel_type = data.fuel_type;
+        }        
+        if(data.hasOwnProperty('vehicle_class')){
+            registration.vehicle_class = data.vehicle_class.trim();
         }
         if(data.hasOwnProperty('vehicle_category')){
             registration.vehicle_category = data.vehicle_category;
         }
-        if(data.hasOwnProperty('fuel_type')){
-            registration.fuel_type = data.fuel_type;
-        }
-        if(data.hasOwnProperty('cc')){
-            registration.cc = data.cc;
+        if(data.hasOwnProperty('owner_name')){            
+            registration.owner_name  = data.owner_name?data.owner_name.trim():'';
         }
         if(data.hasOwnProperty('rto_code')){
             registration.rto_code = data.rto_code;

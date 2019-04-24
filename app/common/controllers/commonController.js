@@ -84,9 +84,8 @@ CommonController.getMappedData = async function(req, res){
     
 CommonController.sendRequestToBrokerage = async function(req, res){
     if(req.method == 'GET'){         
-
-        req.query.source    = req.query.source?req.query.source:config.source.b2c.toLowerCase();
-        req.query.subSource = req.query.sub_source?req.query.sub_source:config.subSource.insuranceDekho;
+        req.query.source    = config.source.autodb;
+        req.query.subSource = config.subSource.vahanScrapper;
 
         if(req.query.fetchData && req.query.fetchData=='all_make'){
             this.getAllMakes(req, res);
@@ -100,7 +99,6 @@ CommonController.sendRequestToBrokerage = async function(req, res){
         }
     }
     if(req.method == 'POST'){
-
         req.body.source    = req.body.source?req.body.source:config.source.b2c.toLowerCase();
         req.body.subSource = req.body.sub_source?req.body.sub_source:config.subSource.insuranceDekho;
 
