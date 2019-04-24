@@ -37,6 +37,10 @@ router.get('/common/get-city', function (req, res) {
     commonController.getCity(req, res);
 });
 
+router.get('/common/get-rto-detail', function (req, res) {	
+    commonController.getRtoDetail(req, res);
+});
+
 router.get('/common/get-mapped-data', function (req, res) {	
     commonController.getMappedData(req, res);
 });

@@ -27,9 +27,8 @@ CommonController.getCity = async function(req, res){
     if(req.query.tags){
         query.tags = req.query.tags;
     }
-
-    query.source    = req.query.source?req.query.source:config.source.b2c.toLowerCase();
-    query.subSource = req.query.sub_source?req.query.sub_source:config.subSource.insuranceDekho;
+    query.source    = config.source.autodb;
+    query.subSource = config.subSource.vahanScrapper;
     
     try{
         let cities = await redisHelper.getJSON('cities');
@@ -40,6 +39,35 @@ CommonController.getCity = async function(req, res){
         }else{
             req.cached = true;
             this.sendResponse(req, res, 200, false, cities, false);
+        }
+    }catch(e){
+        this.sendResponse(req, res, 400, false, false, e);
+    }
+}
+
+CommonController.getRtoDetail = async function(req, res){
+    let query = {};
+    let rtoCode = '';
+    let key = 'rto';
+    req.elk.module      = 'Common';
+    req.elk.sub_module  = 'getRtoDetail'; 
+
+    query.source    = config.source.autodb;
+    query.subSource = config.subSource.vahanScrapper;
+    if(req.query.rto_code){
+        rtoCode = req.query.rto_code;
+        key += '_'+rtoCode;
+    }
+    try{
+        let rtoDetail = await redisHelper.getJSON(key);
+        if(!rtoDetail){
+            let path = '/api/v1/motor/rtoMasterDetail/'+rtoCode;
+            let result = await commonHelper.sendGetRequestToBrokerage(query, path);
+            rtoDetail = await redisHelper.setJSON(key,result);     
+            this.sendResponse(req, res, 200, false, result, false);                      
+        }else{
+            req.cached = true;
+            this.sendResponse(req, res, 200, false, rtoDetail, false);
         }
     }catch(e){
         this.sendResponse(req, res, 400, false, false, e);
@@ -70,10 +98,10 @@ CommonController.getMappedData = async function(req, res){
         error = commonHelper.formatError('ERR10003', 'tags');
         errors.push(error);
     }
-
-    query.source    = req.query.source?req.query.source:config.source.b2c.toLowerCase();
-    query.subSource = req.query.sub_source?req.query.sub_source:config.subSource.insuranceDekho;
-  
+    
+    query.source    = config.source.autodb;
+    query.subSource = config.subSource.vahanScrapper;
+    
     try{
         let result = await commonHelper.sendGetRequestToBrokerage(query, '/api/v1/motor/mappedMasterData');
         this.sendResponse(req, res, 200, false, result, false);
