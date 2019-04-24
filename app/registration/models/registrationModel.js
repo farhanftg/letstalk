@@ -28,12 +28,12 @@ var RegistrationSchema = new Schema({
     rto_city_id                 : String,
     rto_city_name               : String,
     autodb_registration_id      : String,
-    pushed_to_autodb            : Number,
+    pushed_to_autodb            : {type:Number, default:0}, 
     pushed_to_autodb_by         : String,
     source                      : {type: String, required:true},
     sub_source                  : {type: String},
-    status                      : Number,   
-    sub_status                  : Number,   
+    status                      : {type:Number, default:1},   
+    sub_status                  : {type:Number, default:1},   
     updated_by                  : String,
     created_at                  : {type: Date},
     updated_at                  : {type: Date, default: Date.now}
@@ -93,11 +93,6 @@ Registration.addRegistration =  function(data){
         registration.rto_name                   = data.rto_name?data.rto_name:'';
         registration.rto_city_id                = data.rto_city_id?data.rto_city_id:'';
         registration.rto_city_name              = data.rto_city_name?data.rto_city_name:''; 
-        registration.status                     = 1;  
-        registration.sub_status                 = 1;
-        registration.autodb_registration_id     = '';  
-        registration.pushed_to_autodb           = 0    
-        registration.pushed_to_autodb_by        = ''; 
         registration.source                     = data.source?data.source:'';
         registration.sub_source                 = data.sub_source?data.sub_source:'';
         registration.updated_by                 = data.updated_by?data.updated_by:'';

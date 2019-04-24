@@ -16,8 +16,8 @@ var RegistrationTextSchema = new Schema({
     registration_updated: Number,
     source                      : {type: String, required:true},
     sub_source                  : {type: String},
-    status                      : String,   
-    sub_status                  : String,   
+    status                      : {type:String, default:1},   
+    sub_status                  : {type:String, default:1},   
     updated_by                  : String,
     created_at                  : {type: Date},
     updated_at                  : {type: Date, default: Date.now}
@@ -53,11 +53,7 @@ RegistrationText.addRegistrationText =  function(data){
         registrationText.variant_id         = data.variant_id?data.variant_id:'';
         registrationText.variant_name       = data.variant_name?data.variant_name:'';       
         registrationText.variant_display_name= data.variant_display_name?data.variant_display_name:'';       
-        registrationText.category           = data.category?data.category:'';       
-        registrationText.registration_count = 0;  
-        registrationText.registration_updated= 0    
-        registrationText.status             = data.status?data.status:'';  
-        registrationText.sub_status         = data.sub_status?data.sub_status:'';      
+        registrationText.category           = data.category?data.category:'';           
         registrationText.source             = data.source?data.source:'';
         registrationText.sub_source         = data.sub_source?data.sub_source:'';
         registrationText.updated_by         = data.updated_by?data.updated_by:'';
