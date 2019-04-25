@@ -1,3 +1,5 @@
+var path                    = require('path');
+var qs                      = require('qs');
 var ApiController           = require('../../common/controllers/apiController');
 var registrationModel       = require('../models/registrationModel');
 var registrationTextModel   = require('../models/registrationTextModel');
@@ -9,6 +11,71 @@ class RegistrationController extends ApiController{
     constructor() {
         super();
     }
+}
+
+RegistrationController.index = async function(req, res){
+    let twPendingRegCount  = registrationModel.count({category:config.vehicleCategory.twoWheeler, status:1});
+    let twAutomaticRegCount= registrationModel.count({category:config.vehicleCategory.twoWheeler, status:2});
+    let twApprovedRegCount = registrationModel.count({category:config.vehicleCategory.twoWheeler, status:3});
+    let fwPendingRegCount  = registrationModel.count({category:config.vehicleCategory.fourWheeler, status:1});
+    let fwAutomaticRegCount= registrationModel.count({category:config.vehicleCategory.fourWheeler, status:2});
+    let fwApprovedRegCount = registrationModel.count({category:config.vehicleCategory.fourWheeler, status:3});
+    
+    let twPendingRegTextCount   = registrationTextModel.count({category:config.vehicleCategory.twoWheeler, status:1});
+    let twAutomaticRegTextCount = registrationTextModel.count({category:config.vehicleCategory.twoWheeler, status:2});
+    let twApprovedRegTextCount  = registrationTextModel.count({category:config.vehicleCategory.twoWheeler, status:3});
+    let fwPendingRegTextCount   = registrationTextModel.count({category:config.vehicleCategory.fourWheeler, status:1});
+    let fwAutomaticRegTextCount = registrationTextModel.count({category:config.vehicleCategory.fourWheeler, status:2});
+    let fwApprovedRegTextCount  = registrationTextModel.count({category:config.vehicleCategory.fourWheeler, status:3});
+    
+    Promise.all([twPendingRegCount, twAutomaticRegCount, twApprovedRegCount, fwPendingRegCount, fwAutomaticRegCount, fwApprovedRegCount, twPendingRegTextCount, twAutomaticRegTextCount, twApprovedRegTextCount, fwPendingRegTextCount, fwAutomaticRegTextCount, fwApprovedRegTextCount]).then(function(data){
+        res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'index'),{twPendingRegCount:data[0], twAutomaticRegCount:data[1], twApprovedRegCount:data[2], fwPendingRegCount:data[3], fwAutomaticRegCount:data[4], fwApprovedRegCount:data[5], twPendingRegTextCount:data[6], twAutomaticRegTextCount:data[7], twApprovedRegTextCount:data[8], fwPendingRegTextCount:data[9], fwAutomaticRegTextCount:data[10], fwApprovedRegTextCount:data[11]});
+    });
+    
+//    res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'index'),{twPendingRegCount:twPendingRegCount, twAutomaticRegCount:twAutomaticRegCount, twApprovedRegCount:twApprovedRegCount, fwPendingRegCount:fwPendingRegCount, fwAutomaticRegCount:fwAutomaticRegCount, fwApprovedRegCount:fwApprovedRegCount, twPendingRegTextCount:twPendingRegTextCount, twAutomaticRegTextCount:twAutomaticRegTextCount, twApprovedRegTextCount:twApprovedRegTextCount, fwPendingRegTextCount:fwPendingRegTextCount, fwAutomaticRegTextCount:fwAutomaticRegTextCount, fwApprovedRegTextCount:fwApprovedRegTextCount});     
+}
+
+RegistrationController.getRegistrationList = async function(req, res){
+    
+    var page  = 1;
+    var start = 0;
+    var limit = 100;
+    var filterRegNumber = '';
+    var filterStatus    = '';
+    var filterCategory  = '';
+    var filterText      = '';
+    var query = req.query; 
+    let filterQuery ={};
+    if(req.query.page){
+        page  = req.query.page;        
+    }
+    if (query.hasOwnProperty('page')){
+        delete query.page;
+    }    
+    query = qs.stringify(query);   
+    
+    if(req.query.filter_reg_number){
+        filterRegNumber  = req.query.filter_reg_number;               
+        filterQuery.registration_number = filterRegNumber;
+    }
+    if(req.query.filter_text){
+        filterText  = req.query.filter_text;               
+        filterQuery.text = filterText;
+    }
+    if(req.query.filter_category){
+        filterCategory  = req.query.filter_category;
+        filterCategory.category = filterCategory;
+    }
+     if(req.query.filter_status){
+        filterStatus  = req.query.filter_status; 
+        filterQuery.status = filterStatus;
+    }
+
+    start = parseInt((page*limit) - limit);
+    let recordCount     = await registrationModel.countDocumentsAsync(filterQuery);
+    let registrations   = await registrationModel.find(filterQuery).skip(start).limit(limit).execAsync();
+    
+    res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'registration'),{registrations:registrations, filterRegNumber:filterRegNumber, filterStatus:filterStatus, filterCategory:filterCategory, filterText:filterText, url:'/registration/list', page:page, limit:limit, recordCount:recordCount, query:query});     
 }
     
 RegistrationController.getRegistration = async function(req, res){

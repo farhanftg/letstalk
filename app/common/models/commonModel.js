@@ -3,14 +3,61 @@ var redisHelper  = require(HELPER_PATH+'redisHelper');
 
 var CommonModel = {};
 
+CommonModel.getCity = function(query){ 
+    return new Promise( async function(resolve, reject) {
+        query.fetchData = 'city';
+        query.source    = config.source.autodb;
+        query.subSource = config.subSource.vahanScrapper;
+        
+        try{
+            let cities = await redisHelper.getJSON('cities');
+            if(!cities){
+                let result = await commonHelper.sendGetRequestToBrokerage(query, '/api/v1/motor/getBkgMasterData');
+                cities = await redisHelper.setJSON('cities',result);  
+                resolve(result);                   
+            }else{
+                resolve(cities);
+            }
+        }catch(e){
+            reject(e);
+        }
+    });
+}
+
+CommonModel.getRtoDetail = function(query){ 
+    return new Promise( async function(resolve, reject) {
+        let rtoCode = '';
+        let key = 'rto';
+        query.source    = config.source.autodb;
+        query.subSource = config.subSource.vahanScrapper;
+        if(query.rto_code){
+            rtoCode = query.rto_code;
+            key += '_'+rtoCode;
+        }
+        try{
+            let rtoDetail = await redisHelper.getJSON(key);
+            if(!rtoDetail){
+                let path = '/api/v1/motor/rtoMasterDetail/'+rtoCode;
+                let result = await commonHelper.sendGetRequestToBrokerage(query, path);
+                rtoDetail = await redisHelper.setJSON(key,result);  
+                resolve(result);                                  
+            }else{
+                resolve(rtoDetail);
+            }
+        }catch(e){
+            reject(e);
+        }
+    });
+}
+
 CommonModel.getCarMake = function(){ 
     return new Promise( async function(resolve, reject) {
         let query = {};
         query.fetchData = 'all_make';
         query.sortBy    = 'popularity';
         query.tags      = 'make,make_id,popularity_rank';
-        query.source    = 'autodb'; 
-        query.subSource = 'vahanScrapper';
+        query.source    = config.source.autodb;
+        query.subSource = config.subSource.vahanScrapper;
 
         try{
             let makes = await redisHelper.getJSON('car_makes');
@@ -35,8 +82,8 @@ CommonModel.getCarModel = async function(makeId){
         query.sortBy    = 'modelPopularity';
         query.tags      = 'make,make_id,model,model_id,model_display_name,model_popularity_rank,status';
         query.makeId    = makeId;
-        query.source    = 'autodb'; 
-        query.subSource = 'vahanScrapper';
+        query.source    = config.source.autodb;
+        query.subSource = config.subSource.vahanScrapper;
 
         try{
             let models = await redisHelper.getJSON('car_models_'+makeId);
@@ -61,8 +108,8 @@ CommonModel.getCarVariant = function(modelId){
         query.sortBy    = 'modelPopularity';
         query.tags      = 'make,make_id,model,model_id,version,version_id,version_display_name,cc,status,fuel';
         query.modelId    = modelId;
-        query.source    = 'autodb'; 
-        query.subSource = 'vahanScrapper';
+        query.source    = config.source.autodb;
+        query.subSource = config.subSource.vahanScrapper;
 
         try{
             let variants = await redisHelper.getJSON('car_variants_'+modelId);
@@ -87,8 +134,8 @@ CommonModel.getBikeMake = function(req, res){
         query.sortBy    = 'popularity';
         query.tags      = 'make,make_id,popularity_rank';
         query.fetchOnly = 'all_make';
-        query.source    = 'autodb'; 
-        query.subSource = 'vahanScrapper';
+        query.source    = config.source.autodb;
+        query.subSource = config.subSource.vahanScrapper;
 
         try{
             let makes = await redisHelper.getJSON('bike_makes');
@@ -114,8 +161,8 @@ CommonModel.getBikeModel = function(makeId){
         query.tags      = 'make,make_id,model,model_id,model_display_name,model_popularity_rank,status';   
         query.fetchOnly =  'all_model';
         query.makeId    = makeId;
-        query.source    = 'autodb'; 
-        query.subSource = 'vahanScrapper';
+        query.source    = config.source.autodb;
+        query.subSource = config.subSource.vahanScrapper;
 
         try{
             let models = await redisHelper.getJSON('bike_models_'+makeId);
@@ -133,16 +180,16 @@ CommonModel.getBikeModel = function(makeId){
     });
 }
 
-CommonModel.getBikeVariant = function(req, res){ 
+CommonModel.getBikeVariant = function(modelId){ 
     return new Promise(async function(resolve, reject) {
         var query = {};
         query.fetchData = 'tw_mmv';
         query.sortBy    = 'modelPopularity';
         query.tags      = 'make,make_id,model,model_id,version,version_id,version_display_name,cc,status,fuel';
         query.fetchOnly = 'all_variant';
-        query.modelId    = req.query.model_id;
-        query.source    = 'autodb'; 
-        query.subSource = 'vahanScrapper';
+        query.modelId    = modelId;
+        query.source    = config.source.autodb;
+        query.subSource = config.subSource.vahanScrapper;
 
         try{
             let variants = await redisHelper.getJSON('bike_variants_'+query.modelId);
