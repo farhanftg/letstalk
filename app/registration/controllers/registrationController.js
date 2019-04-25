@@ -34,6 +34,7 @@ RegistrationController.getRegistrationList = async function(req, res){
     var page  = 1;
     var start = 0;
     var limit = 100;
+    var filterRegNumber = '';
     var filterStatus    = '';
     var filterCategory  = '';
     var filterText      = '';
@@ -68,7 +69,7 @@ RegistrationController.getRegistrationList = async function(req, res){
     let recordCount     = await registrationModel.countDocumentsAsync(filterQuery);
     let registrations   = await registrationModel.find(filterQuery).skip(start).limit(limit).execAsync();
     
-    res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'registration'),{registrations:registrations, filterRegNumber:filterRegNumber, filterStatus:filterStatus, filterCategory:filterCategory, filterText:filterText, url:'/registration', page:page, limit:limit, recordCount:recordCount, query:query});     
+    res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'registration'),{registrations:registrations, filterRegNumber:filterRegNumber, filterStatus:filterStatus, filterCategory:filterCategory, filterText:filterText, url:'/registration/list', page:page, limit:limit, recordCount:recordCount, query:query});     
 }
     
 RegistrationController.getRegistration = async function(req, res){
