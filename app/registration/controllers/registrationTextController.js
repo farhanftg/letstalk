@@ -33,7 +33,7 @@ RegistrationTextController.getRegistrationText = async function(req, res){
            
             if(req.query.filter_text){
                 filterText  = req.query.filter_text;               
-                filterQuery.text = filterText;
+                filterQuery.text = new RegExp(filterText, 'i');
             }
             if(req.query.filter_category){
                 filterCategory  = req.query.filter_category;
@@ -76,7 +76,20 @@ RegistrationTextController.updateRegistrationText = function(req, res){
     }else{
         data.id = req.body.id;
     }
+    
     registrationTextModel.updateRegistrationText(data);
+    //update registration status approved
+    var registration_data = {};
+    registration_data.status = 3;
+    registration_data.central_make_id = req.body.make? req.body.make:'';
+    registration_data.central_make_name = req.body.make_name? req.body.make_name:'';
+    registration_data.central_model_id = req.body.model? req.body.model:'';
+    registration_data.central_model_name = req.body.model_name? req.body.model_name:'';
+    registration_data.central_version_id     = req.body.variant_id?req.body.variant_id:'';
+    registration_data.central_version_name   = req.body.variant_name?req.body.variant_name:'';
+
+    registrationModel.findOneAndUpdateAsync({maker_model:req.body.text},registration_data);
+
     var filterText      = req.body.filter_text;
     var filterCategory  = req.body.filter_category;
     var filterStatus    = req.body.filter_status;

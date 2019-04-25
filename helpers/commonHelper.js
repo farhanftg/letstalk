@@ -443,6 +443,19 @@ module.exports = {
             return false;
         }
         return true;
+    },
+    getRtoCodeByRegistrationNo: function(registrationNumber){
+        var rtoCode = '';
+        if(registrationNumber)
+        {
+            rtoCode         = registrationNumber.toUpperCase().substring(0,4); 
+            if(rtoCode[2] != '0' && isNaN(rtoCode[3])){
+                var stateCode   = registrationNumber.substring(0,2);
+                var areaCode    = '0'+rtoCode[2];
+                rtoCode = stateCode+areaCode;
+            }
+        }
+        return rtoCode;
     }
 
 }

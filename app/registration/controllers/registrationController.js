@@ -2,6 +2,8 @@ var ApiController           = require('../../common/controllers/apiController');
 var registrationModel       = require('../models/registrationModel');
 var registrationTextModel   = require('../models/registrationTextModel');
 var commonHelper            = require(HELPER_PATH+'commonHelper.js');
+const commonModel             = require('../../common/models/commonModel');
+
 
 class RegistrationController extends ApiController{
     constructor() {
@@ -72,16 +74,24 @@ RegistrationController.getRegistrationFromRtoVehicle = async function(registrati
                 };
         query.auth = config.rtoVehicle.authToken;  
         let result = await commonHelper.sendPostRequest(query, options);
-        if(result.reason = 'active'){
+        if(result && result.reason == 'active'){
+            let getRtoCode = commonHelper.getRtoCodeByRegistrationNo(result.regn_no);
+            let rtoDetail    = await commonModel.getRtoDetail(getRtoCode);
             let registration = {};
             registration.registration_number= result.regn_no;
             registration.maker_model        = result.vehicle_name;
             registration.owner_name         = result.owner_name;
             registration.registration_date  = new Date(result.regn_dt);
+            registration.registration_year  = registration.registration_date.getFullYear();
             registration.fuel_type          = result.f_type;
             registration.chassis_number     = result.c_no;
             registration.engine_number      = result.e_no;
             registration.vehicle_class      = result.vh_class;
+            registration.rto_code           = getRtoCode;
+            registration.rto_name           = rtoDetail[0].rtoName;
+            registration.rto_city_id        = rtoDetail[0].cityId;
+            registration.rto_city_name      = rtoDetail[0].city;
+
             registration.source             = 'rtoVehicle';
             return registration;
         }else{

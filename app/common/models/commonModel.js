@@ -160,4 +160,29 @@ CommonModel.getBikeVariant = function(req, res){
     });
 }
 
+CommonModel.getRtoDetail = function(rtoCode){
+    return new Promise(async function(resolve, reject){
+        var query = {};
+        query.source    = 'autodb'; 
+        query.subSource = 'vahanScrapper';
+        let key = 'rto';
+        if(rtoCode){
+            key += '_'+rtoCode;
+        }
+        try{
+            let rtoDetail = await redisHelper.getJSON(key);
+            if(!rtoDetail){
+                let path = '/api/v1/motor/rtoMasterDetail/'+rtoCode;
+                let result = await commonHelper.sendGetRequestToBrokerage(query, path);
+                rtoDetail = await redisHelper.setJSON(key,result);     
+                resolve(result);                   
+            }else{
+                resolve(rtoDetail);
+            }
+        }catch(e){
+            reject(e);
+        }
+    });
+}
+
 module.exports = CommonModel;
