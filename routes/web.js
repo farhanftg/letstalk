@@ -69,6 +69,14 @@ router.get('/common/get-bike-variant', function (req, res) {
     commonController.getBikeVariant(req, res);
 });
 
+router.get('/', function (req, res) {	
+    registrationController.index(req, res);
+});
+
+router.get('/registration/list', function (req, res) {	
+    registrationController.getRegistrationList(req, res);
+});
+
 router.get('/registration', function (req, res) {	
     registrationController.getRegistration(req, res);
 });
