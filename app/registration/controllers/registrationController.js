@@ -143,7 +143,7 @@ RegistrationController.getRegistrationFromRtoVehicle = async function(registrati
         let result = await commonHelper.sendPostRequest(query, options);
         if(result && result.reason == 'active'){
             let getRtoCode = commonHelper.getRtoCodeByRegistrationNo(result.regn_no);
-            let rtoDetail    = await commonModel.getRtoDetail(getRtoCode);
+            let rtoDetail    = await commonModel.getRtoDetail({rto_code:getRtoCode});
             let registration = {};
             registration.registration_number= result.regn_no;
             registration.maker_model        = result.vehicle_name;
