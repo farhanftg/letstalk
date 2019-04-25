@@ -12,21 +12,25 @@ class RegistrationController extends ApiController{
 }
 
 RegistrationController.index = async function(req, res){
-    let twPendingRegCount  = await registrationModel.count({category:config.vehicleCategory.twoWheeler, status:1});
-    let twAutomaticRegCount= await registrationModel.count({category:config.vehicleCategory.twoWheeler, status:2});
-    let twApprovedRegCount = await registrationModel.count({category:config.vehicleCategory.twoWheeler, status:3});
-    let fwPendingRegCount  = await registrationModel.count({category:config.vehicleCategory.fourWheeler, status:1});
-    let fwAutomaticRegCount= await registrationModel.count({category:config.vehicleCategory.fourWheeler, status:2});
-    let fwApprovedRegCount = await registrationModel.count({category:config.vehicleCategory.fourWheeler, status:3});
+    let twPendingRegCount  = registrationModel.count({category:config.vehicleCategory.twoWheeler, status:1});
+    let twAutomaticRegCount= registrationModel.count({category:config.vehicleCategory.twoWheeler, status:2});
+    let twApprovedRegCount = registrationModel.count({category:config.vehicleCategory.twoWheeler, status:3});
+    let fwPendingRegCount  = registrationModel.count({category:config.vehicleCategory.fourWheeler, status:1});
+    let fwAutomaticRegCount= registrationModel.count({category:config.vehicleCategory.fourWheeler, status:2});
+    let fwApprovedRegCount = registrationModel.count({category:config.vehicleCategory.fourWheeler, status:3});
     
-    let twPendingRegTextCount   = await registrationTextModel.count({category:config.vehicleCategory.twoWheeler, status:1});
-    let twAutomaticRegTextCount = await registrationTextModel.count({category:config.vehicleCategory.twoWheeler, status:2});
-    let twApprovedRegTextCount  = await registrationTextModel.count({category:config.vehicleCategory.twoWheeler, status:3});
-    let fwPendingRegTextCount   = await registrationTextModel.count({category:config.vehicleCategory.fourWheeler, status:1});
-    let fwAutomaticRegTextCount = await registrationTextModel.count({category:config.vehicleCategory.fourWheeler, status:2});
-    let fwApprovedRegTextCount  = await registrationTextModel.count({category:config.vehicleCategory.fourWheeler, status:3});
+    let twPendingRegTextCount   = registrationTextModel.count({category:config.vehicleCategory.twoWheeler, status:1});
+    let twAutomaticRegTextCount = registrationTextModel.count({category:config.vehicleCategory.twoWheeler, status:2});
+    let twApprovedRegTextCount  = registrationTextModel.count({category:config.vehicleCategory.twoWheeler, status:3});
+    let fwPendingRegTextCount   = registrationTextModel.count({category:config.vehicleCategory.fourWheeler, status:1});
+    let fwAutomaticRegTextCount = registrationTextModel.count({category:config.vehicleCategory.fourWheeler, status:2});
+    let fwApprovedRegTextCount  = registrationTextModel.count({category:config.vehicleCategory.fourWheeler, status:3});
     
-    res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'index'),{twPendingRegCount:twPendingRegCount, twAutomaticRegCount:twAutomaticRegCount, twApprovedRegCount:twApprovedRegCount, fwPendingRegCount:fwPendingRegCount, fwAutomaticRegCount:fwAutomaticRegCount, fwApprovedRegCount:fwApprovedRegCount, twPendingRegTextCount:twPendingRegTextCount, twAutomaticRegTextCount:twAutomaticRegTextCount, twApprovedRegTextCount:twApprovedRegTextCount, fwPendingRegTextCount:fwPendingRegTextCount, fwAutomaticRegTextCount:fwAutomaticRegTextCount, fwApprovedRegTextCount:fwApprovedRegTextCount});     
+    Promise.all([twPendingRegCount, twAutomaticRegCount, twApprovedRegCount, fwPendingRegCount, fwAutomaticRegCount, fwApprovedRegCount, twPendingRegTextCount, twAutomaticRegTextCount, twApprovedRegTextCount, fwPendingRegTextCount, fwAutomaticRegTextCount, fwApprovedRegTextCount]).then(function(data){
+        res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'index'),{twPendingRegCount:data[0], twAutomaticRegCount:data[1], twApprovedRegCount:data[2], fwPendingRegCount:data[3], fwAutomaticRegCount:data[4], fwApprovedRegCount:data[5], twPendingRegTextCount:data[6], twAutomaticRegTextCount:data[7], twApprovedRegTextCount:data[8], fwPendingRegTextCount:data[9], fwAutomaticRegTextCount:data[10], fwApprovedRegTextCount:data[11]});
+    });
+    
+//    res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'index'),{twPendingRegCount:twPendingRegCount, twAutomaticRegCount:twAutomaticRegCount, twApprovedRegCount:twApprovedRegCount, fwPendingRegCount:fwPendingRegCount, fwAutomaticRegCount:fwAutomaticRegCount, fwApprovedRegCount:fwApprovedRegCount, twPendingRegTextCount:twPendingRegTextCount, twAutomaticRegTextCount:twAutomaticRegTextCount, twApprovedRegTextCount:twApprovedRegTextCount, fwPendingRegTextCount:fwPendingRegTextCount, fwAutomaticRegTextCount:fwAutomaticRegTextCount, fwApprovedRegTextCount:fwApprovedRegTextCount});     
 }
 
 RegistrationController.getRegistrationList = async function(req, res){
