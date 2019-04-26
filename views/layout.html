@@ -75,8 +75,8 @@
                               <div class="menu_section">
                                     <ul class="nav side-menu">
                                         <li><a href="/"><i class="fa fa-home"></i> Home</a>
-                                        <li><a href="/registration"><i class="fa fa-registered"></i>Registration</a>    
-                                        <li><a href="/registration/text"><i class="fa fa-registered"></i>Registration Text</a>    
+                                        <li><a href="/registration/list"><i class="fa fa-registered"></i>Registration</a>    
+                                        <li><a href="/registration-text"><i class="fa fa-registered"></i>Registration Text</a>    
                                       </li>
                                     </ul>
                               </div>
@@ -197,7 +197,20 @@
         </footer>
         <!-- /footer content -->
         <script>
+          function getStatusTextById(id){
+            var statusText = '';
+            switch(id){
+                case 1: {statusText = 'Pending'; break;}
+                case 2: {statusText = 'Auto(M)'; break;}
+                case 3: {statusText = 'Approved(M)'; break;}
+                default:{statusText = 'None'; break;}
+            }
+            return statusText;
+          }
           $(document).ready(function() {
+            $(".search-clear").on('click',function(){
+                window.location.href = $(this).closest('form').attr('action');
+            })
             var handleDataTableButtons = function() {
               if ($("#datatable-buttons").length) {
                 $("#datatable-buttons").DataTable({

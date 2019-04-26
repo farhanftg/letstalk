@@ -37,7 +37,7 @@ RegistrationTextController.getRegistrationText = async function(req, res){
             }
             if(req.query.filter_category){
                 filterCategory  = req.query.filter_category;
-                filterCategory.category = filterCategory;
+                filterQuery.category = filterCategory;
             }
              if(req.query.filter_status){
                 filterStatus  = req.query.filter_status; 

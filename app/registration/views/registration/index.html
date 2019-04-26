@@ -1,10 +1,10 @@
 <div class="right_col" role="main" style="min-height:100%">
     <div class="page-title">
-        <!--div class="row">
+        <div class="row">
             <div class="col-md-6">
-              <h3>Dashboard</h3>
+              <h3>Registration</h3>
             </div>
-        </div-->
+        </div>
     </div>
     <div class="clearfix"></div>
     <br />
@@ -20,32 +20,41 @@
         <div class="clearfix"></div>
     </div>
     <div class="row top_tiles">
-        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
-            <a href="#">
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a href="/registration/list?filter_category=Four Wheeler">
             <div class="tile-stats">
               <div class="icon"><img src="images/total-calls.svg" title="" alt="" /></div>
-              <div class="count">5876</div>
+              <div class="count"><%= fwTotalRegTextCount %></div>
               <span>Total Registrations</span>
             </div>
             </a>
         </div>
-        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
-            <a href="#">
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a href="/registration/list?filter_category=Four Wheeler&filter_status=3">
                 <div class="tile-stats">
                     <div class="icon"><img src="images/connected-calls.svg" title="" alt="" /></div>
-                    <div class="count">1792</div>
+                    <div class="count"><%= fwApprovedRegCount %></div>
                     <span>Approved Registrations</span>
                 </div>
             </a>
         </div>
-        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
-            <a href="#">
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a href="/registration/list?filter_category=Four Wheeler&filter_status=1">
                 <div class="tile-stats">
                     <div class="icon"><img src="images/missed-calls.svg" title="" alt="" /></div>
-                    <div class="count">5079</div>
+                    <div class="count"><%= fwPendingRegCount %></div>
                     <span>Pending Registrations</span>
                 </div>
             </a>
+        </div>
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <a href="/registration/list?filter_category=Two Wheeler&filter_status=2">
+                    <div class="tile-stats">
+                        <div class="icon"><img src="images/missed-calls.svg" title="" alt="" /></div>
+                        <div class="count"><%= fwAutomaticRegCount %></div>
+                        <span>Auto Registrations</span>
+                    </div>
+                </a>
         </div>
     </div>
     <br>
@@ -55,34 +64,146 @@
         <div class="clearfix"></div>
     </div>
     <div class="row top_tiles">
-        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
-            <a href="#">
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a href="/registration/list?filter_category=Two Wheeler">
                 <div class="tile-stats">
                     <div class="icon"><img src="images/total-calls.svg" title="" alt="" /></div>
-                    <div class="count">1179</div>
+                    <div class="count"><%= twTotalRegTextCount %></div>
                     <span>Total Registrations</span>
                 </div>
             </a>
         </div>
-        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
-            <a href="#">
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a href="/registration/list?filter_category=Two Wheeler&filter_status=3">
                 <div class="tile-stats">
                     <div class="icon"><img src="images/connected-calls.svg" title="" alt="" /></div>
-                    <div class="count">4579</div>
+                    <div class="count"><%= twApprovedRegCount %></div>
                     <span>Approved Registrations</span>
                 </div>
             </a>
         </div>
-        <div class="animated flipInY col-lg-4 col-md-4 col-sm-6 col-xs-12">
-            <a href="#">
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+            <a href="/registration/list?filter_category=Two Wheeler&filter_status=1">
                 <div class="tile-stats">
                     <div class="icon"><img src="images/missed-calls.svg" title="" alt="" /></div>
-                    <div class="count">179</div>
+                    <div class="count"><%= twPendingRegCount %></div>
                     <span>Pending Registrations</span>
                 </div>
             </a>
         </div>
+        <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <a href="/registration/list?filter_category=Two Wheeler&filter_status=1">
+                    <div class="tile-stats">
+                        <div class="icon"><img src="images/missed-calls.svg" title="" alt="" /></div>
+                        <div class="count"><%= twAutomaticRegCount %></div>
+                        <span>Auto Registrations</span>
+                    </div>
+                </a>
+        </div>
     </div>
+
+    <div class="page-title">
+            <div class="row">
+                <div class="col-md-6">
+                  <h3>Registration Text</h3>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <br />
+        <div class="x_title">
+            <h2>Four Wheelers</h2>
+            <!--<div class="filter">
+              <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
+                <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
+                <span>December 30, 2014 - January 28, 2015</span> <b class="caret"></b>
+              </div>
+            </div>-->
+              <!--a href="#" class="pull-right view-all-txt">View All</a-->
+            <div class="clearfix"></div>
+        </div>
+        <div class="row top_tiles">
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <a href="/registration-text?filter_category=Four Wheeler">
+                <div class="tile-stats">
+                  <div class="icon"><img src="images/total-calls.svg" title="" alt="" /></div>
+                  <div class="count"><%= fwTotalRegTextCount %></div>
+                  <span>Total Registrations</span>
+                </div>
+                </a>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <a href="/registration-text?filter_category=Four Wheeler&filter_status=3">
+                    <div class="tile-stats">
+                        <div class="icon"><img src="images/connected-calls.svg" title="" alt="" /></div>
+                        <div class="count"><%= fwApprovedRegTextCount %></div>
+                        <span>Approved Registrations</span>
+                    </div>
+                </a>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <a href="/registration-text?filter_category=Four Wheeler&filter_status=1">
+                    <div class="tile-stats">
+                        <div class="icon"><img src="images/missed-calls.svg" title="" alt="" /></div>
+                        <div class="count"><%= fwPendingRegTextCount %></div>
+                        <span>Pending Registrations</span>
+                    </div>
+                </a>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a href="/registration-text?filter_category=Two Wheeler&filter_status=1">
+                        <div class="tile-stats">
+                            <div class="icon"><img src="images/missed-calls.svg" title="" alt="" /></div>
+                            <div class="count"><%= fwAutomaticRegTextCount %></div>
+                            <span>Auto Registrations</span>
+                        </div>
+                    </a>
+            </div>
+        </div>
+        <br>
+        <div class="x_title">
+            <h2>Two Wheelers</h2>
+              <!--a href="#" class="pull-right view-all-txt">View All</a-->
+            <div class="clearfix"></div>
+        </div>
+        <div class="row top_tiles">
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <a href="/registration-text?filter_category=Two Wheeler">
+                    <div class="tile-stats">
+                        <div class="icon"><img src="images/total-calls.svg" title="" alt="" /></div>
+                        <div class="count"><%= twTotalRegTextCount %></div>
+                        <span>Total Registrations</span>
+                    </div>
+                </a>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <a href="/registration-text?filter_category=Two Wheeler&filter_status=3">
+                    <div class="tile-stats">
+                        <div class="icon"><img src="images/connected-calls.svg" title="" alt="" /></div>
+                        <div class="count"><%= twApprovedRegTextCount %></div>
+                        <span>Approved Registrations</span>
+                    </div>
+                </a>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                <a href="/registration-text?filter_category=Two Wheeler&filter_status=1">
+                    <div class="tile-stats">
+                        <div class="icon"><img src="images/missed-calls.svg" title="" alt="" /></div>
+                        <div class="count"><%= twPendingRegTextCount %></div>
+                        <span>Pending Registrations</span>
+                    </div>
+                </a>
+            </div>
+            <div class="animated flipInY col-lg-3 col-md-3 col-sm-6 col-xs-12">
+                    <a href="/registration-text?filter_category=Two Wheeler&filter_status=2">
+                        <div class="tile-stats">
+                            <div class="icon"><img src="images/missed-calls.svg" title="" alt="" /></div>
+                            <div class="count"><%= twAutomaticRegTextCount %></div>
+                            <span>Auto Registrations</span>
+                        </div>
+                    </a>
+            </div>
+        </div>
 </div>
 <style>
 .tile-stats{
