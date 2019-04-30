@@ -91,14 +91,13 @@ RegistrationController.getRegistrationList = async function(req, res){
         delete query.page;
     }    
     query = qs.stringify(query);   
-    
+    filterQuery["$or"] = [];
     if(req.query.filter_reg_number){
         filterRegNumber  = req.query.filter_reg_number;               
-        filterQuery.registration_number = filterRegNumber;
-    }
-    if(req.query.filter_text){
-        filterText  = req.query.filter_text;               
-        filterQuery.text = filterText;
+        filterQuery["$or"].push({registration_number:new RegExp(filterRegNumber, 'i')});  
+        filterQuery["$or"].push({central_make_name:new RegExp(filterRegNumber, 'i')});  
+        filterQuery["$or"].push({central_model_name:new RegExp(filterRegNumber, 'i')});
+        filterQuery["$or"].push({central_version_name:new RegExp(filterRegNumber, 'i')});
     }
     if(req.query.filter_category){
         filterCategory  = req.query.filter_category;
@@ -108,7 +107,9 @@ RegistrationController.getRegistrationList = async function(req, res){
         filterStatus  = req.query.filter_status; 
         filterQuery.status = filterStatus;
     }
-
+    if(!filterQuery["$or"].length){
+        delete filterQuery["$or"];
+    }
     start = parseInt((page*limit) - limit);
     let recordCount     = await registrationModel.countDocumentsAsync(filterQuery);
     let registrations   = await registrationModel.find(filterQuery).skip(start).limit(limit).execAsync();
@@ -213,6 +214,5 @@ RegistrationController.getRegistrationFromRtoVehicle = async function(registrati
     }catch(e){
         throw e;
     }   
-}
-    
+}    
 module.exports = RegistrationController;

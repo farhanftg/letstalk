@@ -30,7 +30,7 @@ RegistrationTextController.getRegistrationText = async function(req, res){
                 delete query.page;
             }    
             query = qs.stringify(query);   
-           
+            
             if(req.query.filter_text){
                 filterText  = req.query.filter_text;               
                 filterQuery.text = new RegExp(filterText, 'i');
@@ -87,6 +87,7 @@ RegistrationTextController.updateRegistrationText = function(req, res){
     registration_data.central_model_name = req.body.model_name? req.body.model_name:'';
     registration_data.central_version_id     = req.body.variant_id?req.body.variant_id:'';
     registration_data.central_version_name   = req.body.variant_name?req.body.variant_name:'';
+    registration_data.vehicle_category  = req.body.category;
 
     registrationModel.findOneAndUpdateAsync({maker_model:req.body.text},registration_data);
 

@@ -9,6 +9,7 @@ var awsHelper = require(HELPER_PATH+'awsHelper');
 var commonController            = require('../app/common/controllers/commonController');
 var registrationController      = require('../app/registration/controllers/registrationController');
 var registrationTextController  = require('../app/registration/controllers/registrationTextController');
+var vehicleClassController      = require('../app/registration/controllers/vehicleClassController');
 
 var storage = multer.diskStorage({
 //    destination: function (req, file, callback) {
@@ -91,6 +92,14 @@ router.post('/update-registration-text', function (req, res) {
 
 router.get('/file/:registrationNumber/:fileName', function (req, res) {
     awsHelper.readFile(req, res);
+});
+
+router.get('/vehicle-class',function(req,res){
+    vehicleClassController.getVehicleClassList(req, res);
+});
+
+router.post('/update-vehicle-class',function(req,res){
+    vehicleClassController.updateVehicleClass(req, res);
 });
 
 router.get('/favicon.ico',function (req, res) {	
