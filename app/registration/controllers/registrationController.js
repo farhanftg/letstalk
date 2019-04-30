@@ -191,6 +191,16 @@ RegistrationController.getRegistrationFromRtoVehicle = async function(registrati
             let rtoDetail    = await commonModel.getRtoDetail({rto_code:getRtoCode});
             let getVehicleCategory = await vehicleClassModel.getVehicleCategoryByVehicleClass(result.vh_class);
             let registration = {};
+
+            // add vehicle class if not found
+            if(getVehicleCategory == null){
+                console.log("CLass ",getVehicleCategory);
+                vehicleClassModel.create({vehicle_class:result.vh_class},(err , createVehicle) => {
+                    if(err){
+                        console.log("Vehicle Class Error",err);
+                    }
+                })
+            }
             registration.registration_number= result.regn_no;
             registration.maker_model        = result.vehicle_name;
             registration.owner_name         = result.owner_name;
@@ -214,5 +224,6 @@ RegistrationController.getRegistrationFromRtoVehicle = async function(registrati
     }catch(e){
         throw e;
     }   
-}    
+}
+    
 module.exports = RegistrationController;

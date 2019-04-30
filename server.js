@@ -24,9 +24,13 @@ global.ERROR   = require('./config/error-constants');
 
 require('./config/settings');
 require('./config/db');
-
 var authHelper      = require('./helpers/authHelper');
 var commonHelper    = require('./helpers/commonHelper');
+
+var passport        = require('passport');
+
+require('./lib/passport')(passport);
+global.passport = passport;
 
 process.on('uncaughtException', function (exception) {
     console.log('########## SERVER CRASHED WITH UNCAUGHT EXCEPTION ##########');
@@ -69,8 +73,8 @@ app.use(cors({origin: config.corsAllowedOrigin, methods:['GET', 'POST', 'OPTIONS
 app.use(device.capture());
 
 
-//app.use(passport.initialize());
-//app.use(passport.session());
+app.use(passport.initialize());
+app.use(passport.session());
 app.use('/gentelella', express.static(__dirname + '/node_modules/gentelella'));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');

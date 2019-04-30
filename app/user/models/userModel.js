@@ -11,7 +11,7 @@ var UserSchema = new Schema({
 
 var User = mongoose.model('User', UserSchema);
 
-var getUserById = function(id, callback){ 
+User.getUserById = function(id, callback){ 
     User.findOne({_id:id}, function (err, user){
         if (!err) {
             callback(err,user);
@@ -22,7 +22,7 @@ var getUserById = function(id, callback){
     });
 }
 
-var getUserByUsername = function(username, callback){    
+User.getUserByUsername = function(username, callback){    
     User.findOne({username:username}, function (err, user){
         if (!err) {
             callback(err,user);
@@ -33,7 +33,7 @@ var getUserByUsername = function(username, callback){
     });
 }
 
-var getUserByEmail = function(email, callback){    
+User.getUserByEmail = function(email, callback){    
     User.findOne({email:email}, function (err, user){
         if (!err) {
             callback(err,user);
@@ -44,4 +44,4 @@ var getUserByEmail = function(email, callback){
     });
 }
 
-module.exports = {getUserById,getUserByUsername,getUserByEmail};
+module.exports = User;

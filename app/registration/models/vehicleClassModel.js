@@ -3,8 +3,8 @@ var commonHelper        = require(HELPER_PATH+'commonHelper');
 
 var VehicleClassSchema = new Schema({    
     vehicle_class               : {type:String},
-    vehicle_category            : {type:String},
-    status                      : {type:String, default:1},   
+    vehicle_category            : {type:String,default:''},
+    status                      : {type:String, default:'1'},   
     created_at                  : {type: Date},
     updated_at                  : {type: Date, default: Date.now}
 },{collection:'vehicle_class'});
@@ -13,7 +13,7 @@ VehicleClassSchema.set('toJSON', {
     virtuals: true
 });
 
-var VehicleClass = mongoose.model('VehicleText', VehicleClassSchema);
+var VehicleClass = mongoose.model('VehicleClass', VehicleClassSchema);
 
 VehicleClass.getVehicleCategoryByVehicleClass = function(vehicleClass){
     return new Promise(async function(resolve, reject){
