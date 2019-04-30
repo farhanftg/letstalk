@@ -123,4 +123,47 @@ RegistrationText.updateRegistrationText =  function(data){
     });
 }
 
+RegistrationText.getAutoMappedRegistrationText = function(text){
+    return new Promise( async function(resolve, reject) {
+        try{
+            let data = {};
+            let approvedRows = await RegistrationText.aggregateAsync([
+                { $match: {status: '3'}},
+                {
+                    $project: {
+                    "make_id": 1,    
+                    "make_name": 1,
+                    "model_id": 1,    
+                    "model_name": 1,
+                    "length": { $strLenCP: "$model_name" }
+                    }
+                },
+                { $sort: { length: -1} },
+            ]);
+//            approvedRows.forEach(function(approvedRow){
+//                if(approvedRow.make_id && approvedRow.model_id){
+//                    var textArr = text.toLowerCase().split(' ');
+//                    if((text.toLowerCase().indexOf(approvedRow.make_name.toLowerCase()) >= 0 && (approvedRow.model_name.length > 1 && text.toLowerCase().indexOf(approvedRow.model_name.toLowerCase()) >= 0)) || (approvedRow.model_name.length>=3 && textArr.indexOf(approvedRow.model_name.toLowerCase()) >=0)){                                                                  
+//                        resolve(approvedRow);
+//                    }           
+//                } 
+//            });
+//            resolve(approvedRow);
+            for(var i=0;  i<approvedRows.length; i++){
+                let approvedRow = approvedRows[i];
+                if(approvedRow.make_id && approvedRow.model_id){
+                    var textArr = text.toLowerCase().split(' ');
+                    if((text.toLowerCase().indexOf(approvedRow.make_name.toLowerCase()) >= 0 && (approvedRow.model_name.length > 1 && text.toLowerCase().indexOf(approvedRow.model_name.toLowerCase()) >= 0)) || (approvedRow.model_name.length>=3 && textArr.indexOf(approvedRow.model_name.toLowerCase()) >=0)){                                                                  
+                        data = approvedRow;
+                        break;
+                    }           
+                }             
+            }     
+            resolve(data);
+        }catch(e){
+            reject(e);
+        }
+    });
+}
+
 module.exports = RegistrationText;

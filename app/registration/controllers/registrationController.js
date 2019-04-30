@@ -142,22 +142,36 @@ RegistrationController.getRegistration = async function(req, res){
                         registration.status                     = 3;
                     }
                 }else{
-                        registrationTextModel.addRegistrationText(
-                        {
-                            text:registration.maker_model,
-                            category: registration.vehicle_category, 
-                            source:'rtoVehicle'
-                        })
-                        .catch(function(e){
-                            console.log(e);
-                        });
+                    let registrationText = {};
+                    registrationText.text       = registration.maker_model,
+                    registrationText.category   =  registration.vehicle_category, 
+                    registrationText.source     = 'rtoVehicle';
+                    let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
+                    if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
+                        registrationText.make_id    = autoMappedRegistrationText.make_id;
+                        registrationText.make_name  = autoMappedRegistrationText.make_name;
+                        registrationText.model_id   = autoMappedRegistrationText.model_id;
+                        registrationText.model_name = autoMappedRegistrationText.model_name;
+                        registrationText.category   = autoMappedRegistrationText.category;
+                        registrationText.status = 2;
+                        
+                        registration.central_make_id    = autoMappedRegistrationText.make_id;;
+                        registration.central_make_name  = autoMappedRegistrationText.make_name;
+                        registration.central_model_id   = autoMappedRegistrationText.model_id;;
+                        registration.central_model_name = autoMappedRegistrationText.model_name;
+                        registration.vehicle_category   = autoMappedRegistrationText.category;
+                        registration.status = 2;
+                    }
+                    registrationTextModel.addRegistrationText(registrationText).catch(function(e){
+                        console.log(e);
+                    });
                 }
                
                 let data =  registrationModel.addRegistration(registration).catch(function(e){
                     console.log(e);
                 });   
             }
-            if(registration.status == 3){
+            if(registration.status == 2 || registration.status == 3){
                 this.sendResponse(req, res, 200, false, registration, false);
             }else{
                 throw ERROR.REGISTRATION_DETAILS_NOT_VERIFIED;
