@@ -262,4 +262,37 @@ Registration.sendRegistrationToAutoDB = async function(query){
     });
 }
 
+Registration.formatRegistrationData = function(data){  
+    if(data){          
+        let registration = {};       
+        registration.registration_number        = data.registration_number?data.registration_number.toUpperCase():'';
+        registration.maker_model                = data.maker_model?data.maker_model.trim():'';             
+        registration.central_make_id            = data.central_make_id?data.central_make_id:'';
+        registration.central_make_name          = data.central_make_name?data.central_make_name:'';
+        registration.central_model_id           = data.central_model_id?data.central_model_id:'';
+        registration.central_model_name         = data.central_model_name?data.central_model_name:'';
+        registration.central_version_id         = data.central_version_id?data.central_version_id:'';
+        registration.central_version_name       = data.central_version_name?data.central_version_name:'';
+        registration.registration_date          = data.registration_date?data.registration_date:'';
+        registration.registration_year          = data.registration_year?data.registration_year:'';
+        registration.manufacturing_date         = data.manufacturing_date?data.manufacturing_date:'';
+        registration.manufacturing_year         = data.manufacturing_year?data.manufacturing_year:'';
+        registration.registration_date_ymd      = data.registration_date_ymd?data.registration_date_ymd:'';
+        registration.manufacturing_date_ymd     = data.manufacturing_date_ymd?data.manufacturing_date_ymd:'';
+        registration.chassis_number             = data.chassis_number?data.chassis_number:'';
+        registration.engine_number              = data.engine_number?data.engine_number:'';
+        registration.cc                         = data.cc?data.cc:'';
+        registration.fuel_type                  = data.fuel_type?data.fuel_type:'';
+        registration.vehicle_class              = data.vehicle_class?data.vehicle_class:'';
+        registration.vehicle_category           = data.vehicle_category?data.vehicle_category:'';
+        registration.owner_name                 = data.owner_name?data.owner_name.trim():'';
+        registration.rto_code                   = data.rto_code?data.rto_code:'';
+        registration.rto_name                   = data.rto_name?data.rto_name:'';
+        registration.rto_city_id                = data.rto_city_id?data.rto_city_id:'';
+        registration.rto_city_name              = data.rto_city_name?data.rto_city_name:''; 
+        return registration;
+    }
+    return;
+}
+
 module.exports = Registration;

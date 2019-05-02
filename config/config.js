@@ -26,21 +26,9 @@ config.report = {};
 config.report.from      = 'ucchatbot@gaadi.com';
 config.report.to        = 'anand.gupta@girnarsoft.com';
 
-config.report.lmsLeadError      = false;
-config.report.lmsLeadErrorTo    = ['anand.gupta@girnarsoft.com', 'sanjay.singh@girnarsoft.com'];
-config.report.lmsLeadErrorTemplateName = 'B2C_LEAD_LMS_ERROR_INS';
-
 config.report.timeoutError      = true;
 config.report.timeoutErrorTo    = ['anand.gupta@girnarsoft.com', 'sanjay.singh@girnarsoft.com', 'saurabh.jain1@girnarsoft.com'];
 config.report.timeoutErrorTemplateName = 'B2C_API_TIMEOUT_ERROR_INS';
-
-config.report.byPassLogError   = true;
-config.report.byPassLogErrorTo = ['anand.gupta@girnarsoft.com', 'sanjay.singh@girnarsoft.com', 'saurabh.jain1@girnarsoft.com'];
-config.report.byPassLogErrorTemplateName = 'B2C_API_BYPASS_LOG_ERROR_INS';
-
-config.report.proposalDataError   = true;
-config.report.proposalDataErrorTo = ['anand.gupta@girnarsoft.com', 'sanjay.singh@girnarsoft.com', 'saurabh.jain1@girnarsoft.com'];
-config.report.proposalDataErrorTemplateName = 'B2C_PROPOSAL_LMS_ERROR_INS';
 
 config.report.dailyLeadReportTo= ['sumit.shairya@girnarsoft.com'];
 
@@ -63,13 +51,8 @@ config.source.parivahan = 'parivahan';
 config.source.vahan     = 'vahan';
 config.source.rtoVehicle= 'rtoVehicle';
 
-
 config.subSource = {};
 config.subSource.vahanScrapper = 'vahanScrapper';
-
-
-config.leadType = {};
-config.leadType.newCar = 'NewCar';
 
 config.aws      = {};
 config.aws.s3   = {};
@@ -94,7 +77,7 @@ config.requests = [
 config.apiLog   = true;
 config.elkLog   = false;
 config.accessLog= true;
-config.byPassLog = ['/set-user-status', '/getInsurers', '/home', '/content/home', '/content/make', '/content/plan-confirmation', '/news','/news-article', '/content/privacy-policy', '/api/v1/motor/policyDocument', '/common/get-mapped-data', '/api/v1/motor/mappedMasterData', '/api/v1/motor/insurersMaster', '/api/v1/motor/getBkgMasterData', '/api/v1/motor/policyDocument', '/favicon.ico', 'https://lms.insurancedekho.com/setUserLastOnline','https://lmsstaging.insurancedekho.com/setUserLastOnline'];
+config.byPassLog = ['/api/v1/motor/mappedMasterData', '/api/v1/motor/getBkgMasterData', '/favicon.ico'];
 config.hideDetailInErrorResponse    = false;
 config.showDefaultErrorMessage      = false;
 
