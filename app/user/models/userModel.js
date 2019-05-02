@@ -4,7 +4,7 @@ var UserSchema = new Schema({
     lastname    : String,
     username    : String,
     password    : String,
-    status     : Number,
+    status     : {type:Number,default:1},
     created_at  : Date,
     updated_at  : Date
 });
@@ -44,4 +44,49 @@ User.getUserByEmail = function(email, callback){
     });
 }
 
+User.getUserList = function(page = 1){
+    var page  = page;
+    var start = 0;
+    var limit = 10;
+    start = parseInt((page*limit) - limit);
+
+    return new Promise( async function(resolve , reject){
+        let recordCount     = await User.countDocumentsAsync();
+        User
+            .find({})
+            .skip(start)
+            .sort({created_at:-1})
+            .limit(limit)
+            .exec(function(err, result){
+                if(err){
+                    reject(err);
+                }else{
+                    resolve({
+                        page:page,
+                        start:start,
+                        limit:limit,
+                        recordCount:recordCount,
+                        result:result
+                    });
+                }                
+            })
+    });
+}
+
+User.userUpdate = function(requestData = {}){
+    return new Promise( async function(resolve, reject){
+        if(requestData){
+            User.findByIdAndUpdate(requestData.user_id,requestData,(err, updateResult) => {
+                if(err){
+                    reject(err);
+                }else{
+                    resolve(updateResult);
+                }
+            });
+        }else{
+            reject(null);
+        }
+    })
+}
 module.exports = User;
+

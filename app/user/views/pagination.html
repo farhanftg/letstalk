@@ -1,0 +1,70 @@
+<nav aria-label="Page navigation example">
+	<%
+		var previousPage    = '';
+		var nextPage        = '';
+		var startPage       = 1;
+		var totalPageInPagination = 5;
+		var startRecord     = (page*limit)+1 - limit;
+		var endRecord       = startRecord+limit-1;
+		var filterRecordCount = result.length;
+		page = parseInt(page);
+		if(page >1){
+			previousPage = (url?url:'/')+'?'+(query?query+'&':'')+'page='+(parseInt(page)-1);
+		}
+		var totalPageCount = Math.ceil(recordCount/limit);
+		if( totalPageCount > page){
+		   nextPage = (url?url:'/')+'?'+(query?query+'&':'')+'page='+(parseInt(page)+1);
+		}
+		if(startRecord > recordCount){
+			startRecord = 0;
+			endRecord   = 0;
+		}
+		if(endRecord > recordCount){
+			endRecord   = recordCount;
+		}
+		if(page > startPage){
+			startPage = page-2;
+			endPage   = page+2;                       
+			 if(endPage > totalPageCount){
+				startPage= totalPageCount - (totalPageInPagination-1);
+				endPage = totalPageCount;
+			}
+			if(startPage < 1){
+				startPage =1;
+			}
+		}else{                
+			endPage = (totalPageInPagination<totalPageCount)?totalPageInPagination:totalPageCount;
+		}
+	%>
+	<div class="col-md-6 pagination-info"><%=startRecord%>-<%=endRecord%> records of <%=recordCount%> records</div>
+	<div class="col-md-6 pull-right text-right">
+	<ul class="pagination">
+		<li class="page-item" <%=(previousPage)?'':'disabled'%>>
+			<%if(previousPage){%>
+				<a class="page-link" href="<%=previousPage%>">Previous</a>
+			<% }else{ %>
+				<span class="page-link">Previous</span>
+			<% } %>
+		</li>
+			<% for(var i=startPage; i<=endPage; i++ ){ %>
+				<li class="page-item <%=(i==page)?'active':''%>">
+					<% if(i==page){%>
+						<span class="page-link">
+							<%=i%>
+							<span class="sr-only">(current)</span>
+						</span>      
+					<%}else{%>         
+                                        <a class="page-link" href="<%=url%>?<%=(query?query+'&':'')%>page=<%=i%>"><%=i%></a>
+					<% } %>
+				</li>
+			<% } %>    
+		<li class="page-item" <%=(nextPage)?'':'disabled'%>>
+			<%if(nextPage){%>
+				<a class="page-link" href="<%=(nextPage)?nextPage:'#'%>">Next</a>
+			 <% }else{ %>
+				<span class="page-link">Next</span>
+			<% } %>
+		</li>
+	</ul>
+	</div>
+</nav>

@@ -125,6 +125,14 @@ router.post('/user/signup',function(req, res){
     userController.postSignup(req, res);
 });
 
+router.get('/user',function(req, res){
+    userController.userList(req, res);
+});
+
+router.post('/update-user', function(req, res){
+    userController.userUpdate(req, res);
+});
+
 router.get('/user/logout',function(req, res){
     userController.logout(req, res);
 });

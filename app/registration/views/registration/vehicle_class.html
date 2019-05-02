@@ -150,6 +150,8 @@
                     input.setAttribute("id","vehicle_class_status");
                     input.setAttribute("value",$(this).data('status'));
                     document.getElementById("vehicle_class_detail_form").appendChild(input);
+                }else{
+                    document.getElementById("vehicle_class_status").setAttribute("value",$(this).data('status'));
                 }
             });
         })

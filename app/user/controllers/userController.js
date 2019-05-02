@@ -55,6 +55,7 @@ module.exports = {
     postSignup: function(req,res){
         req.body.password = bCrypt.hashSync(req.body.password, bCrypt.genSaltSync(10), null);
         userModel.create(req.body,(err , result) => {});
+        res.redirect('/user');
         /* passport.authenticate('signup', {
             successRedirect: '/home',
             failureRedirect: '/signup',
@@ -88,5 +89,39 @@ module.exports = {
         }else{
             authHelper.sendResponse(res, 400, 'Email is required.');
         }
+    },
+    userList: function(req, res){
+        let page = 1;
+        if(req.query.page){
+            page = req.query.page;
+        }
+        userModel
+            .getUserList(page)
+            .then(function(result){
+                return res.render(
+                    path.join(BASE_DIR, 'app/user/views', 'user_index'),
+                    {
+                        result:result.result,page:page,
+                        limit:result.limit,
+                        recordCount:result.recordCount
+                    });
+            })
+            .catch(err => {
+                console.log("Error : ",err);
+            })
+    },
+
+    userUpdate: function(req, res){
+        if(req.body.password){
+            req.body.password = bCrypt.hashSync(req.body.password, bCrypt.genSaltSync(10), null);  
+        }
+        userModel
+            .userUpdate(req.body)
+            .then(function(result){
+                return res.redirect('/user');
+            })
+            .catch(err => {
+                console.log("Error ", err);
+            })
     }
 }

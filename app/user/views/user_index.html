@@ -1,0 +1,151 @@
+<!-- page content -->
+<div class="right_col" role="main">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <h3>User List</h3>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                        <button type="button"  class="btn btn-primary pull-right btn-add">Add</button>
+                    <div class="x_panel">
+                        <div class="x_content">
+                            <form id="vehicle_class_form" name="vehicle_class_form" action="/vehicle-class" method="GET" > 
+                                <table id="registration" class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>S.No.</th>
+                                            <th>First Name</th>
+                                            <th>Last Name</th>
+                                            <th>Username</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% if(result.length){ %>
+
+                                            <% result.forEach(function(element,index){ %>
+                                                <tr>
+                                                    <td><%= ++index %></td>
+                                                    <td><%= element.firstname %></td>
+                                                    <td><%= element.lastname %></td>
+                                                    <td><%= element.username %></td>
+                                                    <td>
+                                                        <% 
+                                                            var statusText = 'In-active';
+                                                            var statusClass = 'grey-status';
+                                                            if(element.status){
+                                                                statusText = 'Active';
+                                                                statusClass = 'green-status'
+                                                            }
+                                                        %>
+                                                        <span class="label <%=statusClass %>"><b><%=statusText%></b></span>
+                                                       </td>
+                                                    <td>
+                                                        <a class="btn btn-default btn-xs ico-btn edit_user" 
+                                                            data-toggle="modal" 
+                                                            data-target="#myModal" 
+                                                            data-id="<%=element._id%>" 
+                                                            data-firstname="<%=element.firstname%>" 
+                                                            data-lastname="<%=element.lastname%>" 
+                                                            data-username="<%=element.username%>" 
+                                                            data-status="<%=element.status%>"
+                                                            title="Update">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                            <% }); %>
+                                        <% }else{%>
+                                            <tr>
+                                                <td colspan="5"> No record found</td>
+                                            </tr>
+                                        <% }
+                                        %>
+                                    </tbody>                                
+                                </table>
+                            </form> 
+                        </div>
+                        <% include pagination.html %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form  id="update_user" action="/update-user" method="POST" >
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Update User</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="edit_firstname">First Name</label>
+                            <input type="text" id="edit_firstname" class="form-control" name="firstname"  required/>
+                        </div>
+                        
+                        <div class="form-group">
+                                <label for="edit_lastname">Last Name</label>
+                                <input type="text" id="edit_lastname" class="form-control" name="lastname" required />
+                        </div>
+
+                        <div class="form-group">
+                                <label for="edit_username">Username</label>
+                                <input type="text" id="edit_username" class="form-control" name="username"  readonly/>
+                        </div>
+
+                        <div class="form-group">
+                                <label for="edit_username">Password</label>
+                                <input type="password" id="edit_password" class="form-control" name="password" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="variant">Status </label>
+                            <select id="edit_status" name="status" class="form-control" required > 
+                                <option value="1">Active</option>
+                                <option value="0">In-active</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Update</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function(){
+                $(".edit_user").on('click',function(){
+                    $("#edit_firstname").val($(this).data('firstname'));
+                    $("#edit_lastname").val($(this).data('lastname'));
+                    $("#edit_username").val($(this).data('username'));
+                    $("#edit_status").val($(this).data('status'));
+
+                    // create hidden tag dom for status
+                    if(!document.getElementById('user_id')){
+                        var input = document.createElement("input");
+                        input.setAttribute("type","hidden");
+                        input.setAttribute("name","user_id");
+                        input.setAttribute("id","user_id");
+                        input.setAttribute("value",$(this).data('id'));
+                        document.getElementById("update_user").appendChild(input);
+                    }else{
+                        document.getElementById("user_id").setAttribute("value",$(this).data('id'));
+                    }
+                });
+
+                $(".btn-add").on('click',function(){
+                    window.location.href = '/user/signup';
+                })
+            })
+        </script>
+    
