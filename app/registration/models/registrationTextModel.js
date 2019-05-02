@@ -11,12 +11,13 @@ var RegistrationTextSchema = new Schema({
     model_name          : {type: String}, 
     variant_name        : {type: String},
     variant_display_name: {type: String},
+    vehicle_class       : {type:String},
     category            : {type: String},
     registration_count  : Number,
     registration_updated: Number,
     source                      : {type: String, required:true},
     sub_source                  : {type: String},
-    status                      : {type:String, default:1},   
+    status                      : {type:Number, default:1},   
     sub_status                  : {type:String, default:1},   
     updated_by                  : String,
     created_at                  : {type: Date},
@@ -52,7 +53,8 @@ RegistrationText.addRegistrationText =  function(data){
         registrationText.model_name         = data.model_name?data.model_name:'';
         registrationText.variant_id         = data.variant_id?data.variant_id:'';
         registrationText.variant_name       = data.variant_name?data.variant_name:'';       
-        registrationText.variant_display_name= data.variant_display_name?data.variant_display_name:'';       
+        registrationText.variant_display_name= data.variant_display_name?data.variant_display_name:'';     
+        registrationText.vehicle_class       = data.vehicle_class ? data.vehicle_class:'';
         registrationText.category           = data.category?data.category:'';           
         registrationText.source             = data.source?data.source:'';
         registrationText.sub_source         = data.sub_source?data.sub_source:'';
@@ -128,7 +130,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
         try{
             let data = {};
             let approvedRows = await RegistrationText.aggregateAsync([
-                { $match: {status: '3'}},
+                { $match: {status: 3}},
                 {
                     $project: {
                     "make_id": 1,    

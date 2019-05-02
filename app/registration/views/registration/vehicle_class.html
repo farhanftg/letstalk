@@ -11,7 +11,7 @@
                 <div class="col-md-12 col-sm-12 col-xs-12">
                     <div class="x_panel">
                         <div class="x_content">
-                            <form id="registration_form" name="registration_text_form" action="/vehicle-class" method="GET" > 
+                            <form id="vehicle_class_form" name="vehicle_class_form" action="/vehicle-class" method="GET" > 
                                 <div class="row">
                                         <div class="pull-right form-group">
                                                 <button class="btn btn-primary bg-green" type="submit">Go</button>
@@ -55,7 +55,12 @@
                                                     <td><%= inc++ %></td>
                                                     <td><%=vehicleClass[i].vehicle_class%></td>
                                                     <td><%=vehicleClass[i].vehicle_category%></td>
-                                                    <td><%=vehicleClass[i].status%></td>
+                                                    <td>
+                                                        <% 
+                                                            var status = getVehicleClassStatusById(vehicleClass[i].status);
+                                                        %>
+                                                        <span class="label <%=status.class %>"><b><%=status.text%></b></span>
+                                                    </td>
                                                     <td>
                                                         <a class="btn btn-default btn-xs ico-btn edit-vehicle-class" 
                                                             data-toggle="modal" 
@@ -137,6 +142,28 @@
                 $("#category").val(vehicle_category);
                 $("#vehicle_class_id").val($(this).data('id'));
 
+                // create hidden tag dom for status
+                if(!document.getElementById('vehicle_class_status')){
+                    var input = document.createElement("input");
+                    input.setAttribute("type","hidden");
+                    input.setAttribute("name","status");
+                    input.setAttribute("id","vehicle_class_status");
+                    input.setAttribute("value",$(this).data('status'));
+                    document.getElementById("vehicle_class_detail_form").appendChild(input);
+                }
             });
         })
     </script>
+    <%
+        function getVehicleClassStatusById(id)
+        {
+            var status = {};
+            switch(id){
+                case 1: {status.text = "Pending"; status.class = "orange-status"; break;}
+                case 2: {status.text = "Approved"; status.class = "green-status"; break;}
+                case 0: {status.text = "Deleted"; status.class = "grey-status"; break;}
+                default:{status.text = "None"; status.class =- "None"; break;}
+            }
+            return status;
+        }
+    %>

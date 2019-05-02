@@ -79,7 +79,11 @@
                                                         categoryClass = 'grey-status';
                                                     }
                                                 %>
-                                                <td><span class="label <%=categoryClass%>"><b><%=category%></b></span></td>
+                                                <td>
+                                                    <% if(category){ %>
+                                                        <span class="label <%=categoryClass%>"><b><%=category%></b></span>
+                                                    <% } %>
+                                                </td>
                                                 <% 
                                                     var statusClass= '';
                                                     var status=registrations[i].status;
@@ -97,7 +101,8 @@
                                                         statusClass = 'grey-status';
                                                     }
                                                 %>
-                                            <td><span class="label <%=statusClass%>"><b><%=status%></b></span></td>
+                                            <td>
+                                                <span class="label <%=statusClass%>"><b><%=status%></b></span></td>
                                                 <td>
                                                     <a href="#" class="btn btn-default btn-xs ico-btn view_registration" 
                                                         data-toggle="modal" 

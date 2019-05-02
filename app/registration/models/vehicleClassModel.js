@@ -4,7 +4,7 @@ var commonHelper        = require(HELPER_PATH+'commonHelper');
 var VehicleClassSchema = new Schema({    
     vehicle_class               : {type:String},
     vehicle_category            : {type:String,default:''},
-    status                      : {type:String, default:'1'},   
+    status                      : {type:Number, default:1},   
     created_at                  : {type: Date},
     updated_at                  : {type: Date, default: Date.now}
 },{collection:'vehicle_class'});

@@ -82,7 +82,11 @@
                                                     categoryClass = 'grey-status';
                                                 }
                                             %>
-                                            <td><span class="label <%=categoryClass%>"><b><%=category%></b></span></td>
+                                            <td>
+                                                <% if(category){ %>
+                                                    <span class="label <%=categoryClass%>"><b><%=category%></b></span>
+                                                <% } %>
+                                            </td>
                                             <% 
                                                 var statusClass= '';
                                                 var status=registrations[i].status;

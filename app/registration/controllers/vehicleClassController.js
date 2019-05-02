@@ -4,6 +4,8 @@ var ApiController           = require('../../common/controllers/apiController');
 var commonHelper            = require(HELPER_PATH+'commonHelper.js');
 const commonModel           = require('../../common/models/commonModel');
 const vehicleClassModel     = require('../models/vehicleClassModel');
+const registrationModel    = require('../models/registrationModel');
+const registrationTextModel = require('../models/registrationTextModel');
 
 
 class VehicleClassController extends ApiController{
@@ -57,12 +59,19 @@ VehicleClassController.getVehicleClassList = async function(req, res){
 
 VehicleClassController.updateVehicleClass = async function(req, res){
     var vehicleClassData = {};
+    var url = '/vehicle-class';
     if(req.body.vehicle_class_id)
     {
-        vehicleClassData.vehicle_class = req.body.vehicle_class;
-        vehicleClassData.vehicle_category = req.body.category;
-        vehicleClassModel.findOneAndUpdateAsync({_id:req.body.vehicle_class_id},vehicleClassData);
-        var url = '/vehicle-class';
+        if(req.body.status == "1"){
+            // update registration, registration text vehicle category when pending
+            registrationModel.findOneAndUpdateAsync({vehicle_class:req.body.vehicle_class,status:1},{vehicle_category:req.body.category});
+            registrationTextModel.findOneAndUpdateAsync({vehicle_class:req.body.vehicle_class,status:1},{category:req.body.category});
+
+            vehicleClassData.vehicle_class = req.body.vehicle_class;
+            vehicleClassData.vehicle_category = req.body.category;
+            vehicleClassData.status = 2; // Approved
+            vehicleClassModel.findOneAndUpdateAsync({_id:req.body.vehicle_class_id},vehicleClassData);
+        }
     }
     res.redirect(url); 
 }

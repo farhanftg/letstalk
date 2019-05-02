@@ -118,7 +118,7 @@ router.post('/user/login',function(req, res, next){
 });
 
 router.get('/user/signup',function(req,res){
-    return res.status(409).render(path.join(BASE_DIR, 'app/user/views', 'signup'),{layout:false,message: req.flash('message')});
+    return res.status(409).render(path.join(BASE_DIR, 'app/user/views', 'signup'),{message: req.flash('message')});
 });
 
 router.post('/user/signup',function(req, res){

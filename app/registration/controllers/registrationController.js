@@ -112,7 +112,7 @@ RegistrationController.getRegistrationList = async function(req, res){
     }
     start = parseInt((page*limit) - limit);
     let recordCount     = await registrationModel.countDocumentsAsync(filterQuery);
-    let registrations   = await registrationModel.find(filterQuery).skip(start).limit(limit).execAsync();
+    let registrations   = await registrationModel.find(filterQuery).skip(start).sort({created_at:-1}).limit(limit).execAsync();
     
     res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'registration'),{registrations:registrations, filterRegNumber:filterRegNumber, filterStatus:filterStatus, filterCategory:filterCategory, filterText:filterText, url:'/registration/list', page:page, limit:limit, recordCount:recordCount, query:query});     
 }
@@ -130,6 +130,7 @@ RegistrationController.getRegistration = async function(req, res){
             let registration = await registrationModel.findOne({registration_number:req.query.registration_number});
             if(!registration || registration.status < 1){
                 registration = await this.getRegistrationFromRtoVehicle(req.query.registration_number);
+                console.log('registration ',registration);
                 let textData = await registrationTextModel.findOne({text:registration.maker_model});
                 if(textData){
                     if(textData.status == 3){
@@ -145,6 +146,7 @@ RegistrationController.getRegistration = async function(req, res){
                     let registrationText = {};
                     registrationText.text       = registration.maker_model,
                     registrationText.category   =  registration.vehicle_category, 
+                    registrationText.vehicle_class = registration.vehicle_class;
                     registrationText.source     = 'rtoVehicle';
                     let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
                     if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
@@ -208,7 +210,6 @@ RegistrationController.getRegistrationFromRtoVehicle = async function(registrati
 
             // add vehicle class if not found
             if(getVehicleCategory == null){
-                console.log("CLass ",getVehicleCategory);
                 vehicleClassModel.create({vehicle_class:result.vh_class},(err , createVehicle) => {
                     if(err){
                         console.log("Vehicle Class Error",err);
