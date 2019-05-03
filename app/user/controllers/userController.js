@@ -53,14 +53,19 @@ module.exports = {
     },
  
     postSignup: function(req,res){
-        req.body.password = bCrypt.hashSync(req.body.password, bCrypt.genSaltSync(10), null);
-        userModel.create(req.body,(err , result) => {});
-        res.redirect('/user');
-        /* passport.authenticate('signup', {
-            successRedirect: '/home',
-            failureRedirect: '/signup',
-            failureFlash : true 
-        }) */
+        userModel.getUserByUsername(req.body.username,(err,result) => {
+            if(err){
+                req.flash('message', 'Something went wrong!');
+            }
+            else if(!result){
+                req.body.password = bCrypt.hashSync(req.body.password, bCrypt.genSaltSync(10), null);
+                userModel.create(req.body,(err , result) => {});
+                res.redirect('/user');
+            }else{
+                req.flash('message', 'Username is already exist')
+                res.redirect('/user/signup');
+            }
+        });
     },
     
     logout:function(req, res){
@@ -114,6 +119,8 @@ module.exports = {
     userUpdate: function(req, res){
         if(req.body.password){
             req.body.password = bCrypt.hashSync(req.body.password, bCrypt.genSaltSync(10), null);  
+        }else{
+            delete req.body.password;
         }
         userModel
             .userUpdate(req.body)

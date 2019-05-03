@@ -6,6 +6,7 @@ var registrationTextModel   = require('../models/registrationTextModel');
 var commonHelper            = require(HELPER_PATH+'commonHelper.js');
 const commonModel           = require('../../common/models/commonModel');
 const vehicleClassModel     = require('../models/vehicleClassModel');
+const requestRegistrationModel = require('../models/requestRegistrationModel');
 
 
 class RegistrationController extends ApiController{
@@ -128,50 +129,64 @@ RegistrationController.getRegistration = async function(req, res){
     try{
         if(!errors.length){
             let registration = await registrationModel.findOne({registration_number:req.query.registration_number});
-            if(!registration || registration.status < 1){
-                registration = await this.getRegistrationFromRtoVehicle(req.query.registration_number);
-                console.log('registration ',registration);
-                let textData = await registrationTextModel.findOne({text:registration.maker_model});
-                if(textData){
-                    if(textData.status == 3){
-                        registration.central_make_id            = textData.make_id?textData.make_id:'';
-                        registration.central_make_name          = textData.make_name?textData.make_name:'';
-                        registration.central_model_id           = textData.model_id?textData.model_id:'';
-                        registration.central_model_name         = textData.model_name?textData.model_name:'';
-                        registration.central_version_id         = textData.variant_id?textData.variant_id:'';
-                        registration.central_version_name       = textData.variant_name?textData.variant_name:'';
-                        registration.status                     = 3;
+            if(!registration || registration.status < 1)
+            {
+                let onDemandSource = new Array();
+                onDemandSource = config.onDemandAllowedSubsource;
+                if(req.query.source && req.query.sub_source && onDemandSource.includes(req.query.sub_source)){
+                    // log request collection
+                    requestRegistrationModel.logRegistrationRequest({
+                        source: req.query.source,
+                        sub_source: req.query.sub_source,
+                        registration_number: req.query.registration_number
+                    });
+                    throw ERROR.REGISTRATION_DETAILS_NOT_VERIFIED;
+                }
+                else
+                {
+                    registration = await this.getRegistrationFromRtoVehicle(req.query.registration_number);
+                    let textData = await registrationTextModel.findOne({text:registration.maker_model});
+                    if(textData){
+                        if(textData.status == 3){
+                            registration.central_make_id            = textData.make_id?textData.make_id:'';
+                            registration.central_make_name          = textData.make_name?textData.make_name:'';
+                            registration.central_model_id           = textData.model_id?textData.model_id:'';
+                            registration.central_model_name         = textData.model_name?textData.model_name:'';
+                            registration.central_version_id         = textData.variant_id?textData.variant_id:'';
+                            registration.central_version_name       = textData.variant_name?textData.variant_name:'';
+                            registration.status                     = 3;
+                        }
+                    }else{
+                        let registrationText = {};
+                        registrationText.text       = registration.maker_model,
+                        registrationText.category   =  registration.vehicle_category, 
+                        registrationText.vehicle_class = registration.vehicle_class;
+                        registrationText.source     = 'rtoVehicle';
+                        let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
+                        if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
+                            registrationText.make_id    = autoMappedRegistrationText.make_id;
+                            registrationText.make_name  = autoMappedRegistrationText.make_name;
+                            registrationText.model_id   = autoMappedRegistrationText.model_id;
+                            registrationText.model_name = autoMappedRegistrationText.model_name;
+                            registrationText.category   = autoMappedRegistrationText.category;
+                            registrationText.status = 2;
+                            
+                            registration.central_make_id    = autoMappedRegistrationText.make_id;;
+                            registration.central_make_name  = autoMappedRegistrationText.make_name;
+                            registration.central_model_id   = autoMappedRegistrationText.model_id;;
+                            registration.central_model_name = autoMappedRegistrationText.model_name;
+                            registration.vehicle_category   = autoMappedRegistrationText.category;
+                            registration.status = 2;
+                        }
+                        registrationTextModel.addRegistrationText(registrationText).catch(function(e){
+                            console.log(e);
+                        });
                     }
-                }else{
-                    let registrationText = {};
-                    registrationText.text       = registration.maker_model,
-                    registrationText.category   =  registration.vehicle_category, 
-                    registrationText.vehicle_class = registration.vehicle_class;
-                    registrationText.source     = 'rtoVehicle';
-                    let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
-                    if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
-                        registrationText.make_id    = autoMappedRegistrationText.make_id;
-                        registrationText.make_name  = autoMappedRegistrationText.make_name;
-                        registrationText.model_id   = autoMappedRegistrationText.model_id;
-                        registrationText.model_name = autoMappedRegistrationText.model_name;
-                        registrationText.category   = autoMappedRegistrationText.category;
-                        registrationText.status = 2;
-                        
-                        registration.central_make_id    = autoMappedRegistrationText.make_id;;
-                        registration.central_make_name  = autoMappedRegistrationText.make_name;
-                        registration.central_model_id   = autoMappedRegistrationText.model_id;;
-                        registration.central_model_name = autoMappedRegistrationText.model_name;
-                        registration.vehicle_category   = autoMappedRegistrationText.category;
-                        registration.status = 2;
-                    }
-                    registrationTextModel.addRegistrationText(registrationText).catch(function(e){
+                
+                    let data =  registrationModel.addRegistration(registration).catch(function(e){
                         console.log(e);
                     });
                 }
-               
-                let data =  registrationModel.addRegistration(registration).catch(function(e){
-                    console.log(e);
-                });   
             }
             if(registration.status == 2 || registration.status == 3){
                 this.sendResponse(req, res, 200, false, registration, false);
