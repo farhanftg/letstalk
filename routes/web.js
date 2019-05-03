@@ -138,7 +138,7 @@ router.get('/user/logout',function(req, res){
     userController.logout(req, res);
 });
 
-router.get('/cron/get-registration-rto-vehicle-by-registration-request', function(req, res){
+router.get('/console/get-registration-rto-vehicle-by-registration-request', function(req, res){
     consoleController.cronGetRegistrationFromRtoVehicleByRegistrationRequest(req, res);
 });
 
