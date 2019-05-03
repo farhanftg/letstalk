@@ -59,6 +59,8 @@ config.aws.s3   = {};
 config.aws.s3.enabled   = true;
 config.aws.s3.bucketName= 'girnarsoft-b2c'; 
 
+config.onDemandAllowedSubsource = ['jPoffice'];
+
 config.requests = [
     {
         path:'*', 

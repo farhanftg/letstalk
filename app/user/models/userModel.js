@@ -5,8 +5,8 @@ var UserSchema = new Schema({
     username    : String,
     password    : String,
     status     : {type:Number,default:1},
-    created_at  : Date,
-    updated_at  : Date
+    created_at  : {type:Date, default:Date.now()},
+    updated_at  : {type:Date, default:Date.now()}
 });
 
 var User = mongoose.model('User', UserSchema);
@@ -22,7 +22,7 @@ User.getUserById = function(id, callback){
     });
 }
 
-User.getUserByUsername = function(username, callback){    
+User.getUserByUsername =  function(username, callback){    
     User.findOne({username:username}, function (err, user){
         if (!err) {
             callback(err,user);
