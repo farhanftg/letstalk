@@ -77,7 +77,10 @@
                                         <li><a href="/"><i class="fa fa-home"></i> Home</a></li>
                                         <li><a href="/registration/list"><i class="fa fa-database"></i>Registration</a></li>    
                                         <li><a href="/registration-text"><i class="fa fa-registered"></i>Registration Text</a></li> 
-                                        <li><a href="/vehicle-class"><i class="fa fa-car"></i>Vehicle Class</a></li> 
+                                        <li><a href="/vehicle-class"><i class="fa fa-car"></i>Vehicle Class</a></li>
+                                        <% if(user.role == 1){%>
+                                            <li><a href="/user"><i class="fa fa-users"></i>User</a></li> 
+                                        <% } %>
                                     </ul>
                               </div>
                             </div>
