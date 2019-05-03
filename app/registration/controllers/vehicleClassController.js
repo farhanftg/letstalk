@@ -62,7 +62,7 @@ VehicleClassController.updateVehicleClass = async function(req, res){
     var url = '/vehicle-class';
     if(req.body.vehicle_class_id)
     {
-        if(req.body.status == "1"){
+        if(req.body.status == 1 || req.body.status == 0){
             // update registration, registration text vehicle category when pending
             registrationModel.findOneAndUpdateAsync({vehicle_class:req.body.vehicle_class,status:1},{vehicle_category:req.body.category});
             registrationTextModel.findOneAndUpdateAsync({vehicle_class:req.body.vehicle_class,status:1},{category:req.body.category});
