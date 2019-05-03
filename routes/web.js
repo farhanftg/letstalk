@@ -11,7 +11,6 @@ var registrationController      = require('../app/registration/controllers/regis
 var registrationTextController  = require('../app/registration/controllers/registrationTextController');
 var vehicleClassController      = require('../app/registration/controllers/vehicleClassController');
 var userController              = require('../app/user/controllers/userController');
-var consoleController              = require('../app/console/consoleController');
 
 var storage = multer.diskStorage({
 //    destination: function (req, file, callback) {
@@ -136,10 +135,6 @@ router.post('/update-user', function(req, res){
 
 router.get('/user/logout',function(req, res){
     userController.logout(req, res);
-});
-
-router.get('/console/get-registration-rto-vehicle-by-registration-request', function(req, res){
-    consoleController.cronGetRegistrationFromRtoVehicleByRegistrationRequest(req, res);
 });
 
 router.get('/favicon.ico',function (req, res) {	

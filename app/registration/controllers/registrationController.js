@@ -126,14 +126,19 @@ RegistrationController.getRegistration = async function(req, res){
         var error = commonHelper.formatError('ERR10011', 'registration_number');
         errors.push(error);
     }
+    if(!req.query.source){
+        var error = commonHelper.formatError('ERR10004', 'source');
+        errors.push(error);
+    }
+    if(!req.query.sub_source){
+        var error = commonHelper.formatError('ERR10005', 'sub_source');
+        errors.push(error);
+    }
     try{
         if(!errors.length){
             let registration = await registrationModel.findOne({registration_number:req.query.registration_number});
-            if(!registration || registration.status < 1)
-            {
-                let onDemandSource = new Array();
-                onDemandSource = config.onDemandAllowedSubsource;
-                if(req.query.source && req.query.sub_source && onDemandSource.includes(req.query.sub_source)){
+            if(!registration || registration.status < 1){
+                if(!config.onDemandAllowedSubsource.includes(req.query.sub_source)){
                     // log request collection
                     requestRegistrationModel.logRegistrationRequest({
                         source: req.query.source,
@@ -141,9 +146,7 @@ RegistrationController.getRegistration = async function(req, res){
                         registration_number: req.query.registration_number
                     });
                     throw ERROR.REGISTRATION_DETAILS_NOT_VERIFIED;
-                }
-                else
-                {
+                }else{
                     registration = await this.getRegistrationFromRtoVehicle(req.query.registration_number);
                     let textData = await registrationTextModel.findOne({text:registration.maker_model});
                     if(textData){

@@ -1,11 +1,10 @@
 var router  = express.Router();
 
-// Require controller modules
-//var leadController     = require('../app/common/controllers/leadController');
-//
-//router.get('/lead/import-lead-from-old-lead', function (req, res) {	
-//    leadController.importLeadFromOldLead(req, res);
-//});
+var consoleController = require('../app/console/consoleController');
 
+
+router.get('/get-registration-rto-vehicle-by-registration-request', function(req, res){
+    consoleController.cronGetRegistrationFromRtoVehicleByRegistrationRequest(req, res);
+});
 
 module.exports = router;
