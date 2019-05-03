@@ -20,6 +20,7 @@
                                             <th>First Name</th>
                                             <th>Last Name</th>
                                             <th>Username</th>
+                                            <th>Role</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
@@ -33,6 +34,11 @@
                                                     <td><%= element.firstname %></td>
                                                     <td><%= element.lastname %></td>
                                                     <td><%= element.username %></td>
+                                                    <td><%
+                                                        role = getRoleText(element.role);
+                                                       %>
+                                                       <%= role; %>
+                                                    </td>
                                                     <td>
                                                         <% 
                                                             var statusText = 'In-active';
@@ -53,6 +59,7 @@
                                                             data-lastname="<%=element.lastname%>" 
                                                             data-username="<%=element.username%>" 
                                                             data-status="<%=element.status%>"
+                                                            data-role="<%=element.role?element.role:'' %>"
                                                             title="Update">
                                                             <i class="fa fa-pencil"></i>
                                                         </a>
@@ -106,6 +113,15 @@
                                 <label for="edit_username">Password</label>
                                 <input type="password" id="edit_password" class="form-control" name="password" />
                         </div>
+                        <div class="form-group">
+                                <label for="password">Role </label>
+                            <select class="form-control disable" id="role" name="role" required>
+                                <option value="">Select Role</option>
+                                <option value="1">Supper Admin</option>
+                                <option value="2">Admin</option>
+                                <option value="2">Agent</option>
+                            </select>
+                        </div>
 
                         <div class="form-group">
                             <label for="variant">Status </label>
@@ -129,6 +145,7 @@
                     $("#edit_lastname").val($(this).data('lastname'));
                     $("#edit_username").val($(this).data('username'));
                     $("#edit_status").val($(this).data('status'));
+                    $("#role").val($(this).data('role'));
 
                     // create hidden tag dom for status
                     if(!document.getElementById('user_id')){
@@ -148,4 +165,21 @@
                 })
             })
         </script>
+        <%
+            function getRoleText(id){
+                var roleText = '';
+                switch(id){
+                    case 1: {
+                        roleText = 'Supper Admin'; break;
+                    }
+                    case 2: {
+                        roleText = 'Admin'; break;
+                    }
+                    case 3: {
+                        roleText = 'Agent'; break;
+                    }
+                }
+                return roleText;
+            }
+        %>
     
