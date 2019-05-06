@@ -48,7 +48,7 @@ RegistrationTextController.getRegistrationText = async function(req, res){
             let carMakes    = await commonModel.getCarMake();
             let bikeMakes   = await commonModel.getBikeMake();
             let recordCount = await registrationTextModel.countDocumentsAsync(filterQuery);
-            let rows = await registrationTextModel.find(filterQuery).skip(start).sort({status:1}).limit(limit).execAsync();
+            let rows = await registrationTextModel.find(filterQuery).skip(start).sort({status:1,created_at:-1}).limit(limit).execAsync();
             res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'registration_text'),{registrations:rows, bikeMakes:bikeMakes, bikeModels:[], bikeVariants:[], carMakes:carMakes, carModels:[], carVariants:[], filterStatus:filterStatus, filterCategory:filterCategory, filterText:filterText, url:'/registration-text', page:page, limit:limit, recordCount:recordCount, query:query});     
 //        }else{
 //            res.redirect('/login');
@@ -89,7 +89,7 @@ RegistrationTextController.updateRegistrationText = function(req, res){
     registration_data.central_version_name   = req.body.variant_name?req.body.variant_name:'';
     registration_data.vehicle_category  = req.body.category;
 
-    registrationModel.findOneAndUpdateAsync({maker_model:req.body.text},registration_data);
+    registrationModel.updateAsync({maker_model:req.body.text},registration_data,{ multi: true });
 
     var filterText      = req.body.filter_text;
     var filterCategory  = req.body.filter_category;

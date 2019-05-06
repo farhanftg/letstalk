@@ -42,7 +42,7 @@ VehicleClassController.getVehicleClassList = async function(req, res){
 
     start = parseInt((page*limit) - limit);
     let recordCount     = await vehicleClassModel.countDocumentsAsync(filterQuery);
-    let vehicleClass   = await vehicleClassModel.find(filterQuery).skip(start).limit(limit).execAsync();
+    let vehicleClass   = await vehicleClassModel.find(filterQuery).skip(start).sort({status:1,created_at:-1}).limit(limit).execAsync();
     
     res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'vehicle_class'),
         {

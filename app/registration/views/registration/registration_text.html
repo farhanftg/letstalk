@@ -22,11 +22,9 @@
                                 <div class=" col-xs-2 pull-right form-group">
                                     <select id="filter_status" name="filter_status" class="form-control">
                                         <option value=""  <%=(filterStatus =='')?'selected':''%> >All</option>
-                                        <option value="0" <%=(filterStatus == '0')?'selected':''%> >None</option>
                                         <option value="1" <%=(filterStatus == 1)?'selected':''%> >Pending</option>
                                         <option value="2" <%=(filterStatus == 2)?'selected':''%> >Automatic</option>
                                         <option value="3" <%=(filterStatus == 3)?'selected':''%> >Approved</option>
-                                        <option value="4" <%=(filterStatus == 4)?'selected':''%> >None + Pending</option>
                                     </select>
                                 </div>
                                 <div class=" col-xs-2 pull-right form-group">

@@ -47,7 +47,7 @@ RequestRegistration.registrationRequestByRegistrationNo = function(registrationN
     });
 }
 
-RequestRegistration.getPandingRequestRegistration = function(){
+RequestRegistration.getPendingRequestRegistration = function(){
     return new Promise(async function(resolve, reject){
         RequestRegistration.find(
             {status:0},
