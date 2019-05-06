@@ -1,6 +1,9 @@
 var uniqueValidator     = require('mongoose-unique-validator');
 var validationHelper    = require(HELPER_PATH+'validationHelper');
 var commonHelper        = require(HELPER_PATH+'commonHelper');
+var commonModel         = require('../../common/models/commonModel');
+var vehicleClassModel   = require('../models/vehicleClassModel');
+var registrationTextModel = require('../models/registrationTextModel');
 
 var RegistrationSchema = new Schema({
     registration_number         : {type: String, validate:[validationHelper.validateRegistrationNumber,'{VALUE} is not valid'], unique:true}, 
@@ -295,4 +298,116 @@ Registration.formatRegistrationData = function(data){
     return;
 }
 
+Registration.processRegistration = function(registration_number){
+
+    return new Promise(async function(resolve, reject){
+
+        try{
+            registration = await Registration.getRegistrationFromRtoVehicle(registration_number);
+            let textData = await Registration.findOne({maker_model:registration.maker_model});
+            if(textData){
+                if(textData.status == 3){
+                    registration.central_make_id            = textData.make_id?textData.make_id:'';
+                    registration.central_make_name          = textData.make_name?textData.make_name:'';
+                    registration.central_model_id           = textData.model_id?textData.model_id:'';
+                    registration.central_model_name         = textData.model_name?textData.model_name:'';
+                    registration.central_version_id         = textData.variant_id?textData.variant_id:'';
+                    registration.central_version_name       = textData.variant_name?textData.variant_name:'';
+                    registration.status                     = 3;
+                }
+            }else{
+                let registrationText = {};
+                registrationText.text       = registration.maker_model,
+                registrationText.category   =  registration.vehicle_category, 
+                registrationText.vehicle_class = registration.vehicle_class;
+                registrationText.source     = 'rtoVehicle';
+                let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
+                if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
+                    registrationText.make_id    = autoMappedRegistrationText.make_id;
+                    registrationText.make_name  = autoMappedRegistrationText.make_name;
+                    registrationText.model_id   = autoMappedRegistrationText.model_id;
+                    registrationText.model_name = autoMappedRegistrationText.model_name;
+                    registrationText.category   = autoMappedRegistrationText.category;
+                    registrationText.status = 2;
+                    
+                    registration.central_make_id    = autoMappedRegistrationText.make_id;;
+                    registration.central_make_name  = autoMappedRegistrationText.make_name;
+                    registration.central_model_id   = autoMappedRegistrationText.model_id;;
+                    registration.central_model_name = autoMappedRegistrationText.model_name;
+                    registration.vehicle_category   = autoMappedRegistrationText.category;
+                    registration.status = 2;
+                }
+                registrationTextModel.addRegistrationText(registrationText).catch(function(e){
+                    console.log(e);
+                });
+            }
+
+            let data =  Registration.addRegistration(registration).catch(function(e){
+                console.log(e);
+            });
+            resolve(registration);
+        }catch(e){
+            reject(e);
+        }
+    });
+}
+
+Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
+
+    return new Promise(async function(resolve, reject){
+        let query = {};
+        if(registrationNumber){
+            query.r1 = new Array();
+            let r2 = registrationNumber.match(/\d{4}$/);
+            let r1 = registrationNumber.substring(0, r2['index']); 
+
+            query.r1.push(r1);
+            query.r2 = r2[0];
+        }
+        try{     
+            var options = {
+                        host    : config.rtoVehicle.host,
+                        path    : '/batman.php'
+                    };
+            query.auth = config.rtoVehicle.authToken;  
+            let result = await commonHelper.sendPostRequest(query, options);
+            if(result && result.reason == 'active'){
+                let getRtoCode = commonHelper.getRtoCodeByRegistrationNo(result.regn_no);
+                let rtoDetail    = await commonModel.getRtoDetail({rto_code:getRtoCode});
+                let getVehicleCategory = await vehicleClassModel.getVehicleCategoryByVehicleClass(result.vh_class);
+                let registration = {};
+
+                // add vehicle class if not found
+                if(getVehicleCategory == null){
+                    vehicleClassModel.create({vehicle_class:result.vh_class},(err , createVehicle) => {
+                        if(err){
+                            console.log("Vehicle Class Error",err);
+                        }
+                    })
+                }
+                registration.registration_number= result.regn_no;
+                registration.maker_model        = result.vehicle_name;
+                registration.owner_name         = result.owner_name;
+                registration.registration_date  = new Date(result.regn_dt);
+                registration.registration_year  = registration.registration_date.getFullYear();
+                registration.fuel_type          = result.f_type;
+                registration.chassis_number     = result.c_no;
+                registration.engine_number      = result.e_no;
+                registration.vehicle_class      = result.vh_class;
+                registration.vehicle_category   = getVehicleCategory ? getVehicleCategory: '';
+                registration.rto_code           = getRtoCode;
+                registration.rto_name           = rtoDetail[0].rtoName;
+                registration.rto_city_id        = rtoDetail[0].cityId;
+                registration.rto_city_name      = rtoDetail[0].city;
+
+                registration.source             = 'rtoVehicle';
+                resolve(registration);
+            }else{
+                throw ERROR.DEFAULT_ERROR;                        
+            }        
+        }catch(e){
+            reject(e);
+        }
+    });
+}
 module.exports = Registration;

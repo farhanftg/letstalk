@@ -16,23 +16,23 @@ class RegistrationController extends ApiController{
 }
 
 RegistrationController.index = async function(req, res){
-    let twPendingRegCount  = registrationModel.count({vehicle_category:config.vehicleCategory.twoWheeler, status:1});
-    let twAutomaticRegCount= registrationModel.count({vehicle_category:config.vehicleCategory.twoWheeler, status:2});
-    let twApprovedRegCount = registrationModel.count({vehicle_category:config.vehicleCategory.twoWheeler, status:3});
-    let twTotalRegCount    = registrationModel.count({vehicle_category:config.vehicleCategory.twoWheeler});
-    let fwPendingRegCount  = registrationModel.count({vehicle_category:config.vehicleCategory.fourWheeler, status:1});
-    let fwAutomaticRegCount= registrationModel.count({vehicle_category:config.vehicleCategory.fourWheeler, status:2});
-    let fwApprovedRegCount = registrationModel.count({vehicle_category:config.vehicleCategory.fourWheeler, status:3});
-    let fwTotalRegCount    = registrationModel.count({vehicle_category:config.vehicleCategory.fourWheeler});
+    let twPendingRegCount  = registrationModel.countDocuments({vehicle_category:config.vehicleCategory.twoWheeler, status:1});
+    let twAutomaticRegCount= registrationModel.countDocuments({vehicle_category:config.vehicleCategory.twoWheeler, status:2});
+    let twApprovedRegCount = registrationModel.countDocuments({vehicle_category:config.vehicleCategory.twoWheeler, status:3});
+    let twTotalRegCount    = registrationModel.countDocuments({vehicle_category:config.vehicleCategory.twoWheeler});
+    let fwPendingRegCount  = registrationModel.countDocuments({vehicle_category:config.vehicleCategory.fourWheeler, status:1});
+    let fwAutomaticRegCount= registrationModel.countDocuments({vehicle_category:config.vehicleCategory.fourWheeler, status:2});
+    let fwApprovedRegCount = registrationModel.countDocuments({vehicle_category:config.vehicleCategory.fourWheeler, status:3});
+    let fwTotalRegCount    = registrationModel.countDocuments({vehicle_category:config.vehicleCategory.fourWheeler});
 
-    let twPendingRegTextCount   = registrationTextModel.count({category:config.vehicleCategory.twoWheeler, status:1});
-    let twAutomaticRegTextCount = registrationTextModel.count({category:config.vehicleCategory.twoWheeler, status:2});
-    let twApprovedRegTextCount  = registrationTextModel.count({category:config.vehicleCategory.twoWheeler, status:3});
-    let twTotalRegTextCount     = registrationTextModel.count({category:config.vehicleCategory.twoWheeler});
-    let fwPendingRegTextCount   = registrationTextModel.count({category:config.vehicleCategory.fourWheeler, status:1});
-    let fwAutomaticRegTextCount = registrationTextModel.count({category:config.vehicleCategory.fourWheeler, status:2});
-    let fwApprovedRegTextCount  = registrationTextModel.count({category:config.vehicleCategory.fourWheeler, status:3});
-    let fwTotalRegTextCount     = registrationTextModel.count({category:config.vehicleCategory.fourWheeler});
+    let twPendingRegTextCount   = registrationTextModel.countDocuments({category:config.vehicleCategory.twoWheeler, status:1});
+    let twAutomaticRegTextCount = registrationTextModel.countDocuments({category:config.vehicleCategory.twoWheeler, status:2});
+    let twApprovedRegTextCount  = registrationTextModel.countDocuments({category:config.vehicleCategory.twoWheeler, status:3});
+    let twTotalRegTextCount     = registrationTextModel.countDocuments({category:config.vehicleCategory.twoWheeler});
+    let fwPendingRegTextCount   = registrationTextModel.countDocuments({category:config.vehicleCategory.fourWheeler, status:1});
+    let fwAutomaticRegTextCount = registrationTextModel.countDocuments({category:config.vehicleCategory.fourWheeler, status:2});
+    let fwApprovedRegTextCount  = registrationTextModel.countDocuments({category:config.vehicleCategory.fourWheeler, status:3});
+    let fwTotalRegTextCount     = registrationTextModel.countDocuments({category:config.vehicleCategory.fourWheeler});
     
     Promise.all([
         twPendingRegCount, 
@@ -147,48 +147,7 @@ RegistrationController.getRegistration = async function(req, res){
                     });
                     throw ERROR.REGISTRATION_DETAILS_NOT_VERIFIED;
                 }else{
-                    registration = await this.getRegistrationFromRtoVehicle(req.query.registration_number);
-                    let textData = await registrationTextModel.findOne({text:registration.maker_model});
-                    if(textData){
-                        if(textData.status == 3){
-                            registration.central_make_id            = textData.make_id?textData.make_id:'';
-                            registration.central_make_name          = textData.make_name?textData.make_name:'';
-                            registration.central_model_id           = textData.model_id?textData.model_id:'';
-                            registration.central_model_name         = textData.model_name?textData.model_name:'';
-                            registration.central_version_id         = textData.variant_id?textData.variant_id:'';
-                            registration.central_version_name       = textData.variant_name?textData.variant_name:'';
-                            registration.status                     = 3;
-                        }
-                    }else{
-                        let registrationText = {};
-                        registrationText.text       = registration.maker_model,
-                        registrationText.category   =  registration.vehicle_category, 
-                        registrationText.vehicle_class = registration.vehicle_class;
-                        registrationText.source     = 'rtoVehicle';
-                        let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
-                        if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
-                            registrationText.make_id    = autoMappedRegistrationText.make_id;
-                            registrationText.make_name  = autoMappedRegistrationText.make_name;
-                            registrationText.model_id   = autoMappedRegistrationText.model_id;
-                            registrationText.model_name = autoMappedRegistrationText.model_name;
-                            registrationText.category   = autoMappedRegistrationText.category;
-                            registrationText.status = 2;
-                            
-                            registration.central_make_id    = autoMappedRegistrationText.make_id;;
-                            registration.central_make_name  = autoMappedRegistrationText.make_name;
-                            registration.central_model_id   = autoMappedRegistrationText.model_id;;
-                            registration.central_model_name = autoMappedRegistrationText.model_name;
-                            registration.vehicle_category   = autoMappedRegistrationText.category;
-                            registration.status = 2;
-                        }
-                        registrationTextModel.addRegistrationText(registrationText).catch(function(e){
-                            console.log(e);
-                        });
-                    }
-                
-                    let data =  registrationModel.addRegistration(registration).catch(function(e){
-                        console.log(e);
-                    });
+                    registration = registrationModel.processRegistration(req.query.registration_number);
                 }
             }
             if(registration.status == 2 || registration.status == 3){
@@ -204,60 +163,4 @@ RegistrationController.getRegistration = async function(req, res){
         this.sendResponse(req, res, 400, false, false, e);
     }   
 }
-
-RegistrationController.getRegistrationFromRtoVehicle = async function(registrationNumber){
-    let query = {};
-    if(registrationNumber){
-        query.r1 = new Array();
-        let r1 = registrationNumber.substring(0,6);
-        let r2 = registrationNumber.substring(6,10)
-        query.r1.push(r1);
-        query.r2 = r2;
-    }
-    try{     
-        var options = {
-                    host    : config.rtoVehicle.host,
-                    path    : '/batman.php'
-                };
-        query.auth = config.rtoVehicle.authToken;  
-        let result = await commonHelper.sendPostRequest(query, options);
-        if(result && result.reason == 'active'){
-            let getRtoCode = commonHelper.getRtoCodeByRegistrationNo(result.regn_no);
-            let rtoDetail    = await commonModel.getRtoDetail({rto_code:getRtoCode});
-            let getVehicleCategory = await vehicleClassModel.getVehicleCategoryByVehicleClass(result.vh_class);
-            let registration = {};
-
-            // add vehicle class if not found
-            if(getVehicleCategory == null){
-                vehicleClassModel.create({vehicle_class:result.vh_class},(err , createVehicle) => {
-                    if(err){
-                        console.log("Vehicle Class Error",err);
-                    }
-                })
-            }
-            registration.registration_number= result.regn_no;
-            registration.maker_model        = result.vehicle_name;
-            registration.owner_name         = result.owner_name;
-            registration.registration_date  = new Date(result.regn_dt);
-            registration.registration_year  = registration.registration_date.getFullYear();
-            registration.fuel_type          = result.f_type;
-            registration.chassis_number     = result.c_no;
-            registration.engine_number      = result.e_no;
-            registration.vehicle_class      = result.vh_class;
-            registration.vehicle_category   = getVehicleCategory ? getVehicleCategory: '';
-            registration.rto_code           = getRtoCode;
-            registration.rto_name           = rtoDetail[0].rtoName;
-            registration.rto_city_id        = rtoDetail[0].cityId;
-            registration.rto_city_name      = rtoDetail[0].city;
-
-            registration.source             = 'rtoVehicle';
-            return registration;
-        }else{
-            throw ERROR.DEFAULT_ERROR;                        
-        }        
-    }catch(e){
-        throw e;
-    }   
-}
-    
 module.exports = RegistrationController;

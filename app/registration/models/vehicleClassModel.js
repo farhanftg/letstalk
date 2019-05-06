@@ -17,7 +17,7 @@ var VehicleClass = mongoose.model('VehicleClass', VehicleClassSchema);
 
 VehicleClass.getVehicleCategoryByVehicleClass = function(vehicleClass){
     return new Promise(async function(resolve, reject){
-        VehicleClass.findOneAndUpdate({vehicle_class:vehicleClass},{status:0},(err,result) => {
+        VehicleClass.findOneAndUpdate({vehicle_class:vehicleClass},{status:2},(err,result) => {
             if(err){
                 reject(err);
             }else if(result){
