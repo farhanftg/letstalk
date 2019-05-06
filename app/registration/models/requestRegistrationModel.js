@@ -18,7 +18,26 @@ var RequestRegistration = mongoose.model('RequestRegistration', RequestRegistrat
 
 RequestRegistration.logRegistrationRequest = function(requestData){
     return new Promise(async function(resolve, reject){
-        RequestRegistration.create(requestData,(err , result) => {
+        let registrationRequest = await RequestRegistration.registrationRequestByRegistrationNo(requestData.registration_number);
+        
+        if(!registrationRequest){
+            RequestRegistration.create(requestData,(err , result) => {
+                if(err){
+                    reject(err);
+                }else{
+                    resolve(result);
+                }
+            });
+        }else{
+            resolve(registrationRequest);
+        }
+    });
+}
+
+RequestRegistration.registrationRequestByRegistrationNo = function(registrationNo){
+
+    return new Promise(async function(resolve, reject){
+        RequestRegistration.findOne({registration_number:registrationNo},(err, result) => {
             if(err){
                 reject(err);
             }else{

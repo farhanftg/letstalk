@@ -145,6 +145,7 @@ RegistrationController.getRegistration = async function(req, res){
                         sub_source: req.query.sub_source,
                         registration_number: req.query.registration_number
                     });
+                    
                     throw ERROR.REGISTRATION_DETAILS_NOT_VERIFIED;
                 }else{
                     registration = registrationModel.processRegistration(req.query.registration_number);
