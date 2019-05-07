@@ -18,18 +18,17 @@ var RequestRegistration = mongoose.model('RequestRegistration', RequestRegistrat
 
 RequestRegistration.logRegistrationRequest = function(requestData){
     return new Promise(async function(resolve, reject){
-        let registrationRequest = await RequestRegistration.registrationRequestByRegistrationNo(requestData.registration_number);
-        
-        if(!registrationRequest){
-            RequestRegistration.create(requestData,(err , result) => {
-                if(err){
-                    reject(err);
-                }else{
-                    resolve(result);
-                }
-            });
-        }else{
-            resolve(registrationRequest);
+        try{
+            let registrationRequest = await RequestRegistration.registrationRequestByRegistrationNo(requestData.registration_number);
+            if(!registrationRequest){
+                await RequestRegistration.createAsync(requestData);
+            }else{
+                resolve(registrationRequest);
+            }
+        }
+        catch(e){
+            console.log(e);
+            reject(e);
         }
     });
 }
@@ -37,28 +36,26 @@ RequestRegistration.logRegistrationRequest = function(requestData){
 RequestRegistration.registrationRequestByRegistrationNo = function(registrationNo){
 
     return new Promise(async function(resolve, reject){
-        RequestRegistration.findOne({registration_number:registrationNo},(err, result) => {
-            if(err){
-                reject(err);
-            }else{
-                resolve(result);
-            }
-        });
+        try{
+            let registrationRequest = await RequestRegistration.findOneAsync({registration_number:registrationNo});
+            resolve(registrationRequest);
+        }catch(e){
+            console.log(e);
+            reject(e);
+        }
     });
 }
 
 RequestRegistration.getPendingRequestRegistration = function(){
     return new Promise(async function(resolve, reject){
-        RequestRegistration.find(
-            {status:0},
-            {registration_number:1},
-            (err,result) => {
-                if(err){
-                    reject(err);
-                }else{
-                    resolve(result);
-                }
-            }) 
+        try{
+            let pendingRegistrationRequest = await RequestRegistration.findAsync({status:0},{registration_number:1});
+            resolve(pendingRegistrationRequest);
+        }
+        catch(e){
+            console.log(e);
+            reject(e);
+        }
     });
 }
 

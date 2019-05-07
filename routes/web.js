@@ -11,6 +11,7 @@ var registrationController      = require('../app/registration/controllers/regis
 var registrationTextController  = require('../app/registration/controllers/registrationTextController');
 var vehicleClassController      = require('../app/registration/controllers/vehicleClassController');
 var userController              = require('../app/user/controllers/userController');
+var registrationRequestController = require('../app/registration/controllers/registrationRequestController');
 
 var storage = multer.diskStorage({
 //    destination: function (req, file, callback) {
@@ -136,6 +137,10 @@ router.post('/update-user', function(req, res){
 router.get('/user/logout',function(req, res){
     userController.logout(req, res);
 });
+
+router.get('/registration-request',function(req, res){
+    registrationRequestController.index(req, res);
+})
 
 router.get('/favicon.ico',function (req, res) {	
     res.status(204).send();

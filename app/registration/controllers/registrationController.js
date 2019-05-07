@@ -78,7 +78,7 @@ RegistrationController.getRegistrationList = async function(req, res){
     
     var page  = 1;
     var start = 0;
-    var limit = 100;
+    var limit = config.pagination.limit;
     var filterRegNumber = '';
     var filterStatus    = '';
     var filterCategory  = '';

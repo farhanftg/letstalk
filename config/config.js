@@ -83,6 +83,10 @@ config.byPassLog = ['/api/v1/motor/mappedMasterData', '/api/v1/motor/getBkgMaste
 config.hideDetailInErrorResponse    = false;
 config.showDefaultErrorMessage      = false;
 
+//paginatiom
+config.pagination = {};
+config.pagination.limit = 20;
+
 config.redisKeyExpiryTime = '23:59:59:999';
 config.registrationNumberMaxLength = 15;
 config.recordPerPage = 20;

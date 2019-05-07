@@ -16,7 +16,7 @@ RegistrationTextController.getRegistrationText = async function(req, res){
 //        if(req.isAuthenticated()){
             var page  = 1;
             var start = 0;
-            var limit = 100;
+            var limit = config.pagination.limit;
             var filterStatus    = '';
             var filterCategory  = '';
             var filterText      = '';
