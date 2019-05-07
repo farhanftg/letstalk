@@ -112,10 +112,28 @@ RegistrationController.getRegistrationList = async function(req, res){
         delete filterQuery["$or"];
     }
     start = parseInt((page*limit) - limit);
+
+    let carMakes    = await commonModel.getCarMake();
+    let bikeMakes   = await commonModel.getBikeMake();
     let recordCount     = await registrationModel.countDocumentsAsync(filterQuery);
     let registrations   = await registrationModel.find(filterQuery).skip(start).sort({created_at:-1}).limit(limit).execAsync();
     
-    res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'registration'),{registrations:registrations, filterRegNumber:filterRegNumber, filterStatus:filterStatus, filterCategory:filterCategory, filterText:filterText, url:'/registration/list', page:page, limit:limit, recordCount:recordCount, query:query});     
+    res.render(
+        path.join(BASE_DIR, 'app/registration/views/registration', 'registration'),
+        {
+            registrations:registrations, 
+            filterRegNumber:filterRegNumber, 
+            filterStatus:filterStatus, 
+            filterCategory:filterCategory, 
+            filterText:filterText, 
+            carMakes:carMakes,
+            bikeMakes:bikeMakes,
+            url:'/registration/list', 
+            page:page, 
+            limit:limit, 
+            recordCount:recordCount, 
+            query:query
+        });     
 }
     
 RegistrationController.getRegistration = async function(req, res){
@@ -163,5 +181,62 @@ RegistrationController.getRegistration = async function(req, res){
     }catch(e){
         this.sendResponse(req, res, 400, false, false, e);
     }   
+}
+
+RegistrationController.updateRegistration = async function(req, res){
+    // if(req.isAuthenticated()){
+        let data = {}; 
+        data.make_id        = req.body.make;
+        data.make_name      = req.body.make_name;
+        data.model_id       = req.body.model;
+        data.model_name     = req.body.model_name;
+        data.variant_id     = req.body.variant;
+        data.variant_name   = req.body.variant_name;
+        data.variant_display_name    = '';
+        data.category   = req.body.category;
+        data.status     = 3;
+        data.sub_status = 2;
+        
+        if(req.body.id.length > 24){
+            data.id = JSON.parse(req.body.id);
+            data.id.shift();
+        }else{
+            data.id = req.body.id;
+        }
+        
+        registrationTextModel.updateAsync({text:req.body.text},data);
+        //update registration status approved
+        var registration_data = {};
+        registration_data.status = 3;
+        registration_data.central_make_id = req.body.make? req.body.make:'';
+        registration_data.central_make_name = req.body.make_name? req.body.make_name:'';
+        registration_data.central_model_id = req.body.model? req.body.model:'';
+        registration_data.central_model_name = req.body.model_name? req.body.model_name:'';
+        registration_data.central_version_id     = req.body.variant?req.body.variant:'';
+        registration_data.central_version_name   = req.body.variant_name?req.body.variant_name:'';
+        registration_data.vehicle_category  = req.body.category;
+    
+        registrationModel.updateAsync({maker_model:req.body.text},registration_data,{ multi: true });
+    
+        var filterText      = req.body.filter_text;
+        var filterCategory  = req.body.filter_category;
+        var filterStatus    = req.body.filter_status;
+        var url = '/registration/list';
+        var query = new Object;
+        if(filterText){
+            query.filter_text = filterText; 
+        }
+        if(filterCategory){
+            query.filter_category = filterCategory; 
+        }
+        if(filterStatus){
+            query.filter_status = filterStatus; 
+        }
+        if(req.body.page){
+            query.page = req.body.page; 
+        }
+        query = qs.stringify(query);
+        url += '?'+query;
+        res.redirect(url);
 }
 module.exports = RegistrationController;

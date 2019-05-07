@@ -72,7 +72,7 @@
                                                     if(category == 'Two Wheeler'){
                                                         categoryClass = 'yellow-status';
                                                     }else if(category == 'Four Wheeler'){
-                                                        categoryClass = 'green-status';
+                                                        categoryClass = 'blue-status';
                                                     }else{
                                                         categoryClass = 'grey-status';
                                                     }
@@ -102,17 +102,37 @@
                                             <td>
                                                 <span class="label <%=statusClass%>"><b><%=status%></b></span></td>
                                                 <td>
-                                                    <a href="#" class="btn btn-default btn-xs ico-btn view_registration" 
+                                                    <% if(registrations[i].status == 2  || registrations[i].status == 3){ %>
+                                                    <a href="#" class="btn btn-default btn-xs ico-btn edit_registration" 
                                                         data-toggle="modal" 
                                                         data-target="#myModal" 
-                                                        data-id="<%=registrations[i]._id%>" 
-                                                        data-text="<%=registrations[i].maker_model%>"
-                                                        data-central_make_name="<%=registrations[i].central_make_name%>" 
-                                                        data-central_model_name="<%=registrations[i].central_model_name%>" 
-                                                        data-central_version_name="<%=registrations[i].central_version_name%>" 
-                                                        data-status="<%= registrations[i].status %>"
-                                                        data-category="<%=registrations[i].vehicle_category%>"  title="View"><i class="fa fa-eye"></i>
+                                                        data-id="<%=registrations[i]._id%>"
+                                                        data-text="<%=registrations[i].maker_model%>" 
+                                                        data-make_id="<%=registrations[i].central_make_id%>" 
+                                                        data-model_id="<%=registrations[i].central_model_id%>" 
+                                                        data-variant_id="<%=registrations[i].central_version_id%>" 
+                                                        data-category="<%=registrations[i].vehicle_category%>" 
+                                                        data-status="<%=status%>"
+                                                        title="View">
+                                                        <i class="fa fa-eye"></i>
                                                     </a>
+                                                    <%  } %>
+
+                                                    <% if(registrations[i].status == 1){ %>
+                                                    <a class="btn btn-default btn-xs ico-btn edit_registration" 
+                                                        data-toggle="modal" 
+                                                        data-target="#myModal" 
+                                                        data-id="<%=registrations[i]._id%>"
+                                                        data-text="<%=registrations[i].maker_model%>" 
+                                                        data-make_id="<%=registrations[i].central_make_id%>" 
+                                                        data-model_id="<%=registrations[i].central_model_id%>" 
+                                                        data-variant_id="<%=registrations[i].central_version_id%>" 
+                                                        data-category="<%=registrations[i].vehicle_category%>" 
+                                                        data-status="<%=status%>"
+                                                    title="Update">
+                                                        <i class="fa fa-pencil"></i
+                                                    ></a>
+                                                    <%  } %>
                                                     <!--<a class="btn btn-default btn-xs ico-btn edit_registration" title="Update"><i class="fa fa-pencil"></i></a>
                                                     <a href="#" class="btn btn-default btn-xs ico-btn approve_registration" data-toggle="tooltip" data-id="<%=registrations[i].id%>" title="Approve"><i class="fa fa-check"></i></a>-->
                                                 </td>
@@ -140,7 +160,7 @@
 <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form id="registration_text_detail_form" id="registration_text_detail_form" action="/update-registration-text" method="POST" >
+                <form id="registration_text_detail_form" id="registration_text_detail_form" action="/update-registration" method="POST" >
                     <div class="modal-header">
                       <button type="button" class="close" data-dismiss="modal">&times;</button>
                       <h4 class="modal-title">Registration</h4>
@@ -186,14 +206,414 @@
                         </div>         
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-approved">Approve</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                     </div>
+                    <input type="hidden" id="text_id" name="id" value="" />
+                    <input type="hidden" id="filter_text" name="filter_text" value="<%=filterText%>" />
+                    <input type="hidden" id="filter_category" name="filter_category" value="<%=filterCategory%>" />
+                    <input type="hidden" id="filter_status" name="filter_status" value="<%=filterStatus%>" />
+                    <input type="hidden" id="make_name" name="make_name" value="" />
+                    <input type="hidden" id="model_name" name="model_name" value="" />
+                    <input type="hidden" id="variant_name" name="variant_name" value="" />
+                    <input type="hidden" name="page" value="<%=page%>" />
                 </form>
             </div>
         </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <form id="registration_text_detail_form" id="registration_text_detail_form" action="/update-registration-text" method="POST" >
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Registration Text</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="make_model_text">Text</label>
+                            <textarea id="make_model_text" value="" name="text" class="form-control" rows="3" readonly=""></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="model">Category </label>
+                            <select id="category" name="category" class="form-control category">
+                                <option value="">Select Category</option>
+                                <option value="Two Wheeler" <%=(filterCategory=='Two Wheeler'?'selected':'')%>>Two Wheeler</option>
+                                <option value="Four Wheeler" <%=(filterCategory=='Four Wheeler'?'selected':'')%>>Four Wheeler</option>
+                                <option value="Three Wheeler" <%=(filterCategory=='Three Wheeler'?'selected':'')%>>Three Wheeler</option>
+                                <option value="Bus" <%=(filterCategory=='Bus'?'selected':'')%>>Bus</option>
+                                <option value="Truck"<%=(filterCategory=='Truck'?'selected':'')%>>Truck</option>
+                                <option value="Other"<%=(filterCategory=='Other'?'selected':'')%>>Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="make">Make</label>
+                            <select id="make" name="make" class="form-control" >
+                                <option value="0">Select Make</option>
+                                <%
+                                if(filterCategory == 'Two Wheeler'){
+                                    makes   = bikeMakes;
+                                }else{
+                                    makes   = carMakes;
+                                }
+                                %>
+                                <% for(var i=0; i < makes.length; i++){ %>
+                                <% 
+                                    var makeId = 0;
+                                    var makeName = '';
+                                    if(filterCategory == 'Two Wheeler'){
+                                        makeId   = makes[i].id;
+                                        makeName = makes[i].name;
+                                    }else{
+                                        makeId   = makes[i].make_id;
+                                        makeName = makes[i].make_name;
+                                    }
+                                %>
+                                <option value="<%=makeId%>"><%=makeName%></option>
+                                <% } %>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="model">Model </label>
+                            <select id="model" name="model" class="form-control">
+                                <option value="0">Select Model</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="variant">Variant </label>
+                            <select id="variant" name="variant" class="form-control"> 
+                                <option value="0">Select Variant</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="status">Status</label>
+                            <input id="status" type="text" value="" class="form-control disable"  readonly />
+                        </div>         
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Approve</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                    <input type="hidden" id="text_id" name="id" value="" />
+                    <input type="hidden" id="filter_text" name="filter_text" value="<%=filterText%>" />
+                    <input type="hidden" id="filter_category" name="filter_category" value="<%=filterCategory%>" />
+                    <input type="hidden" id="filter_status" name="filter_status" value="<%=filterStatus%>" />
+                    <input type="hidden" id="make_name" name="make_name" value="" />
+                    <input type="hidden" id="model_name" name="model_name" value="" />
+                    <input type="hidden" id="variant_name" name="variant_name" value="" />
+                    <input type="hidden" name="page" value="<%=page%>" />
+                </form>
+            </div>
+        </div>
+    </div>        
+    <!-- /page content -->
+    <script>
+        $(document).ready(function() {
+    
+            $(document).on('submit','#registration_text_detail_form',function(){
+                var makeId      = $("#make option:selected").val();            
+                var modelId     = $("#model option:selected").val();
+                var variantId   = $("#variant option:selected").val();
+                
+                if(makeId != 0){
+                    var makeName = $("#make option:selected").text();
+                    $('#make_name').val(makeName);
+                }
+                if(modelId != 0){
+                    var modelName = $("#model option:selected").text();
+                    $('#model_name').val(modelName);
+                }
+                if(variantId != 0){
+                    var variantName = $("#variant option:selected").text();
+                    $('#variant_name').val(variantName);
+                }
+            });
+            
+            $(document).on("click", ".edit_registration", function () {
+                var id          = $(this).data('id');
+                var text        = $(this).data('text');
+                var makeId      = $(this).data('make_id');
+                var modelId     = $(this).data('model_id');
+                var variantId   = $(this).data('variant_id');
+                var category    = $(this).data('category');
+                var status      = $(this).data('status');
+                //var category    = $('#filter_category').val();
+                $('#myModal #text_id').val(id);  
+                $('#myModal #make_model_text').val(text); 
+                if(category === 'Two Wheeler'){
+                    resetBikeMake();
+                    resetBikeModel(makeId);
+                    resetBikeVariant(modelId);
+                }else if(category === 'Four Wheeler'){
+                    resetCarMake();
+                    resetCarModel(makeId);
+                    resetCarVariant(modelId);
+                }else{
+                    resetAll();
+                }            
+                $('#myModal #category').val(category);
+                $('#myModal #make').val(makeId);
+                $('#myModal #model').val(modelId);
+                $('#myModal #variant').val(variantId);
+                $('#myModal #status').val(status);   
+                
+                if(status == 'Approved' || status == 'Auto'){
+                    $(".btn-approved").hide();
+                }else{
+                    $(".btn-approved").show();
+                }
+                
+            });
+    
+            $(document).on("change", ".category", function () { 
+                var category    = $(this).val();
+                if(category == 'Two Wheeler'){
+                    resetBikeMake();
+                }else if(category == 'Four Wheeler'){
+                    resetCarMake();
+                }else{
+                    resetAll(); 
+                }
+            });
+            
+            $(document).on("change", "#make", function () { 
+                var category    = $('.category').val();
+                var makeId      = $('#make').val();
+                if(category == 'Two Wheeler'){
+                    resetBikeModel(makeId);
+                }else{
+                    resetCarModel(makeId);
+                }
+                $('#make').val(makeId);
+            });
+    
+            $(document).on("change", "#model", function () { 
+                var category    = $('.category').val();
+                var modelId     = $('#model').val();
+                if(category == 'Two Wheeler'){
+                    resetBikeVariant(modelId);
+                }else{
+                    resetCarVariant(modelId);
+                }
+                $('#model').val(modelId);
+            });
+            
+            $('.select_all_registration').change(function(){
+                var table = $(this).closest('table');
+                if($(this).is(":checked")){
+                    table.find("input:checkbox").prop('checked',true);
+                }else{
+                    table.find("input:checkbox").prop('checked',false);
+                }
+            });
+            
+            $('#update_all').click(function(){
+                var ids = new Array();
+                $(this).removeClass("no_modal");
+                if($('.select-check-all').is(":checked")){
+                    $("input:checkbox").each(function(index){
+                        var $this = $(this);
+                        if($this.is(":checked")){
+                            ids.push($this.attr("id"));                     
+                        }
+                    });
+                    var str = JSON.stringify(ids); 
+                    $('input[name="id"]').val(str);
+                    return;
+                }else{
+                    $(this).addClass("no_modal");
+                    alert('Please select registration to update');
+                    return;
+                }
+            });
+            
+            $('#myModal').on('show.bs.modal', function (e) {
+                var button = e.relatedTarget;
+                if($(button).hasClass('no_modal')) {
+                    e.stopPropagation();
+                    return false;
+                }  
+            });
+    
+            $('#approve_all').click(function(){
+                if($('.select-check-all').is(":checked")){
+                    $('#registration_text_form').submit();
+                }else{
+                    alert('Please select registration to approve');
+                }
+            });
+    
+            $('.approve_registration').click(function(){
+                var id = $(this).data('id');
+                $("#"+id+":checkbox").prop('checked',true);
+                $('#registration_text_form').submit();
+            });
+            
+            $("#registration_text_form").submit(function (e) {
+                e.preventDefault();
+                redirectToRegistrationText();
+            });
+    
+            $('#filter_registration_text').click(function(){
+                redirectToRegistrationText();
+            });
+            
+            $('#filter_category').change(function(){
+                var filterCategory = $(this).val();
+                window.location = '/registration-text?filter_category='+filterCategory;
+            });
+    
+            //$('#datatable_registration_text').dataTable({"bPaginate":true, "lengthChange":false, "pageLength":20,"info":true, "aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 0,6 ] }], "order": [[ 1, "desc" ]]}); 
+        });
+        
+        function redirectToRegistrationText(){
+            var url = '/registration-text?';
+            var filterText      = $('#filter_text').val();
+            var filterCategory  = $('#filter_category').val();
+            var filterStatus    = $('#filter_status').val();          
+            if(filterCategory){
+                url += 'filter_category='+filterCategory;
+            }
+            if(filterStatus){
+                url +='&filter_status='+filterStatus;
+            }
+            if(filterText){
+                url += '&filter_text='+filterText;
+            }
+            window.location = url;
+        }
+        
+        function resetAll(){   
+            $('#make').empty();
+            $('#model').empty();
+            $('#variant').empty();
+            $('#make').append('<option value="0">Select Make</option>');
+            $('#model').append('<option value="0">Select Model</option>');
+            $('#variant').append('<option value="0">Select Variant</option>');
+        }
+        
+        function resetCarMake(){   
+            resetAll();
+            <% for(var i=0; i<carMakes.length; i++){%>    
+                $('#make').append('<option value="<%=carMakes[i].make_id%>"><%=carMakes[i].make%></option>');
+            <% } %>
+        }
+    
+        function resetCarModel(makeId){   
+            $('#model').empty();
+            $('#variant').empty();
+            $('#model').append('<option value="0">Select Model</option>');
+            $('#variant').append('<option value="0">Select Variant</option>');
+            
+            setCarModel(makeId);
+        }
+        
+        function resetCarVariant(modelId){   
+            $('#variant').empty();
+            $('#variant').append('<option value="0">Select Variant</option>');
+            
+            setCarVariant(modelId);
+        }
+        
+        function resetBikeMake(){   
+            $('#make').empty();
+            $('#model').empty();
+            $('#variant').empty();
+            $('#make').append('<option value="0">Select Make</option>');
+            $('#model').append('<option value="0">Select Model</option>');
+            $('#variant').append('<option value="0">Select Variant</option>');
+            <% for(var i=0; i<bikeMakes.length; i++){%>
+                $('#make').append('<option value="<%=bikeMakes[i].make_id%>"><%=bikeMakes[i].make%></option>');    
+            <% } %>
+        }
+        
+        function resetBikeModel(makeId){   
+            $('#model').empty();
+            $('#variant').empty();
+            $('#model').append('<option value="0">Select Model</option>');
+            $('#variant').append('<option value="0">Select Variant</option>');
+            
+            setBikeModel(makeId)
+        }
+    
+        function resetBikeVariant(modelId){   
+            $('#variant').empty();
+            $('#variant').append('<option value="0">Select Variant</option>');
+            
+            setBikeVariant(modelId)
+        }
+        
+        function setCarModel(makeId){
+            $.ajax({
+                url: "/common/get-car-model?make_id="+makeId,
+                async: false,
+                success: function(result){
+                    if(result && result.data){                    
+                        var carModels = result.data;
+                        for(i=0; i < carModels.length; i++){
+                            if(makeId == carModels[i].make_id){
+                                $('#model').append('<option value="'+carModels[i].model_id+'">'+carModels[i].model+'</option>');
+                            }
+                        }
+                    }
+                }
+            });
+        }
+         
+        function setCarVariant(modelId){
+            $.ajax({
+                url: "/common/get-car-variant?model_id="+modelId,
+                async: false,
+                success: function(result){
+                    if(result && result.data){                    
+                        var carVariants = result.data;
+                        for(i=0; i < carVariants.length; i++){
+                            if(modelId == carVariants[i].model_id){
+                                $('#variant').append('<option value="'+carVariants[i].version_id+'">'+carVariants[i].version+'</option>');
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function setBikeModel(makeId){
+            $.ajax({
+                url: "/common/get-bike-model?make_id="+makeId,
+                async: false,
+                success: function(result){
+                    if(result && result.data){                    
+                        var bikeModels = result.data;
+                        for(i=0; i < bikeModels.length; i++){
+                            if(makeId == bikeModels[i].make_id){
+                                $('#model').append('<option value="'+bikeModels[i].model_id+'">'+bikeModels[i].model+'</option>');
+                            }
+                        }
+                    }
+                }
+            });
+        }
+           
+        function setBikeVariant(modelId){     
+            $.ajax({
+                url: "/common/get-bike-variant?model_id="+modelId,
+                async: false,
+                success: function(result){
+                    if(result && result.data){                    
+                        var bikeVariants = result.data;
+                        for(i=0; i < bikeVariants.length; i++){
+                            if(modelId == bikeVariants[i].model_id){
+                                $('#variant').append('<option value="'+bikeVariants[i].version_id+'">'+bikeVariants[i].version+'</option>');
+                            }
+                        }
+                    }
+                }
+            });
+        }   
+    </script>
 <script>
-    $(document).ready(function(){
+    /* $(document).ready(function(){
         //
         $(".view_registration").on('click',function(){
             var statusText = getStatusTextById($(this).data('status'));
@@ -213,5 +633,5 @@
             var filterCategory = $(this).val();
             window.location = '/registration/list?filter_category='+filterCategory;
         });
-    })
+    }) */
 </script>

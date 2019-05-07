@@ -69,7 +69,7 @@ RegistrationTextController.updateRegistrationText = function(req, res){
     data.category   = req.body.category;
     data.status     = 3;
     data.sub_status = 2;
-    
+
     if(req.body.id.length > 24){
         data.id = JSON.parse(req.body.id);
         data.id.shift();

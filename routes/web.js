@@ -90,6 +90,10 @@ router.get('/registration', function (req, res) {
     registrationController.getRegistration(req, res);
 });
 
+router.post('/update-registration', function(req, res){
+    registrationController.updateRegistration(req, res);
+});
+
 router.get('/registration-text', ensureAuthenticated,function (req, res) {	
     registrationTextController.getRegistrationText(req, res);
 });
