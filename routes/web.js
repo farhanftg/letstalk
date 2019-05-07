@@ -106,7 +106,7 @@ router.get('/vehicle-class', ensureAuthenticated ,function(req,res){
     vehicleClassController.getVehicleClassList(req, res);
 });
 
-router.post('/update-vehicle-class',function(req,res){
+router.post('/update-vehicle-class',ensureAuthenticated,function(req,res){
     vehicleClassController.updateVehicleClass(req, res);
 });
 
@@ -118,11 +118,11 @@ router.post('/user/login',function(req, res, next){
     userController.postLogin(req, res, next);
 });
 
-router.get('/user/signup',function(req,res){
+router.get('/user/signup',ensureAuthenticated,function(req,res){
     return res.status(409).render(path.join(BASE_DIR, 'app/user/views', 'signup'),{message: req.flash('message')});
 });
 
-router.post('/user/signup',function(req, res){
+router.post('/user/signup',ensureAuthenticated,function(req, res){
     userController.postSignup(req, res);
 });
 
@@ -130,7 +130,7 @@ router.get('/user',function(req, res){
     userController.userList(req, res);
 });
 
-router.post('/update-user', function(req, res){
+router.post('/update-user',ensureAuthenticated, function(req, res){
     userController.userUpdate(req, res);
 });
 
@@ -138,7 +138,7 @@ router.get('/user/logout',function(req, res){
     userController.logout(req, res);
 });
 
-router.get('/registration-request',function(req, res){
+router.get('/registration-request',ensureAuthenticated,function(req, res){
     registrationRequestController.index(req, res);
 })
 
