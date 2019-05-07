@@ -24,7 +24,7 @@ RegistrationRequestController.index = async function(req, res){
 
     if(req.query.search_text){
         search_text = req.query.search_text;
-        filterQuery.registration_number = new RegExp(search_text,'i')
+        filterQuery.registration_number = new RegExp(search_text,'i');
     }
 
     let recordCount = await registrationRequestModel.countDocumentsAsync();
