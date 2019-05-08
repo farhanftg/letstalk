@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title> Girnar AutoDB </title>
-
+    <script src="/gentelella/vendors/jquery/dist/jquery.min.js"></script>
     <!-- Bootstrap -->
     <link href="/gentelella//vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
@@ -19,6 +19,12 @@
     <!-- Custom Theme Style -->
     <link href="/css/custom.min.css" rel="stylesheet">
     <link href="/css/custom-login.css" rel="stylesheet">
+
+    <!-- Form validation plugin -->
+        <script src="../js/formValidation.min.js"></script>
+        <script src="../js/formvalidation.bootstrap.min.js"></script>
+    <!--End Validation -->
+
   </head>
 
   <body class="login">
@@ -86,3 +92,44 @@
     </div>
   </body>
 </html>
+<script>
+        $('#login-form').on('init.field.fv', function (e, data) {
+            var $parent = data.element.parents('.form-group'),
+                    $icon = $parent.find('.form-control-feedback[data-fv-icon-for="' + data.field + '"]');
+            $icon.on('click.clearing', function () {
+                if ($icon.hasClass('glyphicon-remove')) {
+                    data.fv.resetField(data.element);
+                }
+            });
+        })
+        .formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                username: {
+                    threshold: 30,
+                    verbose: false,
+                    validators: {
+                        notEmpty: {
+                            message: 'Username is required'
+                        },
+                    }
+                },
+                password: {
+                    threshold: 30,
+                    verbose: false,
+                    validators: {
+                        notEmpty: {
+                            message: 'Password is required'
+                        },
+                    }
+                },
+            }
+        }).on('success.form.fv', function (e) {
+            return true;
+        });
+    </script>

@@ -128,6 +128,7 @@ RegistrationController.getRegistrationList = async function(req, res){
             filterText:filterText, 
             carMakes:carMakes,
             bikeMakes:bikeMakes,
+            start:start,
             url:'/registration/list', 
             page:page, 
             limit:limit, 

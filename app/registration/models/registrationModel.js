@@ -307,12 +307,12 @@ Registration.processRegistration = function(registration_number){
             let textData = await Registration.findOne({maker_model:registration.maker_model});
             if(textData){
                 if(textData.status == 3){
-                    registration.central_make_id            = textData.make_id?textData.make_id:'';
-                    registration.central_make_name          = textData.make_name?textData.make_name:'';
-                    registration.central_model_id           = textData.model_id?textData.model_id:'';
-                    registration.central_model_name         = textData.model_name?textData.model_name:'';
-                    registration.central_version_id         = textData.variant_id?textData.variant_id:'';
-                    registration.central_version_name       = textData.variant_name?textData.variant_name:'';
+                    registration.central_make_id            = textData.central_make_id?textData.central_make_id:'';
+                    registration.central_make_name          = textData.central_make_name?textData.central_make_name:'';
+                    registration.central_model_id           = textData.central_make_name?textData.central_make_name:'';
+                    registration.central_model_name         = textData.central_model_name?textData.central_model_name:'';
+                    registration.central_version_id         = textData.central_version_id?textData.central_version_id:'';
+                    registration.central_version_name       = textData.central_version_name?textData.central_version_name:'';
                     registration.status                     = 3;
                 }
             }else{

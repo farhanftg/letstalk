@@ -49,7 +49,7 @@ RegistrationTextController.getRegistrationText = async function(req, res){
             let bikeMakes   = await commonModel.getBikeMake();
             let recordCount = await registrationTextModel.countDocumentsAsync(filterQuery);
             let rows = await registrationTextModel.find(filterQuery).skip(start).sort({status:1,created_at:-1}).limit(limit).execAsync();
-            res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'registration_text'),{registrations:rows, bikeMakes:bikeMakes, bikeModels:[], bikeVariants:[], carMakes:carMakes, carModels:[], carVariants:[], filterStatus:filterStatus, filterCategory:filterCategory, filterText:filterText, url:'/registration-text', page:page, limit:limit, recordCount:recordCount, query:query});     
+            res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'registration_text'),{registrations:rows, bikeMakes:bikeMakes, bikeModels:[], bikeVariants:[], carMakes:carMakes, carModels:[], carVariants:[], filterStatus:filterStatus, filterCategory:filterCategory, filterText:filterText, url:'/registration-text', page:page, limit:limit, recordCount:recordCount, query:query,start:start});     
 //        }else{
 //            res.redirect('/login');
 //        }

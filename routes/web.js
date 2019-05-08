@@ -122,13 +122,17 @@ router.post('/user/login',function(req, res, next){
     userController.postLogin(req, res, next);
 });
 
-router.get('/user/signup',ensureAuthenticated,function(req,res){
+router.get('/user/create',ensureAuthenticated,function(req,res){
     return res.status(409).render(path.join(BASE_DIR, 'app/user/views', 'signup'),{message: req.flash('message')});
 });
 
 router.post('/user/signup',ensureAuthenticated,function(req, res){
     userController.postSignup(req, res);
 });
+
+router.post('/validation/username',function(req, res){
+    userController.checkUsername(req,res);
+})
 
 router.get('/user',function(req, res){
     userController.userList(req, res);

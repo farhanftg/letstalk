@@ -32,9 +32,9 @@
                                         <option value="" <%=(filterCategory == '')?'selected':''%> >All</option>
                                         <option value="Two Wheeler" <%=(filterCategory == 'Two Wheeler')?'selected':''%> >Two Wheeler</option>
                                         <option value="Four Wheeler" <%=(filterCategory == 'Four Wheeler')?'selected':''%> >Four Wheeler</option>
-                                        <option value="Three Wheeler" <%=(filterCategory=='Three Wheeler'?'selected':'')%>>Three Wheeler</option>
+                                        <!-- <option value="Three Wheeler" <%=(filterCategory=='Three Wheeler'?'selected':'')%>>Three Wheeler</option>
                                         <option value="Bus" <%=(filterCategory=='Bus'?'selected':'')%>>Bus</option>
-                                        <option value="Truck"<%=(filterCategory=='Truck'?'selected':'')%>>Truck</option>
+                                        <option value="Truck"<%=(filterCategory=='Truck'?'selected':'')%>>Truck</option> -->
                                         <option value="Other"<%=(filterCategory=='Other'?'selected':'')%>>Other</option>
                                     </select>
                                 </div>
@@ -59,11 +59,11 @@
                                 </thead>
                                 <tbody>
                                     <% 
-                                    var inc = 1;
+                                    var inc = start;
                                     for(var i=0; i < registrations.length; i++){
                                         %>
                                         <tr>
-                                            <td><%= inc++ %></td>
+                                            <td><%= ++inc %></td>
                                             <td><%=registrations[i].text%></td>
                                             <td><%=registrations[i].make_name%></td>
                                             <td><%=registrations[i].model_name%></td>
@@ -512,3 +512,71 @@
         });
     }   
 </script>
+<script>
+        $('#registration_text_detail_form').on('init.field.fv', function (e, data) {
+            var $parent = data.element.parents('.form-group'),
+                    $icon = $parent.find('.form-control-feedback[data-fv-icon-for="' + data.field + '"]');
+            $icon.on('click.clearing', function () {
+                if ($icon.hasClass('glyphicon-remove')) {
+                    data.fv.resetField(data.element);
+                }
+            });
+        })
+        .formValidation({
+            framework: 'bootstrap',
+            icon: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            fields: {
+                text: {
+                    threshold: 30,
+                    verbose: false,
+                    validators: {
+                        notEmpty: {
+                            message: 'Text is required'
+                        },
+                    }
+                },
+                category: {
+                    threshold: 30,
+                    verbose: false,
+                    validators: {
+                        notEmpty: {
+                            message: 'Text is required'
+                        },
+                    }
+                },
+                make: {
+                    threshold: 30,
+                    verbose: false,
+                    validators: {
+                        notEmpty: {
+                            message: 'Make is required'
+                        },
+                    }
+                },
+                model: {
+                    threshold: 30,
+                    verbose: false,
+                    validators: {
+                        notEmpty: {
+                            message: 'Model is required'
+                        },
+                    }
+                },
+                variant: {
+                    threshold: 30,
+                    verbose: false,
+                    validators: {
+                        notEmpty: {
+                            message: 'Please select variant'
+                        },
+                    }
+                },
+            }
+        }).on('success.form.fv', function (e) {
+            return true;
+        });
+    </script>

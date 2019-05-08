@@ -17,7 +17,7 @@ class VehicleClassController extends ApiController{
 VehicleClassController.getVehicleClassList = async function(req, res){
     var page  = 1;
     var start = 0;
-    var limit = 100;
+    var limit = config.pagination.limit;
     var filterCategory  =  filterSearchText = '';
     var filterSearch      = '';
     var query = req.query; 
@@ -53,7 +53,8 @@ VehicleClassController.getVehicleClassList = async function(req, res){
             page:page, 
             limit:limit, 
             recordCount:recordCount, 
-            query:query
+            query:query,
+            start:start
         });    
 }
 

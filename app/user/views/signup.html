@@ -21,16 +21,16 @@
 							</div>
 						<div class="x_content">
 						
-								<form id="registration_text_detail_form" id="registration_text_detail_form" action="/user/signup" method="POST" >
+								<form id="signup_form" id="signup_form" action="/user/signup" method="POST" >
 									
 									<div class="modal-body">
 										<div class="form-group">
 											<label for="first_name">First Name</label>
-											<input id="first_name" type="text" value="" name="firstname" class="form-control disable" required  />
+											<input id="firstname" type="text" value="" name="firstname" class="form-control disable" required  />
 										</div>
 										<div class="form-group">
 											<label for="last_name">Last Name </label>
-											<input id="last_name" type="text" value="" name="lastname" class="form-control disable"  required />
+											<input id="lastname" type="text" value="" name="lastname" class="form-control disable"  required />
 										</div>
 										<div class="form-group">
 											<label for="username">Username</label>
@@ -51,7 +51,7 @@
 										</div>
 									</div>
 									<div class="modal-footer">
-										<button type="submit" class="btn btn-default pull-left" data-dismiss="modal">Save</button>
+										<button type="submit" class="btn btn-primary" data-dismiss="modal">Save</button>
 									</div>
 								</form>
 						</div>
@@ -61,5 +61,80 @@
 	</div>
 </div>
 <script>
-
+$('#signup_form').on('init.field.fv', function (e, data) {
+	var $parent = data.element.parents('.form-group'),
+			$icon = $parent.find('.form-control-feedback[data-fv-icon-for="' + data.field + '"]');
+	$icon.on('click.clearing', function () {
+		if ($icon.hasClass('glyphicon-remove')) {
+			data.fv.resetField(data.element);
+		}
+	});
+})
+.formValidation({
+	framework: 'bootstrap',
+	icon: {
+		valid: 'glyphicon glyphicon-ok',
+		invalid: 'glyphicon glyphicon-remove',
+		validating: 'glyphicon glyphicon-refresh'
+	},
+	fields: {
+		firstname: {
+			threshold: 30,
+			verbose: false,
+			validators: {
+				notEmpty: {
+					message: 'Firstname is required'
+				},
+			}
+		},
+		lastname: {
+			threshold: 30,
+			verbose: false,
+			validators: {
+				notEmpty: {
+					message: 'Last name is required'
+				},
+			}
+		},
+		username: {
+			threshold: 30,
+			verbose: false,
+			validators: {
+				notEmpty: {
+					message: 'Username is required'
+				},
+				/* remote: {
+					url: '/validation/username',
+					data: function (validator, $field, value) {
+						return {
+							username: validator.getFieldElements('username').val()
+						};
+					},
+					message: 'Username is already exist',
+					type: 'POST',
+				}, */
+			}
+		},
+		password: {
+			threshold: 30,
+			verbose: false,
+			validators: {
+				notEmpty: {
+					message: 'Password is required'
+				},
+			}
+		},
+		role: {
+			threshold: 30,
+			verbose: false,
+			validators: {
+				notEmpty: {
+					message: 'Please select role'
+				},
+			}
+		},
+	}
+}).on('success.form.fv', function (e) {
+	return true;
+});
 </script>

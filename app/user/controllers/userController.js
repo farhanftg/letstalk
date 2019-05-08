@@ -63,7 +63,7 @@ module.exports = {
                 res.redirect('/user');
             }else{
                 req.flash('message', 'Username is already exist')
-                res.redirect('/user/signup');
+                res.redirect('/user/create');
             }
         });
     },
@@ -108,6 +108,7 @@ module.exports = {
                     {
                         result:result.result,page:page,
                         limit:result.limit,
+                        start:result.start,
                         recordCount:result.recordCount
                     });
             })
@@ -130,5 +131,13 @@ module.exports = {
             .catch(err => {
                 console.log("Error ", err);
             })
+    },
+    checkUsername: function(req, res){
+        let user =  userModel.findOneAsync({username:req.body.username});
+        if(user){
+            return res.json({status:true});
+        }else{
+            return res.json({status:false});
+        }
     }
 }

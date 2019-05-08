@@ -38,7 +38,8 @@ RegistrationRequestController.index = async function(req, res){
             limit:limit, 
             recordCount:recordCount, 
             filter_category:filter_category,
-            search_text:search_text
+            search_text:search_text,
+            start:start
         }
     );     
 

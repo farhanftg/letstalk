@@ -47,12 +47,12 @@
                                     </thead>
                                     <tbody>
                                         <% if(vehicleClass.length > 0){ 
-                                            var inc = 1;
+                                            var inc = start;
                                             %>
                                             <% for(var i=0; i < vehicleClass.length; i++){
                                                 %>
                                                 <tr>
-                                                    <td><%= inc++ %></td>
+                                                    <td><%= ++inc %></td>
                                                     <td><%=vehicleClass[i].vehicle_class%></td>
                                                     <td><%=vehicleClass[i].vehicle_category%></td>
                                                     <td>
@@ -156,6 +156,47 @@
             });
         })
     </script>
+    <script>
+            $('#vehicle_class_detail_form').on('init.field.fv', function (e, data) {
+                var $parent = data.element.parents('.form-group'),
+                        $icon = $parent.find('.form-control-feedback[data-fv-icon-for="' + data.field + '"]');
+                $icon.on('click.clearing', function () {
+                    if ($icon.hasClass('glyphicon-remove')) {
+                        data.fv.resetField(data.element);
+                    }
+                });
+            })
+            .formValidation({
+                framework: 'bootstrap',
+                icon: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    vehicle_class: {
+                        threshold: 30,
+                        verbose: false,
+                        validators: {
+                            notEmpty: {
+                                message: 'Vehicle class is required'
+                            },
+                        }
+                    },
+                    category: {
+                        threshold: 30,
+                        verbose: false,
+                        validators: {
+                            notEmpty: {
+                                message: 'Please select category'
+                            },
+                        }
+                    },
+                }
+            }).on('success.form.fv', function (e) {
+                return true;
+            });
+        </script>
     <%
         function getVehicleClassStatusById(id)
         {

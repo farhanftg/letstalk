@@ -26,11 +26,13 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <% if(result.length){ %>
+                                        <% if(result.length){ 
+                                            var inc = start;
+                                            %>
 
                                             <% result.forEach(function(element,index){ %>
                                                 <tr>
-                                                    <td><%= ++index %></td>
+                                                    <td><%= ++inc %></td>
                                                     <td><%= element.firstname %></td>
                                                     <td><%= element.lastname %></td>
                                                     <td><%= element.username %></td>
@@ -161,10 +163,69 @@
                 });
 
                 $(".btn-add").on('click',function(){
-                    window.location.href = '/user/signup';
+                    window.location.href = '/user/create';
                 })
             })
         </script>
+        <script>
+                $('#update_user').on('init.field.fv', function (e, data) {
+                        var $parent = data.element.parents('.form-group'),
+                        $icon = $parent.find('.form-control-feedback[data-fv-icon-for="' + data.field + '"]');
+                        $icon.on('click.clearing', function () {
+                            if ($icon.hasClass('glyphicon-remove')) {
+                                data.fv.resetField(data.element);
+                            }
+                        });
+                    })
+                    .formValidation({
+                        framework: 'bootstrap',
+                        icon: {
+                            valid: 'glyphicon glyphicon-ok',
+                            invalid: 'glyphicon glyphicon-remove',
+                            validating: 'glyphicon glyphicon-refresh'
+                        },
+                        fields: {
+                            firstname: {
+                                threshold: 30,
+                                verbose: false,
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Firstname is required'
+                                    },
+                                }
+                            },
+                            lastname: {
+                                threshold: 30,
+                                verbose: false,
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Last name is required'
+                                    },
+                                }
+                            },
+                            username: {
+                                threshold: 30,
+                                verbose: false,
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Username is required'
+                                    },
+                                }
+                            },
+                            role: {
+                                threshold: 30,
+                                verbose: false,
+                                validators: {
+                                    notEmpty: {
+                                        message: 'Please select role'
+                                    },
+                                }
+                            },
+                        }
+                    }).on('success.form.fv', function (e) {
+                        return true;
+                    });
+                </script>
         <%
             function getRoleText(id){
                 var roleText = '';
