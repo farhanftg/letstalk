@@ -116,7 +116,7 @@ RegistrationController.getRegistrationList = async function(req, res){
     let carMakes    = await commonModel.getCarMake();
     let bikeMakes   = await commonModel.getBikeMake();
     let recordCount     = await registrationModel.countDocumentsAsync(filterQuery);
-    let registrations   = await registrationModel.find(filterQuery).skip(start).sort({created_at:-1}).limit(limit).execAsync();
+    let registrations   = await registrationModel.find(filterQuery).skip(start).sort({status:1,created_at:-1}).limit(limit).execAsync();
     
     res.render(
         path.join(BASE_DIR, 'app/registration/views/registration', 'registration'),
@@ -156,7 +156,7 @@ RegistrationController.getRegistration = async function(req, res){
     try{
         if(!errors.length){
             let registration = await registrationModel.findOne({registration_number:req.query.registration_number});
-            if(!registration || registration.status < 1){
+            if(!registration){
                 if(!config.onDemandAllowedSubsource.includes(req.query.sub_source)){
                     // log request collection
                     requestRegistrationModel.logRegistrationRequest({

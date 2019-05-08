@@ -3,7 +3,7 @@ var validationHelper    = require(HELPER_PATH+'validationHelper');
 var commonHelper        = require(HELPER_PATH+'commonHelper');
 
 var RegistrationTextSchema = new Schema({    
-    text                 : {type: String, unique:true},
+    text                : {type: String, unique:true},
     make_id             : {type: String},
     model_id            : {type: String}, 
     variant_id          : {type: String},

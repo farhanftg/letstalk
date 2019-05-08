@@ -18,4 +18,5 @@ module.exports = {
     RTO_CODE_REQUIRED : 'Rto Code is required',
     STATUS_REQUIRED : 'Status is required',
     REGISTRATION_DETAILS_NOT_VERIFIED : 'Registration Details not verified',
+    REGISTRATION_EXISTS : 'Registration exists'
 }

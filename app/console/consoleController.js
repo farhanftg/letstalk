@@ -12,14 +12,14 @@ ConsoleController.getRegistrationFromRegistrationRequest = async function(req, r
 
     try{
         let pendingRegistration = await requestRegistrationModel.getPendingRequestRegistration();
-        if(pendingRegistration.length)
-        {
-            pendingRegistration.forEach(async function(element,index){
+        if(pendingRegistration.length){
+            pendingRegistration.forEach(async function(element, index){
                 registrationModel.processRegistration(element.registration_number)
                     .then(function(registration){
                         if(registration){
-                            // update flag registration request status
-                            requestRegistrationModel.findOneAndUpdateAsync({_id:element._id},{status:1});
+                            requestRegistrationModel.findOneAndUpdateAsync({_id:element._id},{status:1}).catch(function(e){
+                                console.log(e);
+                            });
                         }
                     })
                     .catch(e => {
@@ -28,8 +28,7 @@ ConsoleController.getRegistrationFromRegistrationRequest = async function(req, r
             });
         }
         res.send('Done');
-    }
-    catch(err){
+    }catch(err){
         console.log(err);
         res.send("Error");
     }

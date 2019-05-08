@@ -24,14 +24,14 @@
                                                 <option value="" <%=(filterCategory == '')?'selected':''%> >All</option>
                                                 <option value="Two Wheeler" <%=(filterCategory == 'Two Wheeler')?'selected':''%> >Two Wheeler</option>
                                                 <option value="Four Wheeler" <%=(filterCategory == 'Four Wheeler')?'selected':''%> >Four Wheeler</option>
-                                                <option value="Three Wheeler" <%=(filterCategory=='Three Wheeler'?'selected':'')%>>Three Wheeler</option>
+<!--                                                <option value="Three Wheeler" <%=(filterCategory=='Three Wheeler'?'selected':'')%>>Three Wheeler</option>
                                                 <option value="Bus" <%=(filterCategory=='Bus'?'selected':'')%>>Bus</option>
-                                                <option value="Truck"<%=(filterCategory=='Truck'?'selected':'')%>>Truck</option>
+                                                <option value="Truck"<%=(filterCategory=='Truck'?'selected':'')%>>Truck</option>-->
                                                 <option value="Other"<%=(filterCategory=='Other'?'selected':'')%>>Other</option>
                                             </select>
                                         </div>
-                                        <div class="col-xs-2 pull-right form-group">
-                                                <input type="text" id="search_text" name="search_text" value="<%= filterSearchText %>" class="form-control" placeholder="Search for vehicle class" >
+                                        <div class="col-xs-3 pull-right form-group">
+                                                <input type="text" id="search_text" name="search_text" value="<%= filterSearchText %>" class="form-control" placeholder="Search" >
                                        </div>
                                        
                                 </div>
@@ -115,9 +115,9 @@
                                     <option value="">Select Category</option>
                                     <option value="Two Wheeler" <%=(filterCategory=='Two Wheeler'?'selected':'')%>>Two Wheeler</option>
                                     <option value="Four Wheeler" <%=(filterCategory=='Four Wheeler'?'selected':'')%>>Four Wheeler</option>
-                                    <option value="Three Wheeler" <%=(filterCategory=='Three Wheeler'?'selected':'')%>>Three Wheeler</option>
+<!--                                    <option value="Three Wheeler" <%=(filterCategory=='Three Wheeler'?'selected':'')%>>Three Wheeler</option>
                                     <option value="Bus" <%=(filterCategory=='Bus'?'selected':'')%>>Bus</option>
-                                    <option value="Truck"<%=(filterCategory=='Truck'?'selected':'')%>>Truck</option>
+                                    <option value="Truck"<%=(filterCategory=='Truck'?'selected':'')%>>Truck</option>-->
                                     <option value="Other"<%=(filterCategory=='Other'?'selected':'')%>>Other</option>
                                 </select>
                             </div>
