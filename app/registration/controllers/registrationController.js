@@ -16,23 +16,23 @@ class RegistrationController extends ApiController{
 }
 
 RegistrationController.index = async function(req, res){
-    let twPendingRegCount  = registrationModel.countDocuments({vehicle_category:config.vehicleCategory.twoWheeler, status:1});
-    let twAutomaticRegCount= registrationModel.countDocuments({vehicle_category:config.vehicleCategory.twoWheeler, status:2});
-    let twApprovedRegCount = registrationModel.countDocuments({vehicle_category:config.vehicleCategory.twoWheeler, status:3});
-    let twTotalRegCount    = registrationModel.countDocuments({vehicle_category:config.vehicleCategory.twoWheeler});
-    let fwPendingRegCount  = registrationModel.countDocuments({vehicle_category:config.vehicleCategory.fourWheeler, status:1});
-    let fwAutomaticRegCount= registrationModel.countDocuments({vehicle_category:config.vehicleCategory.fourWheeler, status:2});
-    let fwApprovedRegCount = registrationModel.countDocuments({vehicle_category:config.vehicleCategory.fourWheeler, status:3});
-    let fwTotalRegCount    = registrationModel.countDocuments({vehicle_category:config.vehicleCategory.fourWheeler});
+    let twPendingRegCount  = registrationModel.countDocumentsAsync({vehicle_category:config.vehicleCategory.twoWheeler, status:1});
+    let twAutomaticRegCount= registrationModel.countDocumentsAsync({vehicle_category:config.vehicleCategory.twoWheeler, status:2});
+    let twApprovedRegCount = registrationModel.countDocumentsAsync({vehicle_category:config.vehicleCategory.twoWheeler, status:3});
+    let twTotalRegCount    = registrationModel.countDocumentsAsync({vehicle_category:config.vehicleCategory.twoWheeler});
+    let fwPendingRegCount  = registrationModel.countDocumentsAsync({vehicle_category:config.vehicleCategory.fourWheeler, status:1});
+    let fwAutomaticRegCount= registrationModel.countDocumentsAsync({vehicle_category:config.vehicleCategory.fourWheeler, status:2});
+    let fwApprovedRegCount = registrationModel.countDocumentsAsync({vehicle_category:config.vehicleCategory.fourWheeler, status:3});
+    let fwTotalRegCount    = registrationModel.countDocumentsAsync({vehicle_category:config.vehicleCategory.fourWheeler});
 
-    let twPendingRegTextCount   = registrationTextModel.countDocuments({category:config.vehicleCategory.twoWheeler, status:1});
-    let twAutomaticRegTextCount = registrationTextModel.countDocuments({category:config.vehicleCategory.twoWheeler, status:2});
-    let twApprovedRegTextCount  = registrationTextModel.countDocuments({category:config.vehicleCategory.twoWheeler, status:3});
-    let twTotalRegTextCount     = registrationTextModel.countDocuments({category:config.vehicleCategory.twoWheeler});
-    let fwPendingRegTextCount   = registrationTextModel.countDocuments({category:config.vehicleCategory.fourWheeler, status:1});
-    let fwAutomaticRegTextCount = registrationTextModel.countDocuments({category:config.vehicleCategory.fourWheeler, status:2});
-    let fwApprovedRegTextCount  = registrationTextModel.countDocuments({category:config.vehicleCategory.fourWheeler, status:3});
-    let fwTotalRegTextCount     = registrationTextModel.countDocuments({category:config.vehicleCategory.fourWheeler});
+    let twPendingRegTextCount   = registrationTextModel.countDocumentsAsync({category:config.vehicleCategory.twoWheeler, status:1});
+    let twAutomaticRegTextCount = registrationTextModel.countDocumentsAsync({category:config.vehicleCategory.twoWheeler, status:2});
+    let twApprovedRegTextCount  = registrationTextModel.countDocumentsAsync({category:config.vehicleCategory.twoWheeler, status:3});
+    let twTotalRegTextCount     = registrationTextModel.countDocumentsAsync({category:config.vehicleCategory.twoWheeler});
+    let fwPendingRegTextCount   = registrationTextModel.countDocumentsAsync({category:config.vehicleCategory.fourWheeler, status:1});
+    let fwAutomaticRegTextCount = registrationTextModel.countDocumentsAsync({category:config.vehicleCategory.fourWheeler, status:2});
+    let fwApprovedRegTextCount  = registrationTextModel.countDocumentsAsync({category:config.vehicleCategory.fourWheeler, status:3});
+    let fwTotalRegTextCount     = registrationTextModel.countDocumentsAsync({category:config.vehicleCategory.fourWheeler});
     
     Promise.all([
         twPendingRegCount, 
