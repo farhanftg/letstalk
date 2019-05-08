@@ -11,7 +11,7 @@ class ConsoleController{
 ConsoleController.getRegistrationFromRegistrationRequest = async function(req, res){
 
     try{
-        let pendingRegistration = await requestRegistrationModel.getPendingRequestRegistration();
+        let pendingRegistration = await requestRegistrationModel.findAsync({status:0},{registration_number:1});
         if(pendingRegistration.length){
             pendingRegistration.forEach(async function(element, index){
                 registrationModel.processRegistration(element.registration_number)

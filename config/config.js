@@ -27,10 +27,8 @@ config.report.from      = 'ucchatbot@gaadi.com';
 config.report.to        = 'anand.gupta@girnarsoft.com';
 
 config.report.timeoutError      = true;
-config.report.timeoutErrorTo    = ['anand.gupta@girnarsoft.com', 'sanjay.singh@girnarsoft.com', 'saurabh.jain1@girnarsoft.com'];
+config.report.timeoutErrorTo    = ['anand.gupta@girnarsoft.com', 'sanjay.singh@girnarsoft.com'];
 config.report.timeoutErrorTemplateName = 'B2C_API_TIMEOUT_ERROR_INS';
-
-config.report.dailyLeadReportTo= ['sumit.shairya@girnarsoft.com'];
 
 config.format = {};
 config.format.json      = 'JSON';
@@ -62,7 +60,7 @@ config.subSource.vahanScrapper = 'vahanScrapper';
 config.aws      = {};
 config.aws.s3   = {};
 config.aws.s3.enabled   = true;
-config.aws.s3.bucketName= 'girnarsoft-b2c'; 
+config.aws.s3.bucketName= 'girnarsoft-autodb'; 
 
 config.onDemandAllowedSubsource = ['jPoffice'];
 
@@ -70,14 +68,6 @@ config.requests = [
     {
         path:'*', 
         timeout:30000
-    },
-    {
-        path:'/quotes', 
-        timeout:60000
-    },
-    {
-        path:'/proposal', 
-        timeout:90000
     }
 ];
 
@@ -104,6 +94,6 @@ global.HELPER_PATH      = BASE_DIR+'/helpers/';
 global.UPLOAD_PATH      = BASE_DIR+'/'+UPLOAD_DIR+'/'
 global.LOG_PATH         = BASE_DIR+'/logs/';
 global.NODE_MODULE_PATH = BASE_DIR+'/node_modules/';
-global.ELK_FILE_PATH    = BASE_DIR+'/logs/b2c_api.json';
+global.ELK_FILE_PATH    = BASE_DIR+'/logs/vahan_scrapper.json';
 
 module.exports = config;
