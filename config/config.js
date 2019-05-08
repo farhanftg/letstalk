@@ -36,6 +36,11 @@ config.format = {};
 config.format.json      = 'JSON';
 config.format.xml       = 'XML';
 
+config.status = {};
+config.status.pending   = 1;
+config.status.autoMapped  = 2;
+config.status.approved= 3;
+
 config.vehicleCategory = {};
 config.vehicleCategory.twoWheeler   = 'Two Wheeler';
 config.vehicleCategory.fourWheeler  = 'Four Wheeler';

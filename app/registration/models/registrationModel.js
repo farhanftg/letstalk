@@ -304,23 +304,23 @@ Registration.processRegistration = function(registration_number){
 
         try{
             registration = await Registration.getRegistrationFromRtoVehicle(registration_number);
-            let textData = await Registration.findOne({maker_model:registration.maker_model});
+            let textData = await registrationTextModel.findOne({maker_model:registration.maker_model});
             if(textData){
-                if(textData.status == 3){
-                    registration.central_make_id            = textData.central_make_id?textData.central_make_id:'';
-                    registration.central_make_name          = textData.central_make_name?textData.central_make_name:'';
-                    registration.central_model_id           = textData.central_make_name?textData.central_make_name:'';
-                    registration.central_model_name         = textData.central_model_name?textData.central_model_name:'';
-                    registration.central_version_id         = textData.central_version_id?textData.central_version_id:'';
-                    registration.central_version_name       = textData.central_version_name?textData.central_version_name:'';
-                    registration.status                     = 3;
+                if(textData.status == config.status.autoMapped || textData.status == config.status.approved){
+                    registration.central_make_id            = textData.make_id?textData.make_id:'';
+                    registration.central_make_name          = textData.make_name?textData.make_name:'';
+                    registration.central_model_id           = textData.make_name?textData.make_name:'';
+                    registration.central_model_name         = textData.model_name?textData.model_name:'';
+                    registration.central_version_id         = textData.version_id?textData.version_id:'';
+                    registration.central_version_name       = textData.version_name?textData.version_name:'';
+                    registration.status                     = textData.status;
                 }
             }else{
                 let registrationText = {};
                 registrationText.text       = registration.maker_model,
                 registrationText.category   =  registration.vehicle_category, 
                 registrationText.vehicle_class = registration.vehicle_class;
-                registrationText.source     = 'rtoVehicle';
+                registrationText.source     = config.source.rtoVehicle;
                 let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
                 if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
                     registrationText.make_id    = autoMappedRegistrationText.make_id;
@@ -328,14 +328,14 @@ Registration.processRegistration = function(registration_number){
                     registrationText.model_id   = autoMappedRegistrationText.model_id;
                     registrationText.model_name = autoMappedRegistrationText.model_name;
                     registrationText.category   = autoMappedRegistrationText.category;
-                    registrationText.status = 2;
+                    registrationText.status = config.status.autoMapped;
                     
                     registration.central_make_id    = autoMappedRegistrationText.make_id;;
                     registration.central_make_name  = autoMappedRegistrationText.make_name;
                     registration.central_model_id   = autoMappedRegistrationText.model_id;;
                     registration.central_model_name = autoMappedRegistrationText.model_name;
                     registration.vehicle_category   = autoMappedRegistrationText.category;
-                    registration.status = 2;
+                    registration.status = config.status.autoMapped;
                 }
                 registrationTextModel.addRegistrationText(registrationText).catch(function(e){
                     console.log(e);
@@ -372,7 +372,7 @@ Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
             query.auth = config.rtoVehicle.authToken;  
             let result = await commonHelper.sendPostRequest(query, options);
             if(result && result.reason == 'active'){
-                let getRtoCode = commonHelper.getRtoCodeByRegistrationNo(result.regn_no);
+                let getRtoCode = commonHelper.getRtoCodeByRegistrationNumber(result.regn_no);
                 let rtoDetail    = await commonModel.getRtoDetail({rto_code:getRtoCode});
                 let getVehicleCategory = await vehicleClassModel.getVehicleCategoryByVehicleClass(result.vh_class);
                 let registration = {};
@@ -400,7 +400,7 @@ Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
                 registration.rto_city_id        = rtoDetail[0].cityId;
                 registration.rto_city_name      = rtoDetail[0].city;
 
-                registration.source             = 'rtoVehicle';
+                registration.source             = config.source.rtoVehicle;
                 resolve(registration);
             }else{
                 throw ERROR.DEFAULT_ERROR;                        

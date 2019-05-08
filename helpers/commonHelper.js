@@ -444,10 +444,9 @@ module.exports = {
         }
         return true;
     },
-    getRtoCodeByRegistrationNo: function(registrationNumber){
+    getRtoCodeByRegistrationNumber: function(registrationNumber){
         var rtoCode = '';
-        if(registrationNumber)
-        {
+        if(registrationNumber){
             rtoCode         = registrationNumber.toUpperCase().substring(0,4); 
             if(rtoCode[2] != '0' && isNaN(rtoCode[3])){
                 var stateCode   = registrationNumber.substring(0,2);
