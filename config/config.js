@@ -85,7 +85,7 @@ config.showDefaultErrorMessage      = false;
 
 //paginatiom
 config.pagination = {};
-config.pagination.limit = 20;
+config.pagination.limit = 100;
 
 config.redisKeyExpiryTime = '23:59:59:999';
 config.registrationNumberMaxLength = 15;
