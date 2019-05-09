@@ -97,14 +97,14 @@ $('#signup_form').on('init.field.fv', function (e, data) {
 			}
 		},
 		username: {
-			threshold: 30,
+			threshold: 2,
 			verbose: false,
 			validators: {
 				notEmpty: {
 					message: 'Username is required'
 				},
-				/* remote: {
-					url: '/validation/username',
+				remote: {
+					url: 'http://localhost:3000/validation/username',
 					data: function (validator, $field, value) {
 						return {
 							username: validator.getFieldElements('username').val()
@@ -112,7 +112,7 @@ $('#signup_form').on('init.field.fv', function (e, data) {
 					},
 					message: 'Username is already exist',
 					type: 'POST',
-				}, */
+				},
 			}
 		},
 		password: {
