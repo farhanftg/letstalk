@@ -132,12 +132,12 @@ module.exports = {
                 console.log("Error ", err);
             })
     },
-    checkUsername: function(req, res){
-        let user =  userModel.findOneAsync({username:req.body.username});
+    checkUsername: async function(req, res){
+        let user = await userModel.findOneAsync({username:req.body.username});
         if(user){
-            return res.json({status:true});
+            return res.json({valid:false});
         }else{
-            return res.json({status:false});
+            return res.json({valid:true});
         }
     }
 }
