@@ -115,37 +115,6 @@ module.exports = {
             }
         }
         if(!res.headersSent){ 
-            if(response.errors){
-                if(response.errors instanceof Array){
-                    for(var i=0; i<response.errors.length; i++){
-                        if(response.errors[i] && !response.errors[i].displayMessage){
-                            if(config.showDefaultErrorMessage){
-                                response.errors[i].displayMessage = ERROR.DEFAULT_ERROR;
-                            }else{
-                                response.errors[i].displayMessage = response.errors[i].message;
-                            }
-                        }
-                        if(config.hideDetailInErrorResponse){
-                            if(response.errors[i].hasOwnProperty('detail')){
-                                delete response.errors[i].detail;
-                            }
-                        }
-                    }
-                }else{
-                    if(response.errors && !response.errors.displayMessage){
-                        if(config.showDefaultErrorMessage){
-                            response.errors.displayMessage = ERROR.DEFAULT_ERROR;
-                        }else{
-                            response.errors.displayMessage = response.errors.message;
-                        }
-                    }
-                    if(config.hideDetailInErrorResponse){
-                        if(response.errors.hasOwnProperty('detail')){
-                            delete response.errors.detail;
-                        }
-                    }
-                }
-            }
             res.status(status).send(response);
         }   
     },
