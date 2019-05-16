@@ -311,10 +311,11 @@ Registration.processRegistration = function(registrationNumber){
                     if(textData.status == config.status.autoMapped || textData.status == config.status.approved){
                         registration.central_make_id            = textData.make_id?textData.make_id:'';
                         registration.central_make_name          = textData.make_name?textData.make_name:'';
-                        registration.central_model_id           = textData.make_name?textData.make_name:'';
+                        registration.central_model_id           = textData.model_id?textData.model_id:'';
                         registration.central_model_name         = textData.model_name?textData.model_name:'';
                         registration.central_version_id         = textData.version_id?textData.version_id:'';
                         registration.central_version_name       = textData.version_name?textData.version_name:'';
+                        registration.vehicle_category           = textData.category?textData.category:'';
                         registration.status                     = textData.status;
                     }
                 }else{
@@ -348,7 +349,12 @@ Registration.processRegistration = function(registrationNumber){
 
                 let data =  Registration.addRegistration(registration).catch(function(e){
                     console.log(e);
-                });               
+                });         
+                if(!registration.vehicle_category){
+                    vehicleClassModel.createAsync({vehicle_class:registration.vh_class}).catch(function(e){
+                        console.log(e);
+                    });
+                }
             }
             resolve(registration);
         }catch(e){
@@ -382,14 +388,6 @@ Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
                 let getVehicleCategory = await vehicleClassModel.getVehicleCategoryByVehicleClass(result.vh_class);
                 let registration = {};
 
-                // add vehicle class if not found
-                if(getVehicleCategory == null){
-                    vehicleClassModel.create({vehicle_class:result.vh_class},(err , createVehicle) => {
-                        if(err){
-                            console.log("Vehicle Class Error",err);
-                        }
-                    })
-                }
                 registration.registration_number= registrationNumber;
                 registration.maker_model        = result.vehicle_name;
                 registration.owner_name         = result.owner_name;
