@@ -12,7 +12,8 @@ var options = {
     reconnectTries: Number.MAX_VALUE,
     reconnectInterval: 1000,
     keepAlive: 1,     
-    bufferMaxEntries: 0 // If not connected, return errors immediately rather than waiting for reconnect
+    bufferMaxEntries: 0, // If not connected, return errors immediately rather than waiting for reconnect
+    useNewUrlParser: true 
 };
 mongoose.connect(config.mongodb.uri, options, function(err, db){
     if(err){

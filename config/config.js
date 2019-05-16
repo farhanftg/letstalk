@@ -30,6 +30,10 @@ config.report.timeoutError      = true;
 config.report.timeoutErrorTo    = ['anand.gupta@girnarsoft.com', 'sanjay.singh@girnarsoft.com'];
 config.report.timeoutErrorTemplateName = 'B2C_API_TIMEOUT_ERROR_INS';
 
+config.report.byPassLogError      = false;
+config.report.byPassLogErrorTo    = ['anand.gupta@girnarsoft.com', 'sanjay.singh@girnarsoft.com'];
+config.report.byPassLogErrorTemplateName = 'B2C_API_BYPASS_LOG_ERROR_INS';
+
 config.format = {};
 config.format.json      = 'JSON';
 config.format.xml       = 'XML';

@@ -91,11 +91,7 @@ module.exports = {
                 if(req.method == 'POST'){
                     query = req.body;
                 }
-                if(!response.hasOwnProperty('errors')){
-                    apiLogModel.addApiLog(url, req.method, query, response, userIp, userAgent, userDevice);
-                }else{
-                    errorApiLogModel.addErrorApiLog(url, req.method, query, response, userIp, userAgent, userDevice);
-                }         
+                apiLogModel.addApiLog(url, req.method, query, response, userIp, userAgent, userDevice);   
             }
             if(config.elkLog){
                 elkHelper.log(req, response, errorType);
@@ -196,11 +192,7 @@ module.exports = {
                     try{                       
                         data.response = JSON.parse(responseData);
                         if(config.apiLog && config.byPassLog.indexOf(url) == -1){
-                            if(data.response && ((data.response.hasOwnProperty('status') && data.response.status) || data.response.hasOwnProperty('data'))){
-                                apiLogModel.addApiLog(data.url, data.method, data.request, data.response, '', '', '');
-                            }else{
-                                errorApiLogModel.addErrorApiLog(data.url, data.method, data.request, data.response, '', '', '');
-                            }           
+                            apiLogModel.addApiLog(data.url, data.method, data.request, data.response, '', '', '');                                  
                         }
                         resolve(data.response);                     
                     }catch(err){  
@@ -260,11 +252,7 @@ module.exports = {
                     try{                       
                         data.response = JSON.parse(responseData);
                         if(config.apiLog && config.byPassLog.indexOf(url) == -1){
-                            if(data.response && ((data.response.hasOwnProperty('status') && data.response.status) || data.response.hasOwnProperty('data'))){
-                                apiLogModel.addApiLog(data.url, data.method, data.request, data.response, '', '', '');
-                            }else{
-                                errorApiLogModel.addErrorApiLog(data.url, data.method, data.request, data.response, '', '', '');
-                            }           
+                            apiLogModel.addApiLog(data.url, data.method, data.request, data.response, '', '', '');                                      
                         }
                         resolve(data.response);                     
                     }catch(err){  
@@ -311,7 +299,7 @@ module.exports = {
 
             data.template_name    = params.templateName;
             data.template_variable= JSON.stringify(params.params);
-            data.reference_type   = 'Insurance B2C API';
+            data.reference_type   = 'AutoDB Scrapper';
             data.reference_id     = params.referenceId;
             data.subject_variable = JSON.stringify(params.params);
 

@@ -167,9 +167,10 @@ RegistrationController.getRegistration = async function(req, res){
                     
                     throw ERROR.REGISTRATION_DETAILS_NOT_VERIFIED;
                 }else{
-                    registration = registrationModel.processRegistration(req.query.registration_number);
+                    registration = await registrationModel.processRegistration(req.query.registration_number);
                 }
             }
+            console.log(registration);
             if(registration.status == 2 || registration.status == 3){
                 registration = registrationModel.formatRegistrationData(registration);
                 this.sendResponse(req, res, 200, false, registration, false);
