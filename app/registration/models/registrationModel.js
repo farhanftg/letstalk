@@ -351,7 +351,7 @@ Registration.processRegistration = function(registrationNumber){
                     console.log(e);
                 });         
                 if(!registration.vehicle_category){
-                    vehicleClassModel.createAsync({vehicle_class:registration.vh_class}).catch(function(e){
+                    vehicleClassModel.createAsync({vehicle_class:registration.vehicle_class}).catch(function(e){
                         console.log(e);
                     });
                 }
