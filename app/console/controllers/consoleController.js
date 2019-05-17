@@ -1,10 +1,21 @@
 var path                    = require('path');
 var qs                      = require('qs');
-const registrationModel     = require('../registration/models/registrationModel');
-const requestRegistrationModel = require('../registration/models/requestRegistrationModel');
+var registrationModel       = require('../../registration/models/registrationModel');
+var registrationTextModel   = require('../../registration/models/registrationTextModel');
+var requestRegistrationModel= require('../../registration/models/requestRegistrationModel');
 
 class ConsoleController{
     constructor() {
+    }
+}
+
+ConsoleController.autoMapRegistrationText = async function(req, res){ 
+    try{
+        let count = await registrationTextModel.autoMapRegistrationText();
+        res.send('Auto Mapped Registration Text : '+count);
+    }catch(err){
+        console.log(err);
+        res.send("Error");
     }
 }
 

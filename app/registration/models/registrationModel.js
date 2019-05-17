@@ -386,7 +386,7 @@ Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
                 let rtoDetail    = await commonModel.getRtoDetail({rto_code:getRtoCode});
                 let vehicleClass = await vehicleClassModel.findOneAsync({vehicle_class:result.vh_class, status:2});
                 let registration = {};
-
+                
                 registration.registration_number= registrationNumber;
                 registration.maker_model        = result.vehicle_name;
                 registration.owner_name         = result.owner_name;

@@ -1,6 +1,7 @@
 var uniqueValidator     = require('mongoose-unique-validator');
 var validationHelper    = require(HELPER_PATH+'validationHelper');
 var commonHelper        = require(HELPER_PATH+'commonHelper');
+var registrationModel   = require('../models/registrationModel');
 
 var RegistrationTextSchema = new Schema({    
     text                : {type: String, unique:true},
@@ -55,7 +56,9 @@ RegistrationText.addRegistrationText =  function(data){
         registrationText.variant_name       = data.variant_name?data.variant_name:'';       
         registrationText.variant_display_name= data.variant_display_name?data.variant_display_name:'';     
         registrationText.vehicle_class       = data.vehicle_class ? data.vehicle_class:'';
-        registrationText.category           = data.category?data.category:'';           
+        registrationText.category           = data.category?data.category:'';    
+        registrationText.status             = data.status?data.status:1;
+        registrationText.sub_status         = data.sub_status?data.sub_status:1;
         registrationText.source             = data.source?data.source:'';
         registrationText.sub_source         = data.sub_source?data.sub_source:'';
         registrationText.updated_by         = data.updated_by?data.updated_by:'';
@@ -125,12 +128,47 @@ RegistrationText.updateRegistrationText =  function(data){
     });
 }
 
+RegistrationText.autoMapRegistrationText = function(){
+    return new Promise( async function(resolve, reject) {
+        try{
+            let count = 0;
+            let pendingRegistrationTexts = await RegistrationText.findAsync({status:config.status.pending});
+            for(var i=0;  i<pendingRegistrationTexts.length; i++){
+                let autoMappedRegistrationText = RegistrationText.getAutoMappedRegistrationText(pendingRegistrationTexts[i].text);
+                if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
+                    let registration    = {};
+                    let registrationText= {};
+                    registrationText.make_id    = autoMappedRegistrationText.make_id;
+                    registrationText.make_name  = autoMappedRegistrationText.make_name;
+                    registrationText.model_id   = autoMappedRegistrationText.model_id;
+                    registrationText.model_name = autoMappedRegistrationText.model_name;
+                    registrationText.category   = autoMappedRegistrationText.category;
+                    registrationText.status     = config.status.autoMapped;
+                    RegistrationText.updateAsync({_id:pendingRegistrationTexts[i]._id}, registrationText, { multi: true });
+                    
+                    registration.central_make_id    = autoMappedRegistrationText.make_id;;
+                    registration.central_make_name  = autoMappedRegistrationText.make_name;
+                    registration.central_model_id   = autoMappedRegistrationText.model_id;;
+                    registration.central_model_name = autoMappedRegistrationText.model_name;
+                    registration.vehicle_category   = autoMappedRegistrationText.category;
+                    registration.status             = config.status.autoMapped;
+                    registrationModel.updateAsync({maker_model:pendingRegistrationTexts[i].text}, registrationText, { multi: true });
+                    count++;
+                }
+            }     
+            resolve(count);
+        }catch(e){
+            reject(e);
+        }
+    });
+}
+
 RegistrationText.getAutoMappedRegistrationText = function(text){
     return new Promise( async function(resolve, reject) {
         try{
             let data = {};
             let approvedRows = await RegistrationText.aggregateAsync([
-                { $match: {status: 3}},
+                { $match: {status: config.status.approved}},
                 {
                     $project: {
                     "make_id": 1,    
