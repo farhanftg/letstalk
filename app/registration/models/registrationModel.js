@@ -307,6 +307,7 @@ Registration.processRegistration = function(registrationNumber){
             if(!registration){
                 registration = await Registration.getRegistrationFromRtoVehicle(registrationNumber);
                 let textData = await registrationTextModel.findOne({text:registration.maker_model});
+                console.log(textData);
                 if(textData){
                     if(textData.status == config.status.autoMapped || textData.status == config.status.approved){
                         registration.central_make_id            = textData.make_id?textData.make_id:'';
@@ -326,7 +327,7 @@ Registration.processRegistration = function(registrationNumber){
                     registrationText.source         = config.source.rtoVehicle;
 
                     let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
-
+                    console.log(autoMappedRegistrationText);
                     if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
                         registrationText.make_id    = autoMappedRegistrationText.make_id;
                         registrationText.make_name  = autoMappedRegistrationText.make_name;

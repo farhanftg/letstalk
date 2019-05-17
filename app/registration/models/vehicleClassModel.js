@@ -2,8 +2,8 @@ var validationHelper    = require(HELPER_PATH+'validationHelper');
 var commonHelper        = require(HELPER_PATH+'commonHelper');
 
 var VehicleClassSchema = new Schema({    
-    vehicle_class               : {type:String},
-    vehicle_category            : {type:String,default:''},
+    vehicle_class               : {type:String, unique:true},
+    vehicle_category            : {type:String},
     status                      : {type:Number, default:1},   
     created_at                  : {type: Date},
     updated_at                  : {type: Date, default: Date.now}

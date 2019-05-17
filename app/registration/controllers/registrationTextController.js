@@ -3,6 +3,7 @@ var qs              = require('qs');
 var ApiController           = require('../../common/controllers/apiController');
 var registrationModel       = require('../models/registrationModel');
 var registrationTextModel   = require('../models/registrationTextModel');
+var vehicleClassModel       = require('../models/vehicleClassModel');
 var commonModel             = require('../../common/models/commonModel');
 var commonHelper            = require(HELPER_PATH+'commonHelper.js');
 
@@ -55,8 +56,9 @@ RegistrationTextController.getRegistrationText = async function(req, res){
 //        }
     }
  
-RegistrationTextController.updateRegistrationText = function(req, res){  
+RegistrationTextController.updateRegistrationText = async function(req, res){  
     // if(req.isAuthenticated()){
+    try{
     let data = {}; 
     data.id             = req.body.id;
     data.make_id        = req.body.make;
@@ -77,20 +79,28 @@ RegistrationTextController.updateRegistrationText = function(req, res){
         data.id = req.body.id;
     }
     
-    registrationTextModel.updateRegistrationText(data);
+   
     //update registration status approved
     var registration_data = {};
-    registration_data.status = 3;
-    registration_data.central_make_id = req.body.make? req.body.make:'';
+
+    registration_data.central_make_id   = req.body.make? req.body.make:'';
     registration_data.central_make_name = req.body.make_name? req.body.make_name:'';
-    registration_data.central_model_id = req.body.model? req.body.model:'';
-    registration_data.central_model_name = req.body.model_name? req.body.model_name:'';
-    registration_data.central_version_id     = req.body.variant_id?req.body.variant_id:'';
+    registration_data.central_model_id  = req.body.model? req.body.model:'';
+    registration_data.central_model_name= req.body.model_name? req.body.model_name:'';
+    registration_data.central_version_id     = req.body.variant?req.body.variant:'';
     registration_data.central_version_name   = req.body.variant_name?req.body.variant_name:'';
-    registration_data.vehicle_category  = req.body.category;
-
-    registrationModel.updateAsync({maker_model:req.body.text},registration_data,{ multi: true });
-
+    registration_data.vehicle_category  = req.body.category?req.body.category:'';
+    registration_data.status            = config.status.approved;
+    
+    await registrationTextModel.updateRegistrationText(data)
+    await registrationModel.updateAsync({maker_model:req.body.text, status: {$in:[config.status.pending, config.status.autoMapped]}}, registration_data, { multi: true });
+    
+    let registration = await registrationModel.findOneAsync({_id:req.body.id});
+    vehicleClassModel.updateAsync({vehicle_class:registration.vehicle_class, status:config.status.pending}, {vehicle_category:req.body.category});
+    
+    }catch(e){
+        console.log(e);
+    }
     var filterText      = req.body.filter_text;
     var filterCategory  = req.body.filter_category;
     var filterStatus    = req.body.filter_status;
