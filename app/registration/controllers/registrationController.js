@@ -186,8 +186,17 @@ RegistrationController.getRegistration = async function(req, res){
 }
 
 RegistrationController.updateRegistration = async function(req, res){
-    // if(req.isAuthenticated()){
-        try{
+    let errors = new Array();
+    if(!req.query.make){
+        var error = commonHelper.formatError('ERR10008', 'make');
+        errors.push(error);
+    }
+    if(!req.query.model){
+        var error = commonHelper.formatError('ERR10009', 'model');
+        errors.push(error);
+    }
+    try{
+        if(!errors.length){
             let data = {}; 
             data.make_id        = req.body.make? req.body.make:'';
             data.make_name      = req.body.make_name?req.body.make_name:'';
@@ -198,14 +207,13 @@ RegistrationController.updateRegistration = async function(req, res){
             data.variant_display_name = req.body.variant_name?req.body.variant_name:'';
             data.category   = req.body.category?req.body.category:'';
             data.status     = config.status.approved;
-            data.sub_status = 1;
 
-    //        if(req.body.id.length > 24){
-    //            data.id = JSON.parse(req.body.id);
-    //            data.id.shift();
-    //        }else{
-    //            data.id = req.body.id;
-    //        }
+            if(req.body.id.length > 24){
+                data.id = JSON.parse(req.body.id);
+                data.id.shift();
+            }else{
+                data.id = req.body.id;
+            }
 
             let registration_data = {};
             registration_data.central_make_id   = req.body.make? req.body.make:'';
@@ -219,34 +227,38 @@ RegistrationController.updateRegistration = async function(req, res){
 
             await registrationModel.updateAsync({_id:req.body.id, status: {$in:[config.status.pending, config.status.autoMapped]}}, registration_data, { multi: true });
             await registrationTextModel.updateAsync({text:req.body.text, status: {$in:[config.status.pending, config.status.autoMapped]}}, data);
-            
+
             let registration = await registrationModel.findOneAsync({_id:req.body.id});
             vehicleClassModel.updateAsync({vehicle_class:registration.vehicle_class, status:config.status.pending}, {vehicle_category:req.body.category}).catch(function(e){
                 console.log(e);
             });       
-        }catch(e){
-            console.log(e);
+        }else{
+            throw errors;
         }
-        
-        let filterText      = req.body.filter_text;
-        let filterCategory  = req.body.filter_category;
-        let filterStatus    = req.body.filter_status;
-        let url = '/registration/list';
-        let query = {};
-        if(filterText){
-            query.filter_text = filterText; 
-        }
-        if(filterCategory){
-            query.filter_category = filterCategory; 
-        }
-        if(filterStatus){
-            query.filter_status = filterStatus; 
-        }
-        if(req.body.page){
-            query.page = req.body.page; 
-        }
-        query = qs.stringify(query);
-        url += '?'+query;
-        res.redirect(url);
+    }catch(e){
+        console.log(e);
+    }
+
+    let filterText      = req.body.filter_text;
+    let filterCategory  = req.body.filter_category;
+    let filterStatus    = req.body.filter_status;
+    let url = '/registration/list';
+    let query = {};
+    if(filterText){
+        query.filter_text = filterText; 
+    }
+    if(filterCategory){
+        query.filter_category = filterCategory; 
+    }
+    if(filterStatus){
+        query.filter_status = filterStatus; 
+    }
+    if(req.body.page){
+        query.page = req.body.page; 
+    }
+    query = qs.stringify(query);
+    url += '?'+query;
+    res.redirect(url);
 }
+
 module.exports = RegistrationController;

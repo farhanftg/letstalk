@@ -61,15 +61,14 @@ VehicleClassController.getVehicleClassList = async function(req, res){
 VehicleClassController.updateVehicleClass = async function(req, res){
     var vehicleClassData = {};
     var url = '/vehicle-class';
-    if(req.body.vehicle_class_id)
-    {
+    if(req.body.vehicle_class_id){
         if(req.body.status == 1 || req.body.status == 0){
             // update registration, registration text vehicle category when pending
             registrationModel.findOneAndUpdateAsync({vehicle_class:req.body.vehicle_class, status:config.status.pending},{vehicle_category:req.body.category});
             registrationTextModel.findOneAndUpdateAsync({vehicle_class:req.body.vehicle_class, status:config.status.pending},{category:req.body.category});
 
-            vehicleClassData.vehicle_class = req.body.vehicle_class;
-            vehicleClassData.vehicle_category = req.body.category;
+            vehicleClassData.vehicle_class      = req.body.vehicle_class;
+            vehicleClassData.vehicle_category   = req.body.category;
             vehicleClassData.status = 2; // Approved
             vehicleClassModel.findOneAndUpdateAsync({_id:req.body.vehicle_class_id},vehicleClassData);
         }
