@@ -307,7 +307,6 @@ Registration.processRegistration = function(registrationNumber){
             if(!registration){
                 registration = await Registration.getRegistrationFromRtoVehicle(registrationNumber);
                 let textData = await registrationTextModel.findOne({text:registration.maker_model});
-                console.log(textData);
                 if(textData){
                     if(textData.status == config.status.autoMapped || textData.status == config.status.approved){
                         registration.central_make_id            = textData.make_id?textData.make_id:'';
@@ -327,7 +326,6 @@ Registration.processRegistration = function(registrationNumber){
                     registrationText.source         = config.source.rtoVehicle;
 
                     let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
-                    console.log(autoMappedRegistrationText);
                     if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
                         registrationText.make_id    = autoMappedRegistrationText.make_id;
                         registrationText.make_name  = autoMappedRegistrationText.make_name;
@@ -386,7 +384,7 @@ Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
             if(result && result.reason == 'active'){
                 let getRtoCode = commonHelper.getRtoCodeByRegistrationNumber(registrationNumber);
                 let rtoDetail    = await commonModel.getRtoDetail({rto_code:getRtoCode});
-                let getVehicleCategory = await vehicleClassModel.getVehicleCategoryByVehicleClass(result.vh_class);
+                let vehicleClass = await vehicleClassModel.findOneAsync({vehicle_class:result.vh_class, status:2});
                 let registration = {};
 
                 registration.registration_number= registrationNumber;
@@ -398,7 +396,7 @@ Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
                 registration.chassis_number     = result.c_no;
                 registration.engine_number      = result.e_no;
                 registration.vehicle_class      = result.vh_class;
-                registration.vehicle_category   = getVehicleCategory ? getVehicleCategory: '';
+                registration.vehicle_category   = vehicleClass && vehicleClass.vehicle_category ? vehicleClass.vehicle_category: '';
                 registration.rto_code           = getRtoCode;
                 registration.rto_name           = rtoDetail[0].rtoName;
                 registration.rto_city_id        = rtoDetail[0].cityId;
