@@ -58,11 +58,11 @@ RegistrationTextController.getRegistrationText = async function(req, res){
  
 RegistrationTextController.updateRegistrationText = async function(req, res){  
     let errors = new Array();
-    if(!req.query.make){
+    if(!req.body.make){
         var error = commonHelper.formatError('ERR10008', 'make');
         errors.push(error);
     }
-    if(!req.query.model){
+    if(!req.body.model){
         var error = commonHelper.formatError('ERR10009', 'model');
         errors.push(error);
     }
