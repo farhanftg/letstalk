@@ -102,7 +102,9 @@ RegistrationTextController.updateRegistrationText = async function(req, res){
             await registrationModel.updateAsync({maker_model:req.body.text, status: {$in:[config.status.pending, config.status.autoMapped]}}, registration_data, { multi: true });
 
             let registration = await registrationModel.findOneAsync({_id:req.body.id});
-            vehicleClassModel.updateAsync({vehicle_class:registration.vehicle_class, status:config.status.pending}, {vehicle_category:req.body.category});
+            if(registration){
+                vehicleClassModel.updateAsync({vehicle_class:registration.vehicle_class, status:config.status.pending}, {vehicle_category:req.body.category});
+            }
         }else{
             throw errors;
         }
