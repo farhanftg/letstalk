@@ -86,7 +86,8 @@ config.showDefaultErrorMessage      = false;
 config.pagination = {};
 config.pagination.limit = 20;
 
-config.autoMapping.limit = 100;
+config.autoMapRegistrationText = {};
+config.autoMapRegistrationText.limit = 100;
 
 config.redisKeyExpiryTime = '23:59:59:999';
 config.registrationNumberMaxLength = 15;
