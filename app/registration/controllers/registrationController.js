@@ -214,21 +214,21 @@ RegistrationController.updateRegistration = async function(req, res){
                 data.id = req.body.id;
             }
 
-            let registration_data = {};
-            registration_data.central_make_id   = req.body.make? req.body.make:'';
-            registration_data.central_make_name = req.body.make_name?req.body.make_name:'';
-            registration_data.central_model_id  = req.body.model?req.body.model:'';
-            registration_data.central_model_name= req.body.model_name?req.body.model_name:'';
-            registration_data.central_version_id= req.body.variant?req.body.variant:'';
-            registration_data.central_version_name = req.body.variant_name?req.body.variant_name:'';
-            registration_data.vehicle_category  = req.body.category?req.body.category:'';
-            registration_data.status            = config.status.approved;
+            let registrationData = {};
+            registrationData.central_make_id   = req.body.make? req.body.make:'';
+            registrationData.central_make_name = req.body.make_name?req.body.make_name:'';
+            registrationData.central_model_id  = req.body.model?req.body.model:'';
+            registrationData.central_model_name= req.body.model_name?req.body.model_name:'';
+            registrationData.central_version_id= req.body.variant?req.body.variant:'';
+            registrationData.central_version_name = req.body.variant_name?req.body.variant_name:'';
+            registrationData.vehicle_category  = req.body.category?req.body.category:'';
+            registrationData.status            = config.status.approved;
 
-            await registrationModel.updateAsync({_id:req.body.id, status: {$in:[config.status.pending, config.status.autoMapped]}}, registration_data, { multi: true });
-            await registrationTextModel.updateAsync({text:req.body.text, status: {$in:[config.status.pending, config.status.autoMapped]}}, data);
+            await registrationModel.updateManyAsync({maker_model:req.body.text, status: {$in:[config.status.pending, config.status.autoMapped]}}, registrationData);
+            await registrationTextModel.updateOneAsync({text:req.body.text, status: {$in:[config.status.pending, config.status.autoMapped]}}, data);
 
             let registration = await registrationModel.findOneAsync({_id:req.body.id});
-            vehicleClassModel.updateAsync({vehicle_class:registration.vehicle_class, status:config.status.pending}, {vehicle_category:req.body.category}).catch(function(e){
+            vehicleClassModel.updateOneAsync({vehicle_class:registration.vehicle_class, status:config.status.pending}, {vehicle_category:req.body.category}).catch(function(e){
                 console.log(e);
             });       
         }else{

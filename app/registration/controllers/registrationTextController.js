@@ -14,47 +14,43 @@ class RegistrationTextController extends ApiController{
 }
 
 RegistrationTextController.getRegistrationText = async function(req, res){
-//        if(req.isAuthenticated()){
-            var page  = 1;
-            var start = 0;
-            var limit = config.pagination.limit;
-            var filterStatus    = '';
-            var filterCategory  = '';
-            var filterText      = '';
-            var query = req.query;
-            var data = new Object(); 
-            let filterQuery ={};
-            if(req.query.page){
-                page  = req.query.page;        
-            }
-            if (query.hasOwnProperty('page')){
-                delete query.page;
-            }    
-            query = qs.stringify(query);   
-            
-            if(req.query.filter_text){
-                filterText  = req.query.filter_text;               
-                filterQuery.text = new RegExp(filterText, 'i');
-            }
-            if(req.query.filter_category){
-                filterCategory  = req.query.filter_category;
-                filterQuery.category = filterCategory;
-            }
-             if(req.query.filter_status){
-                filterStatus  = req.query.filter_status; 
-                filterQuery.status = filterStatus;
-            }
-            
-            start = parseInt((page*limit) - limit);
-            let carMakes    = await commonModel.getCarMake();
-            let bikeMakes   = await commonModel.getBikeMake();
-            let recordCount = await registrationTextModel.countDocumentsAsync(filterQuery);
-            let rows = await registrationTextModel.find(filterQuery).skip(start).sort({status:1,created_at:-1}).limit(limit).execAsync();
-            res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'registration_text'),{registrations:rows, bikeMakes:bikeMakes, bikeModels:[], bikeVariants:[], carMakes:carMakes, carModels:[], carVariants:[], filterStatus:filterStatus, filterCategory:filterCategory, filterText:filterText, url:'/registration-text', page:page, limit:limit, recordCount:recordCount, query:query,start:start});     
-//        }else{
-//            res.redirect('/login');
-//        }
+    var page  = 1;
+    var start = 0;
+    var limit = config.pagination.limit;
+    var filterStatus    = '';
+    var filterCategory  = '';
+    var filterText      = '';
+    var query = req.query;
+    var data = new Object(); 
+    let filterQuery ={};
+    if(req.query.page){
+        page  = req.query.page;        
     }
+    if (query.hasOwnProperty('page')){
+        delete query.page;
+    }    
+    query = qs.stringify(query);   
+
+    if(req.query.filter_text){
+        filterText  = req.query.filter_text;               
+        filterQuery.text = new RegExp(filterText, 'i');
+    }
+    if(req.query.filter_category){
+        filterCategory  = req.query.filter_category;
+        filterQuery.category = filterCategory;
+    }
+     if(req.query.filter_status){
+        filterStatus  = req.query.filter_status; 
+        filterQuery.status = filterStatus;
+    }
+
+    start = parseInt((page*limit) - limit);
+    let carMakes    = await commonModel.getCarMake();
+    let bikeMakes   = await commonModel.getBikeMake();
+    let recordCount = await registrationTextModel.countDocumentsAsync(filterQuery);
+    let rows = await registrationTextModel.find(filterQuery).skip(start).sort({status:1,created_at:-1}).limit(limit).execAsync();
+    res.render(path.join(BASE_DIR, 'app/registration/views/registration', 'registration_text'),{registrations:rows, bikeMakes:bikeMakes, bikeModels:[], bikeVariants:[], carMakes:carMakes, carModels:[], carVariants:[], filterStatus:filterStatus, filterCategory:filterCategory, filterText:filterText, url:'/registration-text', page:page, limit:limit, recordCount:recordCount, query:query,start:start});     
+}
  
 RegistrationTextController.updateRegistrationText = async function(req, res){  
     let errors = new Array();
@@ -99,7 +95,7 @@ RegistrationTextController.updateRegistrationText = async function(req, res){
             registration_data.status            = config.status.approved;
 
             await registrationTextModel.updateRegistrationText(data)
-            await registrationModel.updateAsync({maker_model:req.body.text, status: {$in:[config.status.pending, config.status.autoMapped]}}, registration_data, { multi: true });
+            await registrationModel.updateManyAsync({maker_model:req.body.text, status: {$in:[config.status.pending, config.status.autoMapped]}}, registration_data);
 
             let registration = await registrationModel.findOneAsync({_id:req.body.id});
             if(registration){
@@ -132,80 +128,7 @@ RegistrationTextController.updateRegistrationText = async function(req, res){
     query = qs.stringify(query);
     url += '?'+query;
     res.redirect(url);     
-          
-//        }else{
-//            res.redirect('/login');
-//        }
-    }
-    
-/*    
-RegistrationTextController.getAutoMapping = function(req, res){
-        var vehicleRegistrations    = new Array();
-        var vehicleRegistrationText = new Object();               
-        vehicleRegistrationTextModel.getRegistrationText('status=3 AND category="Four Wheeler"', 'make_name, model_name', 'CHAR_LENGTH(model_name) DESC',false, function(approvedRows){ 
-            vehicleRegistrationTextModel.getRegistrationText('(status >= 0 AND status <= 2) AND (sub_status IS NULL OR sub_status=0 OR sub_status !=2) AND category="Four Wheeler"',false,'registration_count DESC',false, function(rows){                             
-                for(i=0; i<approvedRows.length; i++){
-                    var approvedRow = approvedRows[i];
-                    if(approvedRows[i].make_id && approvedRows[i].model_id){
-                        for(j=0; j<rows.length; j++){                
-                            var row = rows[j];
-                            var rowArr = row.text.toLowerCase().split(' ');
-                            if((row.text.toLowerCase().indexOf(approvedRow.make_name.toLowerCase()) >= 0 && (approvedRow.model_name.length > 1 && row.text.toLowerCase().indexOf(approvedRow.model_name.toLowerCase()) >= 0)) || (approvedRow.model_name.length>=3 && rowArr.indexOf(approvedRow.model_name.toLowerCase()) >=0)){                    
-                                var exists = false;
-                                if(vehicleRegistrations.length > 0){
-                                    for(k=0; k<vehicleRegistrations.length;k++){
-                                        if(vehicleRegistrations[k].id == row.id){
-                                            exists = true;
-                                            break;
-                                        }                               
-                                    }
-                                }
-                                if(!exists){                                 
-                                    vehicleRegistrationText = new Object();
-                                    vehicleRegistrationText.id          = row.id;
-                                    vehicleRegistrationText.text        = row.text;
-                                    vehicleRegistrationText.make_id     = approvedRow.make_id;
-                                    vehicleRegistrationText.make_name   = approvedRow.make_name;
-                                    vehicleRegistrationText.model_id    = approvedRow.model_id;
-                                    vehicleRegistrationText.model_name  = approvedRow.model_name;
-                                    vehicleRegistrationText.category    = approvedRow.category;
-                                    vehicleRegistrationText.text_id     = approvedRow.id;                                   
-                                    vehicleRegistrationText.status      = 2;
-                                    vehicleRegistrationText.sub_status  = 2; 
-                                    vehicleRegistrationText.updated_at  = registrationHelper.getCurrentDateTime();
-                                    console.log(vehicleRegistrationText);
-                                    vehicleRegistrations.push(vehicleRegistrationText);
-                                }
-                            }
-                        }
-                    }
-                }
-                if(vehicleRegistrations.length > 0){
-                    vehicleRegistrationTextModel.setVehicleRegistrationText(vehicleRegistrations, function(result){
-                        console.log('AutoQC done for '+vehicleRegistrations.length+' records');
-                        res.send(vehicleRegistrations); 
-                    });   
-                }else{
-                    console.log('No data found');
-                    res.send('No data found');
-                }
-            }); 
-        }); 
 }
     
-RegistrationTextController.getStatus = function(registration){
-    var status = 0; 
-    if(registration.make_id != '' && registration.model_id != ''){
-        status = 2;
-        return status;
-    }else if(registration.make_id != ''){
-        status = 1;
-        return status;
-    }else{
-        return status;
-    }
-}
-*/
-
 module.exports = RegistrationTextController;
 
