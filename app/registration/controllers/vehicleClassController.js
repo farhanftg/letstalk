@@ -2,10 +2,10 @@ var path                    = require('path');
 var qs                      = require('qs');
 var ApiController           = require('../../common/controllers/apiController');
 var commonHelper            = require(HELPER_PATH+'commonHelper.js');
-const commonModel           = require('../../common/models/commonModel');
-const vehicleClassModel     = require('../models/vehicleClassModel');
-const registrationModel    = require('../models/registrationModel');
-const registrationTextModel = require('../models/registrationTextModel');
+var commonModel             = require('../../common/models/commonModel');
+var vehicleClassModel       = require('../models/vehicleClassModel');
+var registrationModel       = require('../models/registrationModel');
+var registrationTextModel   = require('../models/registrationTextModel');
 
 
 class VehicleClassController extends ApiController{

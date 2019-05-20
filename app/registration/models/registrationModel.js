@@ -303,7 +303,7 @@ Registration.processRegistration = function(registrationNumber){
     return new Promise(async function(resolve, reject){
 
         try{
-            let registration = await Registration.findOne({registration_number:registrationNumber});
+            let registration = await Registration.findOneAsync({registration_number:registrationNumber});
             if(!registration){
                 registration = await Registration.getRegistrationFromRtoVehicle(registrationNumber);
                 let textData = await registrationTextModel.findOne({text:registration.maker_model});

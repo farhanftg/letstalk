@@ -2,6 +2,7 @@ var uniqueValidator     = require('mongoose-unique-validator');
 var validationHelper    = require(HELPER_PATH+'validationHelper');
 var commonHelper        = require(HELPER_PATH+'commonHelper');
 var registrationModel   = require('../models/registrationModel');
+var vehicleClassModel   = require('../models/vehicleClassModel');
 
 var RegistrationTextSchema = new Schema({    
     text                : {type: String, unique:true},
@@ -19,7 +20,7 @@ var RegistrationTextSchema = new Schema({
     source                      : {type: String, required:true},
     sub_source                  : {type: String},
     status                      : {type:Number, default:1},   
-    sub_status                  : {type:String, default:1},   
+    sub_status                  : {type:Number, default:1},   
     updated_by                  : String,
     created_at                  : {type: Date},
     updated_at                  : {type: Date, default: Date.now}
@@ -129,22 +130,24 @@ RegistrationText.updateRegistrationText =  function(data){
 }
 
 RegistrationText.autoMapRegistrationText = function(){
+    var registrationModel = require('../models/registrationModel');
     return new Promise( async function(resolve, reject) {
         try{
             let count = 0;
             let pendingRegistrationTexts = await RegistrationText.findAsync({status:config.status.pending});
             for(var i=0;  i<pendingRegistrationTexts.length; i++){
-                let autoMappedRegistrationText = RegistrationText.getAutoMappedRegistrationText(pendingRegistrationTexts[i].text);
+                let autoMappedRegistrationText = await RegistrationText.getAutoMappedRegistrationText(pendingRegistrationTexts[i].text);
                 if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
                     let registration    = {};
                     let registrationText= {};
+                    
                     registrationText.make_id    = autoMappedRegistrationText.make_id;
                     registrationText.make_name  = autoMappedRegistrationText.make_name;
                     registrationText.model_id   = autoMappedRegistrationText.model_id;
                     registrationText.model_name = autoMappedRegistrationText.model_name;
                     registrationText.category   = autoMappedRegistrationText.category;
                     registrationText.status     = config.status.autoMapped;
-                    RegistrationText.updateAsync({_id:pendingRegistrationTexts[i]._id}, registrationText, { multi: true });
+                    RegistrationText.updateOneAsync({_id:pendingRegistrationTexts[i]._id}, registrationText);
                     
                     registration.central_make_id    = autoMappedRegistrationText.make_id;;
                     registration.central_make_name  = autoMappedRegistrationText.make_name;
@@ -152,7 +155,7 @@ RegistrationText.autoMapRegistrationText = function(){
                     registration.central_model_name = autoMappedRegistrationText.model_name;
                     registration.vehicle_category   = autoMappedRegistrationText.category;
                     registration.status             = config.status.autoMapped;
-                    registrationModel.updateAsync({maker_model:pendingRegistrationTexts[i].text}, registrationText, { multi: true });
+                    registrationModel.updateManyAsync({maker_model:pendingRegistrationTexts[i].text, status:config.status.pending}, registration);
                     count++;
                 }
             }     
