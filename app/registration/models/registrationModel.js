@@ -232,7 +232,7 @@ Registration.formatAndSendRegistrationToAutoDB = function(registration){
 }
 
 Registration.formatRegistrationDataForAutoDB= function(data){  
-    if(registration){              
+    if(data){              
         let registration = {};       
         registration.registration_number        = data.registration_number?data.registration_number.toUpperCase():'';
         registration.maker_model                = data.maker_model?data.maker_model.trim():'';             
