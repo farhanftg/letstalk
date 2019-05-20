@@ -129,12 +129,12 @@ RegistrationText.updateRegistrationText =  function(data){
     });
 }
 
-RegistrationText.autoMapRegistrationText = function(){
+RegistrationText.autoMapRegistrationText = function(limit){
     var registrationModel = require('../models/registrationModel');
     return new Promise( async function(resolve, reject) {
         try{
             let count = 0;
-            let pendingRegistrationTexts = await RegistrationText.findAsync({status:config.status.pending});
+            let pendingRegistrationTexts = await RegistrationText.find({status:config.status.pending}).limit(limit).execAsync();
             for(var i=0;  i<pendingRegistrationTexts.length; i++){
                 let autoMappedRegistrationText = await RegistrationText.getAutoMappedRegistrationText(pendingRegistrationTexts[i].text);
                 if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){

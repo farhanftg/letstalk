@@ -11,7 +11,8 @@ class ConsoleController{
 
 ConsoleController.autoMapRegistrationText = async function(req, res){ 
     try{
-        let count = await registrationTextModel.autoMapRegistrationText();
+        let limit = req.query && req.query.limit?req.query.limit:config.autoMapping.limit;
+        let count = await registrationTextModel.autoMapRegistrationText(limit);
         res.send('Auto Mapped Registration Text : '+count);
     }catch(err){
         console.log(err);
