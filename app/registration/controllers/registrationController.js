@@ -171,7 +171,7 @@ RegistrationController.getRegistration = async function(req, res){
                 }
             }
             if(registration.status == 2 || registration.status == 3){
-                registration = registrationModel.formatRegistrationData(registration);
+                registration = registrationModel.formatRegistrationDataForAutoDB(registration);
                 this.sendResponse(req, res, 200, false, registration, false);
             }else{
                 throw ERROR.REGISTRATION_DETAILS_NOT_VERIFIED;
