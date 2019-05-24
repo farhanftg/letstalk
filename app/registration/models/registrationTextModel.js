@@ -178,8 +178,6 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
                     "make_name": 1,
                     "model_id": 1,    
                     "model_name": 1,
-                    "variant_id":1,
-                    "variant_name":1,
                     "category": 1,
                     "length": { $strLenCP: "$model_name" }
                     }
@@ -187,7 +185,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
                 { $match: {length:{$gte:3}}},
                 { $sort: { length: -1} },
             ]);
-            console.log(approvedRows);
+            
 //            approvedRows.forEach(function(approvedRow){
 //                if(approvedRow.make_id && approvedRow.model_id){
 //                    var textArr = text.toLowerCase().split(' ');
