@@ -161,8 +161,7 @@ RegistrationTextController.getVehicleTextMmv = async function(req, res){
                
                 let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(req.query.registration_text);
 
-                if(Array.isArray(autoMappedRegistrationText)){
-                    
+                if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
                     getRegistrationText.make_id    = autoMappedRegistrationText.make_id;
                     getRegistrationText.make_name  = autoMappedRegistrationText.make_name;
                     getRegistrationText.model_id   = autoMappedRegistrationText.model_id;
