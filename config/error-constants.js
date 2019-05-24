@@ -19,5 +19,6 @@ module.exports = {
     STATUS_REQUIRED : 'Status is required',
     REGISTRATION_DETAILS_NOT_VERIFIED : 'Registration Details not verified',
     REGISTRATION_EXISTS : 'Registration exists',
-    REGISTRATION_TEXT_REQUIRED : 'Registration text is required'
+    REGISTRATION_TEXT_REQUIRED : 'Registration text is required',
+    REGISTRATION_TEXT_NOT_FOUND : 'Registration text not found'
 }

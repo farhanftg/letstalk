@@ -157,11 +157,8 @@ RegistrationTextController.getDetailsByRegistrationText = async function(req, re
                 text.category   = registrationText.category;
                 text.variant_id = registrationText.variant_id;
                 text.variant_name = registrationText.variant_name;
-            }
-            else{  
-                            
-                let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(req.query.registration_text);
-            
+            }else{                            
+                let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(req.query.registration_text);           
                 if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
                     text.make_id    = autoMappedRegistrationText.make_id;
                     text.make_name  = autoMappedRegistrationText.make_name;
@@ -171,6 +168,10 @@ RegistrationTextController.getDetailsByRegistrationText = async function(req, re
                     text.variant_id = autoMappedRegistrationText.variant_id;
                     text.variant_name = autoMappedRegistrationText.variant_name;
                 }
+            }
+            
+            if(!text.make_id && !text.model_id){
+                throw ERROR.REGISTRATION_TEXT_NOT_FOUND;
             }
             this.sendResponse(req, res, 200, false, text, false);
 
