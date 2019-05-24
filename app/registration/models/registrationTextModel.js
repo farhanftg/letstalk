@@ -171,7 +171,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
         try{
             let data = {};
             let approvedRows = await RegistrationText.aggregateAsync([
-                { $match: {status: config.status.approved}},
+                { $match: {status: config.status.approved,model_name:{$ne:null}}},
                 {
                     $project: {
                     "make_id": 1,    
@@ -187,6 +187,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
                 { $match: {length:{$gte:3}}},
                 { $sort: { length: -1} },
             ]);
+            console.log(approvedRows);
 //            approvedRows.forEach(function(approvedRow){
 //                if(approvedRow.make_id && approvedRow.model_id){
 //                    var textArr = text.toLowerCase().split(' ');
