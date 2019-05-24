@@ -184,6 +184,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
                     "length": { $strLenCP: "$model_name" }
                     }
                 },
+                { $match: {length:{$gte:3}}},
                 { $sort: { length: -1} },
             ]);
 //            approvedRows.forEach(function(approvedRow){
