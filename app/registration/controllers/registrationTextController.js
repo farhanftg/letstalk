@@ -130,11 +130,11 @@ RegistrationTextController.updateRegistrationText = async function(req, res){
     res.redirect(url);     
 }
 
-RegistrationTextController.getVehicleTextMmv = async function(req, res){
+RegistrationTextController.getDetailsByRegistrationText = async function(req, res){
     let errors = new Array();
 
     if(!req.query.registration_text){
-        var error = commonHelper.formatError('ERR10011', 'registration_text', 'Registration text is required');
+        var error = commonHelper.formatError('ERR10016', 'registration_text');
         errors.push(error);
     }
 
@@ -147,31 +147,32 @@ RegistrationTextController.getVehicleTextMmv = async function(req, res){
                     status:{$in:[config.status.autoMapped,config.status.approved]},
                 },{make_id:1,make_name:1,model_id:1,model_name:1,category:1,variant_id:1,variant_name:1});
 
-            let getRegistrationText = {};
+            let text = {};
+            
             if(registrationText){
-                getRegistrationText.make_id    = registrationText.make_id;
-                getRegistrationText.make_name  = registrationText.make_name;
-                getRegistrationText.model_id   = registrationText.model_id;
-                getRegistrationText.model_name = registrationText.model_name;
-                getRegistrationText.category   = registrationText.category;
-                getRegistrationText.variant_id = registrationText.variant_id;
-                getRegistrationText.variant_name = registrationText.variant_name;
+                text.make_id    = registrationText.make_id;
+                text.make_name  = registrationText.make_name;
+                text.model_id   = registrationText.model_id;
+                text.model_name = registrationText.model_name;
+                text.category   = registrationText.category;
+                text.variant_id = registrationText.variant_id;
+                text.variant_name = registrationText.variant_name;
             }
-            else{
-               
+            else{  
+                            
                 let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(req.query.registration_text);
-
+            
                 if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
-                    getRegistrationText.make_id    = autoMappedRegistrationText.make_id;
-                    getRegistrationText.make_name  = autoMappedRegistrationText.make_name;
-                    getRegistrationText.model_id   = autoMappedRegistrationText.model_id;
-                    getRegistrationText.model_name = autoMappedRegistrationText.model_name;
-                    getRegistrationText.category   = autoMappedRegistrationText.category;
-                    getRegistrationText.variant_id = autoMappedRegistrationText.variant_id;
-                    getRegistrationText.variant_name = autoMappedRegistrationText.variant_name;
+                    text.make_id    = autoMappedRegistrationText.make_id;
+                    text.make_name  = autoMappedRegistrationText.make_name;
+                    text.model_id   = autoMappedRegistrationText.model_id;
+                    text.model_name = autoMappedRegistrationText.model_name;
+                    text.category   = autoMappedRegistrationText.category;
+                    text.variant_id = autoMappedRegistrationText.variant_id;
+                    text.variant_name = autoMappedRegistrationText.variant_name;
                 }
             }
-            this.sendResponse(req, res, 200, false, getRegistrationText, false);
+            this.sendResponse(req, res, 200, false, text, false);
 
         }else{
             throw errors;

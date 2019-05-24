@@ -102,6 +102,11 @@ router.post('/update-registration-text', function (req, res) {
     registrationTextController.updateRegistrationText(req, res);
 });
 
+router.get('/registration-text/details',function(req,res){
+    registrationTextController.getDetailsByRegistrationText(req, res);
+});
+
+
 router.get('/file/:registrationNumber/:fileName', function (req, res) {
     awsHelper.readFile(req, res);
 });
@@ -150,9 +155,6 @@ router.get('/registration-request',ensureAuthenticated,function(req, res){
     registrationRequestController.index(req, res);
 });
 
-router.get('/vehicle-text-mmv',function(req,res){
-    registrationTextController.getVehicleTextMmv(req, res);
-});
 
 router.get('/favicon.ico',function (req, res) {	
     res.status(204).send();
