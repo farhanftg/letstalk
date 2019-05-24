@@ -129,6 +129,59 @@ RegistrationTextController.updateRegistrationText = async function(req, res){
     url += '?'+query;
     res.redirect(url);     
 }
+
+RegistrationTextController.getVehicleTextMmv = async function(req, res){
+    let errors = new Array();
+
+    if(!req.query.registration_text){
+        var error = commonHelper.formatError('ERR10011', 'registration_text', 'Registration text is required');
+        errors.push(error);
+    }
+
+    try{
+        if(!errors.length){
+            
+            let registrationText = await registrationTextModel.findOneAsync(
+                {
+                    text:req.query.registration_text.trim(),
+                    status:{$in:[config.status.autoMapped,config.status.approved]},
+                },{make_id:1,make_name:1,model_id:1,model_name:1,category:1,variant_id:1,variant_name:1});
+
+            let getRegistrationText = {};
+            if(registrationText){
+                getRegistrationText.make_id    = registrationText.make_id;
+                getRegistrationText.make_name  = registrationText.make_name;
+                getRegistrationText.model_id   = registrationText.model_id;
+                getRegistrationText.model_name = registrationText.model_name;
+                getRegistrationText.category   = registrationText.category;
+                getRegistrationText.variant_id = registrationText.variant_id;
+                getRegistrationText.variant_name = registrationText.variant_name;
+            }
+            else{
+               
+                let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(req.query.registration_text);
+
+                if(Array.isArray(autoMappedRegistrationText)){
+                    
+                    getRegistrationText.make_id    = autoMappedRegistrationText.make_id;
+                    getRegistrationText.make_name  = autoMappedRegistrationText.make_name;
+                    getRegistrationText.model_id   = autoMappedRegistrationText.model_id;
+                    getRegistrationText.model_name = autoMappedRegistrationText.model_name;
+                    getRegistrationText.category   = autoMappedRegistrationText.category;
+                    getRegistrationText.variant_id = autoMappedRegistrationText.variant_id;
+                    getRegistrationText.variant_name = autoMappedRegistrationText.variant_name;
+                }
+            }
+            this.sendResponse(req, res, 200, false, getRegistrationText, false);
+
+        }else{
+            throw errors;
+        }
+    }
+    catch(e){
+        this.sendResponse(req, res, 400, false, false, e)
+    }
+}
     
 module.exports = RegistrationTextController;
 

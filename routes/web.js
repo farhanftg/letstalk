@@ -148,7 +148,11 @@ router.get('/user/logout',function(req, res){
 
 router.get('/registration-request',ensureAuthenticated,function(req, res){
     registrationRequestController.index(req, res);
-})
+});
+
+router.get('/vehicle-text-mmv',function(req,res){
+    registrationTextController.getVehicleTextMmv(req, res);
+});
 
 router.get('/favicon.ico',function (req, res) {	
     res.status(204).send();

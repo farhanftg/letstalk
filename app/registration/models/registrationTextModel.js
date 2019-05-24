@@ -178,6 +178,8 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
                     "make_name": 1,
                     "model_id": 1,    
                     "model_name": 1,
+                    "variant_id":1,
+                    "variant_name":1,
                     "category": 1,
                     "length": { $strLenCP: "$model_name" }
                     }
