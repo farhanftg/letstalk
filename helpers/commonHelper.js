@@ -4,6 +4,7 @@ var https       = require('https');
 var moment      = require('moment');
 var useragent   = require('useragent');
 var apiLogModel = require('../app/common/models/apiLogModel');
+var tpApiLogModel    = require('../app/common/models/tpApiLogModel');
 var errorApiLogModel = require('../app/common/models/errorApiLogModel');
 var elkHelper        = require('./elkHelper');
 var errors      = require('../config/errors');
@@ -91,7 +92,7 @@ module.exports = {
                 if(req.method == 'POST'){
                     query = req.body;
                 }
-                apiLogModel.addApiLog(url, req.method, query, response, userIp, userAgent, userDevice);   
+                apiLogModel.addApiLog(url, req.method, query, response, userIp, userAgent, userDevice);
             }
             if(config.elkLog){
                 elkHelper.log(req, response, errorType);
@@ -122,7 +123,7 @@ module.exports = {
                         path: path                          
                     };   
             try{
-                let result = await module.exports.sendGetRequest(query, options);
+                let result = await module.exports.sendGetRequest(query, options, true);
                 if(result.data){
                     resolve(result.data);
                 }else if(result.errors){
@@ -192,7 +193,7 @@ module.exports = {
                     try{                       
                         data.response = JSON.parse(responseData);
                         if(config.apiLog && config.byPassLog.indexOf(url) == -1){
-                            apiLogModel.addApiLog(data.url, data.method, data.request, data.response, '', '', '');                                  
+                            tpApiLogModel.addApiLog(data.url, data.method, data.request, data.response, '', '', '');
                         }
                         resolve(data.response);                     
                     }catch(err){  
@@ -252,7 +253,7 @@ module.exports = {
                     try{                       
                         data.response = JSON.parse(responseData);
                         if(config.apiLog && config.byPassLog.indexOf(url) == -1){
-                            apiLogModel.addApiLog(data.url, data.method, data.request, data.response, '', '', '');                                      
+                            tpApiLogModel.addApiLog(data.url, data.method, data.request, data.response, '', '', '');
                         }
                         resolve(data.response);                     
                     }catch(err){  

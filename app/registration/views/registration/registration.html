@@ -309,6 +309,7 @@
     </div>        
     <!-- /page content -->
     <script>
+        var getCarModelId = getCarVariantId = getBikeModelId = getBikeVariantId =  0;
         $(document).ready(function() {
     
             $(document).on('submit','#registration_text_detail_form',function(){
@@ -356,7 +357,12 @@
                 $('#myModal #make').val(makeId);
                 $('#myModal #model').val(modelId);
                 $('#myModal #variant').val(variantId);
-                $('#myModal #status').val(status);   
+                $('#myModal #status').val(status); 
+                
+                getCarModelId = modelId;
+                getCarVariantId = variantId;
+                getBikeModelId =  modelId;
+                getBikeVariantId = variantId;
                 
                 if(status == 'Approved' || status == 'Auto'){
                     $(".btn-approved").hide();
@@ -547,7 +553,7 @@
         function setCarModel(makeId){
             $.ajax({
                 url: "/common/get-car-model?make_id="+makeId,
-                async: false,
+                async: true,
                 success: function(result){
                     if(result && result.data){                    
                         var carModels = result.data;
@@ -556,6 +562,7 @@
                                 $('#model').append('<option value="'+carModels[i].model_id+'">'+carModels[i].model+'</option>');
                             }
                         }
+                        $('#myModal #model').val(getCarModelId);
                     }
                 }
             });
@@ -565,7 +572,7 @@
             if(modelId){
                 $.ajax({
                     url: "/common/get-car-variant?model_id="+modelId,
-                    async: false,
+                    async: true,
                     success: function(result){
                         if(result && result.data){                    
                             var carVariants = result.data;
@@ -574,6 +581,7 @@
                                     $('#variant').append('<option value="'+carVariants[i].version_id+'">'+carVariants[i].version+'</option>');
                                 }
                             }
+                            $('#myModal #variant').val(getCarVariantId);
                         }
                     }
                 });   
@@ -593,6 +601,7 @@
                                     $('#model').append('<option value="'+bikeModels[i].model_id+'">'+bikeModels[i].model+'</option>');
                                 }
                             }
+                            $('#myModal #model').val(getBikeModelId);
                         }
                     }
                 });
@@ -612,6 +621,7 @@
                                     $('#variant').append('<option value="'+bikeVariants[i].version_id+'">'+bikeVariants[i].version+'</option>');
                                 }
                             }
+                            $('#myModal #variant').val(getBikeVariantId);
                         }
                     }
                 });
@@ -673,7 +683,7 @@
                     verbose: false,
                     validators: {
                         notEmpty: {
-                            message: 'Text is required'
+                            message: 'Category is required'
                         },
                     }
                 },
