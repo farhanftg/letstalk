@@ -562,54 +562,60 @@
         }
          
         function setCarVariant(modelId){
-            $.ajax({
-                url: "/common/get-car-variant?model_id="+modelId,
-                async: false,
-                success: function(result){
-                    if(result && result.data){                    
-                        var carVariants = result.data;
-                        for(i=0; i < carVariants.length; i++){
-                            if(modelId == carVariants[i].model_id){
-                                $('#variant').append('<option value="'+carVariants[i].version_id+'">'+carVariants[i].version+'</option>');
+            if(modelId){
+                $.ajax({
+                    url: "/common/get-car-variant?model_id="+modelId,
+                    async: false,
+                    success: function(result){
+                        if(result && result.data){                    
+                            var carVariants = result.data;
+                            for(i=0; i < carVariants.length; i++){
+                                if(modelId == carVariants[i].model_id){
+                                    $('#variant').append('<option value="'+carVariants[i].version_id+'">'+carVariants[i].version+'</option>');
+                                }
                             }
                         }
                     }
-                }
-            });
+                });   
+            }
         }
         
         function setBikeModel(makeId){
-            $.ajax({
-                url: "/common/get-bike-model?make_id="+makeId,
-                async: false,
-                success: function(result){
-                    if(result && result.data){                    
-                        var bikeModels = result.data;
-                        for(i=0; i < bikeModels.length; i++){
-                            if(makeId == bikeModels[i].make_id){
-                                $('#model').append('<option value="'+bikeModels[i].model_id+'">'+bikeModels[i].model+'</option>');
+            if(makeId){
+                $.ajax({
+                    url: "/common/get-bike-model?make_id="+makeId,
+                    async: false,
+                    success: function(result){
+                        if(result && result.data){                    
+                            var bikeModels = result.data;
+                            for(i=0; i < bikeModels.length; i++){
+                                if(makeId == bikeModels[i].make_id){
+                                    $('#model').append('<option value="'+bikeModels[i].model_id+'">'+bikeModels[i].model+'</option>');
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }
         }
            
-        function setBikeVariant(modelId){     
-            $.ajax({
-                url: "/common/get-bike-variant?model_id="+modelId,
-                async: false,
-                success: function(result){
-                    if(result && result.data){                    
-                        var bikeVariants = result.data;
-                        for(i=0; i < bikeVariants.length; i++){
-                            if(modelId == bikeVariants[i].model_id){
-                                $('#variant').append('<option value="'+bikeVariants[i].version_id+'">'+bikeVariants[i].version+'</option>');
+        function setBikeVariant(modelId){
+            if(modelId){
+                $.ajax({
+                    url: "/common/get-bike-variant?model_id="+modelId,
+                    async: false,
+                    success: function(result){
+                        if(result && result.data){                    
+                            var bikeVariants = result.data;
+                            for(i=0; i < bikeVariants.length; i++){
+                                if(modelId == bikeVariants[i].model_id){
+                                    $('#variant').append('<option value="'+bikeVariants[i].version_id+'">'+bikeVariants[i].version+'</option>');
+                                }
                             }
                         }
                     }
-                }
-            });
+                });
+            }     
         }   
     </script>
 <script>

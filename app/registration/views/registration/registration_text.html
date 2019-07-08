@@ -186,12 +186,15 @@
                         <select id="model" name="model" class="form-control">
                             <option value="0">Select Model</option>
                         </select>
+                        <div id="modelLoader" style="margin-top: -24px;">Please Wait..</div>
+
                     </div>
                     <div class="form-group">
                         <label for="variant">Variant </label>
                         <select id="variant" name="variant" class="form-control"> 
                             <option value="0">Select Variant</option>
                         </select>
+                        <div id="variantLoader" style="margin-top: -24px;">Please Wait..</div>
                     </div>
                     <div class="form-group">
                         <label for="status">Status</label>
@@ -216,8 +219,8 @@
 </div>        
 <!-- /page content -->
 <script>
+    var getCarModelId = getCarVariantId = getBikeModelId = getBikeVariantId =  0;
     $(document).ready(function() {
-
         $(document).on('submit','#registration_text_detail_form',function(){
             var makeId      = $("#make option:selected").val();            
             var modelId     = $("#model option:selected").val();
@@ -258,11 +261,16 @@
                 resetCarVariant(modelId);
             }else{
                 resetAll();
-            }                     
+            }    
+            $("#modelLoader").show();
+            $("#variantLoader").show();
+
             $('#myModal #category').val(category);
             $('#myModal #make').val(makeId);
-            $('#myModal #model').val(modelId);
-            $('#myModal #variant').val(variantId);
+            getCarModelId = modelId;
+            getCarVariantId = variantId;
+            getBikeModelId =  modelId;
+            getBikeVariantId = variantId;
             $('#myModal #status').val(status);               
         });
 
@@ -445,71 +453,87 @@
     }
     
     function setCarModel(makeId){
-        $.ajax({
-            url: "/common/get-car-model?make_id="+makeId,
-            async: false,
-            success: function(result){
-                if(result && result.data){                    
-                    var carModels = result.data;
-                    for(i=0; i < carModels.length; i++){
-                        if(makeId == carModels[i].make_id){
-                            $('#model').append('<option value="'+carModels[i].model_id+'">'+carModels[i].model+'</option>');
+        if(makeId){
+            $.ajax({
+                url: "/common/get-car-model?make_id="+makeId,
+                async: true,
+                success: function(result){
+                    if(result && result.data){                    
+                        var carModels = result.data;
+                        for(i=0; i < carModels.length; i++){
+                            if(makeId == carModels[i].make_id){
+                                $('#model').append('<option value="'+carModels[i].model_id+'">'+carModels[i].model+'</option>');
+                            }
                         }
+                        $("#modelLoader").hide();
+                        $('#myModal #model').val(getCarModelId);
                     }
                 }
-            }
-        });
+            });
+        }
     }
      
     function setCarVariant(modelId){
-        $.ajax({
-            url: "/common/get-car-variant?model_id="+modelId,
-            async: false,
-            success: function(result){
-                if(result && result.data){                    
+        if(modelId){
+            $.ajax({
+                url: "/common/get-car-variant?model_id="+modelId,
+                async: true,
+                success: function(result){
                     var carVariants = result.data;
                     for(i=0; i < carVariants.length; i++){
-                        if(modelId == carVariants[i].model_id){
-                            $('#variant').append('<option value="'+carVariants[i].version_id+'">'+carVariants[i].version+'</option>');
+                            if(result && result.data){                    
+                            if(modelId == carVariants[i].model_id){
+                                $('#variant').append('<option value="'+carVariants[i].version_id+'">'+carVariants[i].version+'</option>');
+                            }
                         }
                     }
+                    $("#variantLoader").hide();
+                    $('#myModal #variant').val(getCarVariantId);
                 }
-            }
-        });
+            });
+        }
     }
     
     function setBikeModel(makeId){
-        $.ajax({
-            url: "/common/get-bike-model?make_id="+makeId,
-            async: false,
-            success: function(result){
-                if(result && result.data){                    
-                    var bikeModels = result.data;
-                    for(i=0; i < bikeModels.length; i++){
-                        if(makeId == bikeModels[i].make_id){
-                            $('#model').append('<option value="'+bikeModels[i].model_id+'">'+bikeModels[i].model+'</option>');
+        if(makeId){
+            $.ajax({
+                url: "/common/get-bike-model?make_id="+makeId,
+                async: false,
+                success: function(result){
+                    if(result && result.data){                    
+                        var bikeModels = result.data;
+                        for(i=0; i < bikeModels.length; i++){
+                            if(makeId == bikeModels[i].make_id){
+                                $('#model').append('<option value="'+bikeModels[i].model_id+'">'+bikeModels[i].model+'</option>');
+                            }
                         }
+                        $("#modelLoader").hide();
+                        $('#myModal #model').val(getBikeModelId);
                     }
                 }
-            }
-        });
+            });
+        }
     }
        
-    function setBikeVariant(modelId){     
-        $.ajax({
-            url: "/common/get-bike-variant?model_id="+modelId,
-            async: false,
-            success: function(result){
-                if(result && result.data){                    
-                    var bikeVariants = result.data;
-                    for(i=0; i < bikeVariants.length; i++){
-                        if(modelId == bikeVariants[i].model_id){
-                            $('#variant').append('<option value="'+bikeVariants[i].version_id+'">'+bikeVariants[i].version+'</option>');
+    function setBikeVariant(modelId){
+        if(modelId){
+            $.ajax({
+                url: "/common/get-bike-variant?model_id="+modelId,
+                async: false,
+                success: function(result){
+                    if(result && result.data){                    
+                        var bikeVariants = result.data;
+                        for(i=0; i < bikeVariants.length; i++){
+                            if(modelId == bikeVariants[i].model_id){
+                                $('#variant').append('<option value="'+bikeVariants[i].version_id+'">'+bikeVariants[i].version+'</option>');
+                            }
                         }
+                        $("#variantLoader").hide();
+                        $('#myModal #variant').val(getBikeVariantId);
                     }
                 }
-            }
-        });
+            });
+        }     
     }   
 </script>
 <script>
