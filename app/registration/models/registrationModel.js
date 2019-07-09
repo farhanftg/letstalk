@@ -332,6 +332,7 @@ Registration.processRegistration = function(registrationNumber){
             if(!registration){
                 registration = await Registration.getRegistrationFromRtoVehicle(registrationNumber);
                 let textData = await registrationTextModel.findOne({text:registration.maker_model});
+
                 if(textData){
                     if(textData.status == config.status.autoMapped || textData.status == config.status.approved){
                         registration.central_make_id            = textData.make_id?textData.make_id:'';
@@ -344,6 +345,7 @@ Registration.processRegistration = function(registrationNumber){
                         registration.status                     = textData.status;
                     }
                 }else{
+                    
                     let registrationText = {};
                     registrationText.text           = registration.maker_model,
                     registrationText.category       = registration.vehicle_category, 
@@ -351,6 +353,10 @@ Registration.processRegistration = function(registrationNumber){
                     registrationText.source         = config.source.rtoVehicle;
 
                     let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
+                    if(!autoMappedRegistrationText.make_id && !autoMappedRegistrationText.model_id){
+                        autoMappedRegistrationText = await registrationTextModel.getAutoMappedByMMV(registrationText.category , registrationText.text);
+                    }
+                    
                     if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
                         registrationText.make_id    = autoMappedRegistrationText.make_id;
                         registrationText.make_name  = autoMappedRegistrationText.make_name;
@@ -366,6 +372,7 @@ Registration.processRegistration = function(registrationNumber){
                         registration.vehicle_category   = autoMappedRegistrationText.category;
                         registration.status = config.status.autoMapped;
                     }
+                    
                     registrationTextModel.addRegistrationText(registrationText).catch(function(e){
                         console.log(e);
                     });
@@ -373,7 +380,8 @@ Registration.processRegistration = function(registrationNumber){
 
                 let data =  Registration.addRegistration(registration).catch(function(e){
                     console.log(e);
-                });         
+                });  
+                       
                 if(!registration.vehicle_category){
                     vehicleClassModel.createAsync({vehicle_class:registration.vehicle_class}).catch(function(e){
                         console.log(e);

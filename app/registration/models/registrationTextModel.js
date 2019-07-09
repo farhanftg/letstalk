@@ -3,6 +3,7 @@ var validationHelper    = require(HELPER_PATH+'validationHelper');
 var commonHelper        = require(HELPER_PATH+'commonHelper');
 var registrationModel   = require('../models/registrationModel');
 var vehicleClassModel   = require('../models/vehicleClassModel');
+var CommonModel         = require('../../common/models/commonModel');
 
 var RegistrationTextSchema = new Schema({    
     text                : {type: String, unique:true},
@@ -186,15 +187,6 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
                 { $sort: { length: -1} },
             ]);
             
-//            approvedRows.forEach(function(approvedRow){
-//                if(approvedRow.make_id && approvedRow.model_id){
-//                    var textArr = text.toLowerCase().split(' ');
-//                    if((text.toLowerCase().indexOf(approvedRow.make_name.toLowerCase()) >= 0 && (approvedRow.model_name.length > 1 && text.toLowerCase().indexOf(approvedRow.model_name.toLowerCase()) >= 0)) || (approvedRow.model_name.length>=3 && textArr.indexOf(approvedRow.model_name.toLowerCase()) >=0)){                                                                  
-//                        resolve(approvedRow);
-//                    }           
-//                } 
-//            });
-//            resolve(approvedRow);
             for(var i=0;  i<approvedRows.length; i++){
                 let approvedRow = approvedRows[i];
                 if(approvedRow.make_id && approvedRow.model_id){
@@ -205,11 +197,87 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
                     }           
                 }             
             }     
+            
             resolve(data);
         }catch(e){
             reject(e);
         }
     });
+},
+RegistrationText.getAutoMappedByMMV = async function(category , text){
+
+    return new Promise( async function(resolve, reject) {
+        try{
+            let getMakes = {};
+            let findMake = null;
+            let mmvObject = {};
+            
+            if(category && (category == config.vehicleCategory.fourWheeler)){
+                mmvObject.category = category;
+                getMakes = await CommonModel.getCarMake();
+
+                for (var i = 0; i < getMakes.length; i++){
+                    if((text.toLowerCase().indexOf(getMakes[i].make.toLowerCase()) >= 0)){
+                        findMake = getMakes[i].make_id;
+                        mmvObject.make_id = findMake;
+                        mmvObject.make = getMakes[i].make;
+                        break;
+                    }
+                }
+
+                if(findMake){
+                    modelByMake = await CommonModel.getCarModel(findMake);
+                    
+                    //sort array by model name desc
+                    modelByMake.sort(function(a , b){
+                        return b.model.length - a.model.length;
+                    });
+
+                    for (var i = 0; i < modelByMake.length; i++){
+                        if(modelByMake[i].model.length >= 3 && (text.toLowerCase().indexOf(modelByMake[i].model.toLowerCase()) >= 0)){
+                            mmvObject.model = modelByMake[i].model;
+                            mmvObject.model_id = modelByMake[i].model_id;
+                            break;
+                        }
+                    }
+                }
+
+            }else if(category && (category == config.vehicleCategory.twoWheeler)){
+                mmvObject.category = category;
+                getMakes = await CommonModel.getBikeMake();
+
+                for (var i = 0; i < getMakes.length; i++){
+                    if((text.toLowerCase().indexOf(getMakes[i].make.toLowerCase()) >= 0)){
+                        findMake = getMakes[i].make_id;
+                        mmvObject.make_id = findMake;
+                        mmvObject.make = getMakes[i].make;
+                        break;
+                    }
+                }
+
+                if(findMake){
+                    modelByMake = await CommonModel.getBikeModel(findMake);
+
+                    //sort array by model name desc
+                    modelByMake.sort(function(a , b){
+                        return b.model.length - a.model.length;
+                    });
+                    
+                    for (var i = 0; i < modelByMake.length; i++){
+                        if(modelByMake[i].model.length >= 3 && (text.toLowerCase().indexOf(modelByMake[i].model.toLowerCase()) >= 0)){
+                            mmvObject.model = modelByMake[i].model;
+                            mmvObject.model_id = modelByMake[i].model_id;
+                            break;
+                        }
+                    }
+                }
+            }
+            resolve(mmvObject);
+        }
+        catch(err){
+            reject(err);
+        }
+    })
 }
 
 module.exports = RegistrationText;
