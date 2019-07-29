@@ -10,43 +10,35 @@ class ConsoleController{
 }
 
 ConsoleController.getAllMMV = async function(req, res){ 
-    let modelLength = 0;
-    let variantLength = 0;
     try{
-        let carMakes    = await commonModel.getCarMake();
-        let carModels   = await commonModel.getCarModel();
-        let carVariants = await commonModel.getCarVariant();
-
-        carMakes.forEach(async function (carMake, index) {
-            let model = new Array();
-//            console.log('MakeId: ', carMake.make_id);
-            carModels.forEach(async function (carModel, index) { 
-                let variant = new Array();
-//                console.log('ModelId: ', carModel.model_id);
+//        let carMakes    = await commonModel.getCarMake();
+//        let carModels   = await commonModel.getCarModel();
+//        let carVariants = await commonModel.getCarVariant();
+        let [carMakes, carModels, carVariants] = await Promise.all([commonModel.getCarMake(), commonModel.getCarModel(), commonModel.getCarVariant()]);
+        carMakes.forEach(function (carMake, index) {
+            let models = new Array();
+            carModels.forEach(function (carModel, index) { 
+                let variants = new Array();
                 if(carMake.make_id == carModel.make_id){
                     carVariants.forEach(function (carVariant, index) {  
-//                        console.log('VariantId: ', carVariant.version_id);
                         if(carModel.model_id == carVariant.model_id){
-                            variant.push(carVariant);
+                            variants.push(carVariant);
                         }                        
                     });
-                    model.push(carModel);
-                    variantLength += variant.length;
-//                     console.log('variant: ', variant.length);
-                    redisHelper.setJSON('car_variants_'+carModel.model_id, variant); 
+                    models.push(carModel);
+                    if(variants.length){
+                        redisHelper.setJSON('car_variants_'+carModel.model_id, variants); 
+                    }
                 }                       
-            });
-            modelLength += model.length;
-//            console.log('model: ', model.length);
-           
-            redisHelper.setJSON('car_models_'+carMake.make_id, model); 
+            });   
+            if(models.length){
+                redisHelper.setJSON('car_models_'+carMake.make_id, models); 
+            }
         });       
-        console.log(modelLength);
-        console.log(variantLength);
-        //res.send('Done');
+        res.send('Done');
     }catch(err){
         console.log(err);
-        res.send("Error");
+        res.send('Error');
     }
 }
 

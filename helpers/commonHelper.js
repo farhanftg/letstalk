@@ -47,7 +47,15 @@ module.exports = {
         return status[code];
     },
     
-     sendResponse: function(req, res, status, message, data, errors){
+    sendSuccessResponse: function(req, res, data){
+        this.sendResponse(req, res, 200, false, data);
+    },
+    
+    sendErrorResponse: function(req, res, errors){
+        this.sendResponse(req, res, 400, false, false, errors);
+    },
+    
+    sendResponse: function(req, res, status, message, data, errors){
         var errorType   = 1;
         var response    = new Object();
         var agent       = useragent.parse(req.headers['user-agent']);
