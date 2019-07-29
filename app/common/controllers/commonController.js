@@ -1,4 +1,5 @@
 var ApiController   = require('./apiController');
+var commonModel     = require('../models/commonModel');
 var commonHelper    = require(HELPER_PATH+'commonHelper');
 var redisHelper     = require(HELPER_PATH+'redisHelper');
 
@@ -83,19 +84,19 @@ CommonController.getMappedData = async function(req, res){
     if(req.query.insurerId){
         query.insurerId = req.query.insurerId;
     }else{
-        error = commonHelper.formatError('ERR10001', 'insurerId');
+        error = this.formatError('ERR10001', 'insurerId');
         errors.push(error);
     }
     if(req.query.data){
         query.data = req.query.data;
     }else{
-        error = commonHelper.formatError('ERR10002', 'data');
+        error = this.formatError('ERR10002', 'data');
         errors.push(error);
     }
     if(req.query.tags){
         query.tags = req.query.tags;
     }else{
-        error = commonHelper.formatError('ERR10003', 'tags');
+        error = this.formatError('ERR10003', 'tags');
         errors.push(error);
     }
     
@@ -159,153 +160,92 @@ CommonController.sendRequestToBrokerage = async function(req, res){
 }
 
 CommonController.getCarMake = async function(req, res){ 
-    var query = {};
-    query.fetchData = 'all_make';
-    query.sortBy    = 'popularity';
-    query.tags      = 'make,make_id,popularity_rank';
-    query.source    = 'autodb'; 
-    query.subSource = 'vahanScrapper';
-
-    try{
-        let makes = await redisHelper.getJSON('car_makes');
-        if(!makes){
-            let path    = '/api/v1/motor/getBkgMasterData';
-            let result  = await commonHelper.sendGetRequestToBrokerage(query, path);
-            makes = await redisHelper.setJSON('car_makes',result);     
-            this.sendResponse(req, res, 200, false, result, false);    
-        }else{
-            req.cached = true;
-            this.sendResponse(req, res, 200, false, makes, false);
-        }
+    try{ 
+        let result = await commonModel.getCarMake();
+        this.sendSuccessResponse(req, res, result);    
     }catch(e){
-        this.sendResponse(req, res, 400, false, false, e);
+        this.sendErrorResponse(req, res, e);
     }
 }
 
 CommonController.getCarModel = async function(req, res){ 
-    var query = {};
-    query.fetchData = 'all_parent_model';
-    query.sortBy    = 'modelPopularity';
-    query.tags      = 'make,make_id,model,model_id,model_display_name,model_popularity_rank,status';
-    query.makeId    = req.query.make_id;
-    query.source    = 'autodb'; 
-    query.subSource = 'vahanScrapper';
-
+    var errors = new Array();
+    if(!req.query.make_id){
+        error = this.formatError('ERR10008', 'make_id');
+        errors.push(error);
+    }
     try{
-        let models = await redisHelper.getJSON('car_models_'+query.makeId);
-        if(!models){
-            let path    = '/api/v1/motor/getBkgMasterData';
-            let result  = await commonHelper.sendGetRequestToBrokerage(query, path);   
-            models = await redisHelper.setJSON('car_models_'+query.makeId,result);     
-            this.sendResponse(req, res, 200, false, result, false);    
+        if(!errors.length){
+            let result = await commonModel.getCarModel(req.query.make_id);
+            this.sendSuccessResponse(req, res, result);
         }else{
-            req.cached = true;
-            this.sendResponse(req, res, 200, false, models, false);
+            throw errors;
         }
     }catch(e){
-        this.sendResponse(req, res, 400, false, false, e);
+        this.sendErrorResponse(req, res, e);
     }
 }
 
 CommonController.getCarVariant = async function(req, res){ 
-    var query = {};
-    query.fetchData = 'all_variant_by_parent';
-    query.sortBy    = 'modelPopularity';
-    query.tags      = 'make,make_id,model,model_id,version,version_id,version_display_name,cc,status,fuel';
-    query.modelId    = req.query.model_id;;
-    query.source    = 'autodb'; 
-    query.subSource = 'vahanScrapper';
-
+    var errors = new Array();
+    if(!req.query.model_id){
+        error = this.formatError('ERR10009', 'model_id');
+        errors.push(error);
+    }
     try{
-        let variants = await redisHelper.getJSON('car_variants_'+query.modelId);
-        if(!variants){
-            let path    = '/api/v1/motor/getBkgMasterData';
-            let result  = await commonHelper.sendGetRequestToBrokerage(query, path);   
-            variants    = await redisHelper.setJSON('car_variants_'+query.modelId,result);     
-            this.sendResponse(req, res, 200, false, result, false);    
+        if(!errors.length){
+            let result = await commonModel.getCarVariant(req.query.model_id);
+            this.sendSuccessResponse(req, res, result);
         }else{
-            req.cached = true;
-            this.sendResponse(req, res, 200, false, variants, false);
+            throw errors;
         }
     }catch(e){
-        this.sendResponse(req, res, 400, false, false, e);
+        this.sendErrorResponse(req, res, e);
     }
 }
 
-CommonController.getBikeMake = async function(req, res){ 
-    var query = {};
-    query.fetchData = 'tw_mmv';
-    query.sortBy    = 'popularity';
-    query.tags      = 'make,make_id,popularity_rank';
-    query.fetchOnly = 'all_make';
-    query.source    = 'autodb'; 
-    query.subSource = 'vahanScrapper';
-
+CommonController.getBikeMake = async function(req, res){    
     try{
-        let makes = await redisHelper.getJSON('bike_makes');
-        if(!makes){
-            let path    = '/api/v1/motor/getBkgMasterData';
-            let result  = await commonHelper.sendGetRequestToBrokerage(query, path);
-            makes       = await redisHelper.setJSON('bike_makes',result);     
-            this.sendResponse(req, res, 200, false, result, false);    
-        }else{
-            req.cached = true;
-            this.sendResponse(req, res, 200, false, makes, false);
-        }
+        let result = await commonModel.getBikeMake();
+        this.sendSuccessResponse(req, res, result);    
     }catch(e){
-        this.sendResponse(req, res, 400, false, false, e);
+        this.sendErrorResponse(req, res, e);
     }
 }
 
 CommonController.getBikeModel = async function(req, res){ 
-    var query = {};
-    query.fetchData = 'tw_mmv';
-    query.sortBy    = 'modelPopularity';
-    query.tags      = 'make,make_id,model,model_id,model_display_name,model_popularity_rank,status';   
-    query.fetchOnly =  'all_model';
-    query.makeId    = req.query.make_id;
-    query.source    = 'autodb'; 
-    query.subSource = 'vahanScrapper';
-
+    var errors = new Array();
+    if(!req.query.make_id){
+        error = this.formatError('ERR10008', 'make_id');
+        errors.push(error);
+    }
     try{
-        let models = await redisHelper.getJSON('bike_models_'+query.makeId);
-        if(!models){
-            let path    = '/api/v1/motor/getBkgMasterData';
-            let result  = await commonHelper.sendGetRequestToBrokerage(query, path);   
-            models      = await redisHelper.setJSON('bike_models_'+query.makeId,result);     
-            this.sendResponse(req, res, 200, false, result, false);    
+        if(!errors.length){
+            let result = await commonModel.getBikeModel(req.query.make_id);
+            this.sendSuccessResponse(req, res, result);   
         }else{
-            req.cached = true;
-            this.sendResponse(req, res, 200, false, models, false);
+            throw errors;
         }
     }catch(e){
-        this.sendResponse(req, res, 400, false, false, e);
+        this.sendErrorResponse(req, res, e);
     }
 }
 
 CommonController.getBikeVariant = async function(req, res){ 
-    var query = {};
-    query.fetchData = 'tw_mmv';
-    query.sortBy    = 'modelPopularity';
-    query.tags      = 'make,make_id,model,model_id,version,version_id,version_display_name,cc,status,fuel';
-    query.fetchOnly = 'all_variant';
-    query.modelId    = req.query.model_id;
-    query.source    = 'autodb'; 
-    query.subSource = 'vahanScrapper';
-
+    var errors = new Array();
+    if(!req.query.model_id){
+        error = this.formatError('ERR10009', 'model_id');
+        errors.push(error);
+    }
     try{
-        let variants = await redisHelper.getJSON('bike_variants_'+query.modelId);
-        if(!variants){
-            let path    = '/api/v1/motor/getBkgMasterData';
-            let result  = await commonHelper.sendGetRequestToBrokerage(query, path);   
-            variants    = await redisHelper.setJSON('bike_variants_'+query.modelId,result);     
-            this.sendResponse(req, res, 200, false, result, false);    
+        if(!errors.length){
+            let result = await commonModel.getBikeVariant(req.query.model_id);
+            this.sendSuccessResponse(req, res, result); 
         }else{
-            req.cached = true;
-            this.sendResponse(req, res, 200, false, variants, false);
+            throw errors;
         }
     }catch(e){
-        this.sendResponse(req, res, 400, false, false, e);
+        this.sendErrorResponse(req, res, e);
     }
 }
 

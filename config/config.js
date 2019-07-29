@@ -71,7 +71,7 @@ config.onDemandAllowedSubsource = ['JpOffice', 'GgnOffice'];
 config.requests = [
     {
         path:'*', 
-        timeout:30000
+        timeout:90000
     }
 ];
 

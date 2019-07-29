@@ -142,15 +142,15 @@ RegistrationController.getRegistration = async function(req, res){
     req.elk.module      = 'Registration';
     req.elk.sub_module  = 'getRegistration'; 
     if(!req.query.registration_number){
-        var error = commonHelper.formatError('ERR10011', 'registration_number');
+        var error = this.formatError('ERR10011', 'registration_number');
         errors.push(error);
     }
     if(!req.query.source){
-        var error = commonHelper.formatError('ERR10004', 'source');
+        var error = this.formatError('ERR10004', 'source');
         errors.push(error);
     }
     if(!req.query.sub_source){
-        var error = commonHelper.formatError('ERR10005', 'sub_source');
+        var error = this.formatError('ERR10005', 'sub_source');
         errors.push(error);
     }
     try{
@@ -187,11 +187,11 @@ RegistrationController.getRegistration = async function(req, res){
 RegistrationController.updateRegistration = async function(req, res){
     let errors = new Array();
     if(!req.body.make){
-        var error = commonHelper.formatError('ERR10008', 'make');
+        var error = this.formatError('ERR10008', 'make');
         errors.push(error);
     }
     if(!req.body.model){
-        var error = commonHelper.formatError('ERR10009', 'model');
+        var error = this.formatError('ERR10009', 'model');
         errors.push(error);
     }
     try{

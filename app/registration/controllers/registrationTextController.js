@@ -55,11 +55,11 @@ RegistrationTextController.getRegistrationText = async function(req, res){
 RegistrationTextController.updateRegistrationText = async function(req, res){  
     let errors = new Array();
     if(!req.body.make){
-        var error = commonHelper.formatError('ERR10008', 'make');
+        var error = this.formatError('ERR10008', 'make');
         errors.push(error);
     }
     if(!req.body.model){
-        var error = commonHelper.formatError('ERR10009', 'model');
+        var error = this.formatError('ERR10009', 'model');
         errors.push(error);
     }
     try{
@@ -134,7 +134,7 @@ RegistrationTextController.getDetailsByRegistrationText = async function(req, re
     let errors = new Array();
 
     if(!req.query.registration_text){
-        var error = commonHelper.formatError('ERR10016', 'registration_text');
+        var error = this.formatError('ERR10016', 'registration_text');
         errors.push(error);
     }
 

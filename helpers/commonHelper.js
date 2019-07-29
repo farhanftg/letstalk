@@ -6,7 +6,7 @@ var useragent   = require('useragent');
 var apiLogModel = require('../app/common/models/apiLogModel');
 var errorApiLogModel = require('../app/common/models/errorApiLogModel');
 var elkHelper        = require('./elkHelper');
-var errors      = require('../config/errors');
+var errorHelper      = require('./errorHelper');
 
 module.exports = {
     
@@ -71,7 +71,11 @@ module.exports = {
         }
         if(errors){
             if(typeof errors === 'string'){
-                error = module.exports.formatError('ERR400', 'error', errors);
+                error = errorHelper.formatError('ERR400', 'error', errors);
+                errors= new Array(error);
+            }
+            if(errors instanceof Error){
+                error = errorHelper.formatError('ERR500', 'error', '', errors.stack);
                 errors= new Array(error);
             }
             response.errors = errors;
@@ -380,19 +384,7 @@ module.exports = {
     removeLineCharacters: function(str){
         return str.replace(/\r?\n|\r/g, ' ');
     },
-
-    formatError: function(code, detail, message = '', displayMessage = ''){
-        var error = {};
-        if(!message){
-            message = errors[code]?errors[code]:ERROR.DEFAULT_ERROR;
-        }
-        error.code    = code;
-        error.detail  = detail;
-        error.message = message; 
-        error.displayMessage = displayMessage; 
-        return error;
-    },
-
+    
     isJsonString: function(data) {
         try {
             JSON.parse(data);

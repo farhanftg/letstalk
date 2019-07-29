@@ -49,6 +49,22 @@ process.on('uncaughtException', function (exception) {
     }
 });
 
+process.on('unhandledRejection', function(err){
+    console.log('########## SERVER CRASHED WITH UNHANDLED REJECTION ##########');
+    if (typeof err === 'object') {
+        if (err.message) {
+            console.log('\nMessage: ' + err.message)
+        }
+        if (err.stack) {
+            console.log('\nStacktrace:')
+            console.log('====================')
+            console.log(err.stack);
+        }
+    } else {
+        console.log('dumpError :: argument is not an object');
+    }
+});
+
 fs.existsSync(LOG_PATH) || fs.mkdirSync(LOG_PATH);
 var accessLogStream = rfs('access.log', {
     size: '100M',
@@ -108,43 +124,43 @@ function isAuthenticated(req, res, next) {
     }
 }
 
-app.use(function(req, res, next){
-    var timeout     = '';
-    var urlParts    = url.parse(req.url, true);
-    var urlPathname = urlParts.pathname;
-    
-    for(var i=0; i<config.requests.length; i++){        
-        if(urlPathname == config.requests[i].path){
-            timeout = config.requests[i].timeout;
-        }
-        if(!timeout && config.requests[i].path == '*'){
-            timeout = config.requests[i].timeout;
-        }
-    }
-    
-    if(timeout){
-        res.setTimeout(timeout, function(){
-            if(config.report.timeoutError){
-                var error='';
-                var data = {};
-                var url  = req.host+req.url;
-                data.templateName   = config.report.timeoutErrorTemplateName;
-                data.emailTo        = config.report.timeoutErrorTo;
-                data.referenceId    = 1;
-                var requestData    = req.method == "GET" ? JSON.stringify(req.query) : JSON.stringify(req.body);
-                error = ' Timeout Error on '+url;
-                data.params = {'URL':url, 'TIMEOUT':timeout, 'ERROR': error, 'REQUEST': requestData};
-                commonHelper.sendResponse(req, res, 504, false, false, ERROR.DEFAULT_ERROR ); 
-                commonHelper.sendEmail(data).catch(function(e){
-                    console.log(e);
-                });                                   
-            }else{
-                commonHelper.sendResponse(req, res, 504, false, false, ERROR.DEFAULT_ERROR ); 
-            }
-        });
-    }
-    next();
-});
+//app.use(function(req, res, next){
+//    var timeout     = '';
+//    var urlParts    = url.parse(req.url, true);
+//    var urlPathname = urlParts.pathname;
+//    
+//    for(var i=0; i<config.requests.length; i++){        
+//        if(urlPathname == config.requests[i].path){
+//            timeout = config.requests[i].timeout;
+//        }
+//        if(!timeout && config.requests[i].path == '*'){
+//            timeout = config.requests[i].timeout;
+//        }
+//    }
+//    
+//    if(timeout){
+//        res.setTimeout(timeout, function(){
+//            if(config.report.timeoutError){
+//                var error='';
+//                var data = {};
+//                var url  = req.host+req.url;
+//                data.templateName   = config.report.timeoutErrorTemplateName;
+//                data.emailTo        = config.report.timeoutErrorTo;
+//                data.referenceId    = 1;
+//                var requestData    = req.method == "GET" ? JSON.stringify(req.query) : JSON.stringify(req.body);
+//                error = ' Timeout Error on '+url;
+//                data.params = {'URL':url, 'TIMEOUT':timeout, 'ERROR': error, 'REQUEST': requestData};
+//                commonHelper.sendResponse(req, res, 504, false, false, ERROR.DEFAULT_ERROR ); 
+//                commonHelper.sendEmail(data).catch(function(e){
+//                    console.log(e);
+//                });                                   
+//            }else{
+//                commonHelper.sendResponse(req, res, 504, false, false, ERROR.DEFAULT_ERROR ); 
+//            }
+//        });
+//    }
+//    next();
+//});
 
 var api     = require('./routes/api');
 var web     = require('./routes/web');
