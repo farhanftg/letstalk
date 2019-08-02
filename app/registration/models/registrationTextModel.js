@@ -204,75 +204,67 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
         }
     });
 },
-RegistrationText.getAutoMappedByMMV = async function(category , text){
-
+RegistrationText.getAutoMappedRegistrationTextByMMV = async function(category , text){
     return new Promise( async function(resolve, reject) {
         try{
-            let getMakes = {};
-            let findMake = null;
-            let mmvObject = {};
-            
+            let mmv = {};
+            mmv.category = category;
             if(category && (category == config.vehicleCategory.fourWheeler)){
-                mmvObject.category = category;
-                getMakes = await CommonModel.getCarMake();
-
-                for (var i = 0; i < getMakes.length; i++){
-                    if((text.toLowerCase().indexOf(getMakes[i].make.toLowerCase()) >= 0)){
-                        findMake = getMakes[i].make_id;
-                        mmvObject.make_id = findMake;
-                        mmvObject.make = getMakes[i].make;
+                let carMakes = await CommonModel.getCarMake();
+                for (var i = 0; i < carMakes.length; i++){
+                    if((text.toLowerCase().indexOf(carMakes[i].make.toLowerCase()) >= 0)){
+                        mmv.make_id = carMakes[i].make_id;
+                        mmv.make = carMakes[i].make;
                         break;
                     }
                 }
-
-                if(findMake){
-                    modelByMake = await CommonModel.getCarModel(findMake);
+                
+                if(mmv.make_id){
+                    carModels = await CommonModel.getCarModel(mmv.make_id);
                     
                     //sort array by model name desc
-                    modelByMake.sort(function(a , b){
+                    carModels.sort(function(a , b){
                         return b.model.length - a.model.length;
                     });
 
-                    for (var i = 0; i < modelByMake.length; i++){
-                        if(modelByMake[i].model.length >= 3 && (text.toLowerCase().indexOf(modelByMake[i].model.toLowerCase()) >= 0)){
-                            mmvObject.model = modelByMake[i].model;
-                            mmvObject.model_id = modelByMake[i].model_id;
+                    for (var i = 0; i < carModels.length; i++){
+                        if(carModels[i].model.length >= 3 && (text.toLowerCase().indexOf(carModels[i].model.toLowerCase()) >= 0)){
+                            mmv.model = carModels[i].model;
+                            mmv.model_id = carModels[i].model_id;
                             break;
                         }
                     }
                 }
 
             }else if(category && (category == config.vehicleCategory.twoWheeler)){
-                mmvObject.category = category;
-                getMakes = await CommonModel.getBikeMake();
+                let bikeMakes = await CommonModel.getBikeMake();
 
-                for (var i = 0; i < getMakes.length; i++){
-                    if((text.toLowerCase().indexOf(getMakes[i].make.toLowerCase()) >= 0)){
-                        findMake = getMakes[i].make_id;
-                        mmvObject.make_id = findMake;
-                        mmvObject.make = getMakes[i].make;
+                for (var i = 0; i < bikeMakes.length; i++){
+                    if((text.toLowerCase().indexOf(bikeMakes[i].make.toLowerCase()) >= 0)){
+                        mmv.make_id = bikeMakes[i].make_id;
+                        mmv.make = bikeMakes[i].make;
                         break;
                     }
                 }
 
-                if(findMake){
-                    modelByMake = await CommonModel.getBikeModel(findMake);
+                if(mmv.make_id){
+                    bikeModels = await CommonModel.getBikeModel(mmv.make_id);
 
                     //sort array by model name desc
-                    modelByMake.sort(function(a , b){
+                    bikeModels.sort(function(a , b){
                         return b.model.length - a.model.length;
                     });
                     
-                    for (var i = 0; i < modelByMake.length; i++){
-                        if(modelByMake[i].model.length >= 3 && (text.toLowerCase().indexOf(modelByMake[i].model.toLowerCase()) >= 0)){
-                            mmvObject.model = modelByMake[i].model;
-                            mmvObject.model_id = modelByMake[i].model_id;
+                    for (var i = 0; i < bikeModels.length; i++){
+                        if(bikeModels[i].model.length >= 3 && (text.toLowerCase().indexOf(bikeModels[i].model.toLowerCase()) >= 0)){
+                            mmv.model = bikeModels[i].model;
+                            mmv.model_id = bikeModels[i].model_id;
                             break;
                         }
                     }
                 }
             }
-            resolve(mmvObject);
+            resolve(mmv);
         }
         catch(err){
             reject(err);

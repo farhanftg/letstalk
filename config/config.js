@@ -87,6 +87,7 @@ config.pagination = {};
 config.pagination.limit = 20;
 
 config.autoMapRegistrationText = {};
+config.autoMapRegistrationText.autoMapByMmv = true;
 config.autoMapRegistrationText.limit = 100;
 
 config.redisKeyExpiryTime = '23:59:59:999';

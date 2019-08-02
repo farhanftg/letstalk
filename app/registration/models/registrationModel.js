@@ -345,7 +345,6 @@ Registration.processRegistration = function(registrationNumber){
                         registration.status                     = textData.status;
                     }
                 }else{
-                    
                     let registrationText = {};
                     registrationText.text           = registration.maker_model,
                     registrationText.category       = registration.vehicle_category, 
@@ -353,8 +352,9 @@ Registration.processRegistration = function(registrationNumber){
                     registrationText.source         = config.source.rtoVehicle;
 
                     let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
-                    if(!autoMappedRegistrationText.make_id && !autoMappedRegistrationText.model_id){
-                        autoMappedRegistrationText = await registrationTextModel.getAutoMappedByMMV(registrationText.category , registrationText.text);
+                    
+                    if(config.autoMapRegistrationText.autoMapByMmv && !autoMappedRegistrationText.make_id && !autoMappedRegistrationText.model_id){
+                        autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationTextByMMV(registrationText.category , registrationText.text);
                     }
                     
                     if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
@@ -418,6 +418,7 @@ Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
                 let getRtoCode = commonHelper.getRtoCodeByRegistrationNumber(registrationNumber);
                 let rtoDetail    = await commonModel.getRtoDetail({rto_code:getRtoCode});
                 let vehicleClass = await vehicleClassModel.findOneAsync({vehicle_class:result.vh_class, status:2});
+                //let [rtoDetail, vehicleClass] = await Promise.all([commonModel.getRtoDetail({rto_code:getRtoCode}), vehicleClassModel.findOneAsync({vehicle_class:result.vh_class, status:2})]);
                 let registration = {};
                 
                 registration.registration_number= registrationNumber;
