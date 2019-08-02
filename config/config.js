@@ -89,6 +89,22 @@ config.pagination.limit = 20;
 config.autoMapRegistrationText = {};
 config.autoMapRegistrationText.limit = 100;
 
+config.autoMapRegistrationText.autoMapByCorrectModelName = true;
+config.autoMapRegistrationText.models = [
+    {
+        name: 'i10',
+        values:['i 10', 'i-10']
+    },
+    {
+        name: 'i20',
+        values:['i 20', 'i-20']
+    },
+    {
+        name: 'Wagon R',
+        values:['WagonR', 'Wagon-R', 'WaganR', 'Wagan-R']
+    }
+];
+
 config.redisKeyExpiryTime = '23:59:59:999';
 config.registrationNumberMaxLength = 15;
 config.recordPerPage = 20;

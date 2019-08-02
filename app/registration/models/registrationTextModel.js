@@ -167,6 +167,7 @@ RegistrationText.autoMapRegistrationText = function(limit){
 }
 
 RegistrationText.getAutoMappedRegistrationText = function(text){
+    let that = this;
     return new Promise( async function(resolve, reject) {
         try{
             let data = {};
@@ -195,6 +196,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
 //                } 
 //            });
 //            resolve(approvedRow);
+
             for(var i=0;  i<approvedRows.length; i++){
                 let approvedRow = approvedRows[i];
                 if(approvedRow.make_id && approvedRow.model_id){
@@ -205,6 +207,19 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
                     }           
                 }             
             }     
+            if(config.autoMapRegistrationText.autoMapByCorrectModelName && !data.make_id && !data.model_id){               
+                for(let model of config.autoMapRegistrationText.models) {
+                    if(model.values){
+                        for (let value of model.values) {
+                            if(value && text.toLowerCase().includes(value.toLowerCase())){
+                                let valueRegex   = new RegExp(' '+value+' ', "ig");
+                                text    = text.replace(valueRegex, ' '+model.name+' ');
+                                data    = await that.getAutoMappedRegistrationText(text);
+                            }
+                        }
+                    }
+                }                
+            }
             resolve(data);
         }catch(e){
             reject(e);
