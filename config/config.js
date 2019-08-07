@@ -89,8 +89,8 @@ config.pagination.limit = 20;
 config.autoMapRegistrationText = {};
 config.autoMapRegistrationText.limit = 100;
 
-config.autoMapRegistrationText.autoMapByCorrectModelName = true;
-config.autoMapRegistrationText.models = [
+config.autoMapRegistrationText.autoMapByCorrectMMV = true;
+config.autoMapRegistrationText.mmv = [
     {
         name: 'i10',
         values:['i 10', 'i-10']

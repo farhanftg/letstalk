@@ -207,13 +207,13 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
                     }           
                 }             
             }     
-            if(config.autoMapRegistrationText.autoMapByCorrectModelName && !data.make_id && !data.model_id){               
-                for(let model of config.autoMapRegistrationText.models) {
-                    if(model.values){
-                        for (let value of model.values) {
+            if(config.autoMapRegistrationText.autoMapByCorrectMMV && !data.make_id && !data.model_id){               
+                for(let mmv of config.autoMapRegistrationText.mmv) {
+                    if(mmv.values){
+                        for (let value of mmv.values) {
                             if(value && text.toLowerCase().includes(value.toLowerCase())){
                                 let valueRegex   = new RegExp(' '+value+' ', "ig");
-                                text    = text.replace(valueRegex, ' '+model.name+' ');
+                                text    = text.replace(valueRegex, ' '+mmv.name+' ');
                                 data    = await that.getAutoMappedRegistrationText(text);
                             }
                         }
