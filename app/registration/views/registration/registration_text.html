@@ -217,7 +217,7 @@
 </div>        
 <!-- /page content -->
 <script>
-    var getCarModelId = getCarVariantId = getBikeModelId = getBikeVariantId =  0;
+    var carModelId = carVariantId = bikeModelId = bikeVariantId =  0;
     $(document).ready(function() {
         $(document).on('submit','#registration_text_detail_form',function(){
             var makeId      = $("#make option:selected").val();            
@@ -263,10 +263,10 @@
             
             $('#myModal #category').val(category);
             $('#myModal #make').val(makeId);
-            getCarModelId = modelId;
-            getCarVariantId = variantId;
-            getBikeModelId =  modelId;
-            getBikeVariantId = variantId;
+            carModelId = modelId;
+            carVariantId = variantId;
+            bikeModelId =  modelId;
+            bikeVariantId = variantId;
             $('#myModal #status').val(status);               
         });
 
@@ -461,7 +461,7 @@
                                 $('#model').append('<option value="'+carModels[i].model_id+'">'+carModels[i].model+'</option>');
                             }
                         }
-                        $('#myModal #model').val(getCarModelId);
+                        $('#myModal #model').val(carModelId);
                     }
                 }
             });
@@ -483,7 +483,7 @@
                         }
                     }
                     
-                    $('#myModal #variant').val(getCarVariantId);
+                    $('#myModal #variant').val(carVariantId);
                 }
             });
         }
@@ -502,7 +502,7 @@
                                 $('#model').append('<option value="'+bikeModels[i].model_id+'">'+bikeModels[i].model+'</option>');
                             }
                         }
-                        $('#myModal #model').val(getBikeModelId);
+                        $('#myModal #model').val(bikeModelId);
                     }
                 }
             });
@@ -522,7 +522,7 @@
                                 $('#variant').append('<option value="'+bikeVariants[i].version_id+'">'+bikeVariants[i].version+'</option>');
                             }
                         }
-                        $('#myModal #variant').val(getBikeVariantId);
+                        $('#myModal #variant').val(bikeVariantId);
                     }
                 }
             });
