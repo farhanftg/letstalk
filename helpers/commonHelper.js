@@ -418,8 +418,7 @@ module.exports = {
         if(typeof makeName == 'string' && typeof modelName == 'string'){
             makeName    = makeName.trim();
             modelName   = modelName.trim();
-            if(makeName && modelName){
-                
+            if(makeName && modelName){              
                 if(modelName.startsWith(makeName)){
                     modelName = modelName.substring(makeName.length+1, modelName.length);
                 }
