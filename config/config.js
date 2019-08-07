@@ -40,8 +40,8 @@ config.format.xml       = 'XML';
 
 config.status = {};
 config.status.pending   = 1;
-config.status.autoMapped  = 2;
-config.status.approved= 3;
+config.status.autoMapped= 2;
+config.status.approved  = 3;
 
 config.vehicleCategory = {};
 config.vehicleCategory.twoWheeler   = 'Two Wheeler';
@@ -51,6 +51,16 @@ config.vehicleCategory.other= 'Other';
 config.vehicleCategoryCode = {};
 config.vehicleCategoryCode.twoWheeler = 1;
 config.vehicleCategoryCode.fourWheeler= 2;
+
+config.vehicleType = {};
+config.vehicleType.bike  = 'Bike';
+config.vehicleType.car   = 'Car';
+config.vehicleType.other = 'Other';
+
+config.autoDBVehicleCategory = {};
+config.autoDBVehicleCategory[config.vehicleCategory.twoWheeler] = config.vehicleType.bike;
+config.autoDBVehicleCategory[config.vehicleCategory.fourWheeler]= config.vehicleType.car;
+config.autoDBVehicleCategory[config.vehicleCategory.other]      = config.vehicleType.other;
 
 config.source = {};
 config.source.autodb    = 'autodb';

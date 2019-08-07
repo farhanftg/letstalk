@@ -17,6 +17,7 @@ module.exports = {
     VEHICLE_CATEGORY_NOT_VALID : 'Vehicle Category is not valid',
     RTO_CODE_REQUIRED : 'Rto Code is required',
     STATUS_REQUIRED : 'Status is required',
+    REGISTRATION_NOT_FOUND : 'Registration not found',
     REGISTRATION_DETAILS_NOT_VERIFIED : 'Registration Details not verified',
     REGISTRATION_EXISTS : 'Registration exists',
     REGISTRATION_TEXT_REQUIRED : 'Registration text is required',
