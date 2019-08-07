@@ -11,9 +11,6 @@ class ConsoleController{
 
 ConsoleController.getAllMMV = async function(req, res){ 
     try{
-//        let carMakes    = await commonModel.getCarMake();
-//        let carModels   = await commonModel.getCarModel();
-//        let carVariants = await commonModel.getCarVariant();
         let [carMakes, carModels, carVariants] = await Promise.all([commonModel.getCarMake(), commonModel.getCarModel(), commonModel.getCarVariant()]);
         carMakes.forEach(function (carMake, index) {
             let models = new Array();
