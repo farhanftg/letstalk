@@ -351,12 +351,8 @@ Registration.processRegistration = function(registrationNumber){
                     registrationText.vehicle_class  = registration.vehicle_class;
                     registrationText.source         = config.source.rtoVehicle;
 
-                    let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
-                    
-                    if(config.autoMapRegistrationText.autoMapByMmv && !autoMappedRegistrationText.make_id && !autoMappedRegistrationText.model_id){
-                        autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationTextByMMV(registrationText.category , registrationText.text);
-                    }
-                    
+                    let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model, registrationText.category);
+        
                     if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
                         registrationText.make_id    = autoMappedRegistrationText.make_id;
                         registrationText.make_name  = autoMappedRegistrationText.make_name;
