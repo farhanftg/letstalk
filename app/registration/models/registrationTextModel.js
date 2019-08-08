@@ -167,7 +167,7 @@ RegistrationText.autoMapRegistrationText = function(limit){
     });
 }
 
-RegistrationText.getAutoMappedRegistrationText = function(text){
+RegistrationText.getAutoMappedRegistrationText = function(text, category = false){
     let that = this;
     return new Promise( async function(resolve, reject) {
         try{
@@ -200,7 +200,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text){
             }     
 
             if(config.autoMapRegistrationText.autoMapByMmv && !data.make_id && !data.model_id){
-                data = await that.getAutoMappedRegistrationTextByMMV(registrationText.category , registrationText.text);
+                data = await that.getAutoMappedRegistrationTextByMMV(category, text);
             }
             
             resolve(data);
