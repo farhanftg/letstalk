@@ -189,6 +189,10 @@ RegistrationController.getRegistration = async function(req, res){
 
 RegistrationController.updateRegistration = async function(req, res){
     let errors = new Array();
+    if(!req.body.id){
+        var error = this.formatError('ERR10017', 'id');
+        errors.push(error);
+    }
     if(!req.body.make){
         var error = this.formatError('ERR10008', 'make');
         errors.push(error);
@@ -203,7 +207,7 @@ RegistrationController.updateRegistration = async function(req, res){
             data.make_id        = req.body.make? req.body.make:'';
             data.make_name      = req.body.make_name?req.body.make_name:'';
             data.model_id       = req.body.model?req.body.model:'';
-            data.model_name     = req.body.model_name?req.body.model_name:'';
+            data.model_name     = req.body.model_name?commonHelper.removeMakeNameFromModelName(req.body.make_name, req.body.model_name):'';
             data.variant_id     = req.body.variant?req.body.variant:'';
             data.variant_name   = req.body.variant_name?req.body.variant_name:'';
             data.variant_display_name = req.body.variant_name?req.body.variant_name:'';

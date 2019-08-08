@@ -54,6 +54,10 @@ RegistrationTextController.getRegistrationText = async function(req, res){
  
 RegistrationTextController.updateRegistrationText = async function(req, res){  
     let errors = new Array();
+    if(!req.body.id){
+        var error = this.formatError('ERR10017', 'id');
+        errors.push(error);
+    }
     if(!req.body.make){
         var error = this.formatError('ERR10008', 'make');
         errors.push(error);
@@ -65,16 +69,16 @@ RegistrationTextController.updateRegistrationText = async function(req, res){
     try{
         if(!errors.length){
             let data = {}; 
-            data.id             = req.body.id;
-            data.make_id        = req.body.make;
-            data.make_name      = req.body.make_name;
-            data.model_id       = req.body.model;
-            data.model_name     = req.body.model_name;
-            data.variant_id     = req.body.variant;
-            data.variant_name   = req.body.variant_name;
-            data.variant_display_name    = '';
-            data.category   = req.body.category;
-            data.status     = config.status.approved;
+            data.id                     = req.body.id;
+            data.make_id                = req.body.make? req.body.make:'';
+            data.make_name              = req.body.make_name?req.body.make_name:'';
+            data.model_id               = req.body.model?req.body.model:'';
+            data.model_name             = req.body.model_name?commonHelper.removeMakeNameFromModelName(req.body.make_name, req.body.model_name):'';
+            data.variant_id             = req.body.variant?req.body.variant:'';
+            data.variant_name           = req.body.variant_name?req.body.variant_name:'';
+            data.variant_display_name   = req.body.variant_name?req.body.variant_name:'';
+            data.category               = req.body.category?req.body.category:'';
+            data.status                 = config.status.approved;
 
             if(req.body.id.length > 24){
                 data.id = JSON.parse(req.body.id);
