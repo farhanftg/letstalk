@@ -201,9 +201,11 @@ RegistrationText.getAutoMappedRegistrationText = function(text, category = false
                 for (var i = 0; i < approvedRows.length; i++) {
                     let approvedRow = approvedRows[i];
                     if (approvedRow.make_id && approvedRow.model_id) {
-                        if ((text.toLowerCase().indexOf(approvedRow.make_name.toLowerCase()) >= 0 
-                            && (text.toLowerCase().indexOf(approvedRow.model_name.toLowerCase()) >= 0)) 
-                            || (text.indexOf(` ${approvedRow.model_name.toLowerCase()} `) >= 0)) {
+                        if ((text.toLowerCase().includes(approvedRow.make_name.toLowerCase()) 
+                            && text.toLowerCase().includes(approvedRow.model_name.toLowerCase())) 
+                            || text.toLowerCase().includes(` ${approvedRow.model_name.toLowerCase()} `)
+                            || text.toLowerCase().startsWith(`${approvedRow.model_name.toLowerCase()} `)
+                            || text.toLowerCase().endsWith(` ${approvedRow.model_name.toLowerCase()}`)) {
                             data = approvedRow;
                             break;
                         }
@@ -232,62 +234,42 @@ RegistrationText.getAutoMappedRegistrationText = function(text, category = false
     });
 },
 RegistrationText.getAutoMappedRegistrationTextByMMV = function (category, text) {
-    return new Promise( async function(resolve, reject) {
+    return new Promise(async function (resolve, reject) {
         try{
             let mmv = {};
             mmv.category = category;
-            if(category && (category == config.vehicleCategory.fourWheeler)){
-                let carMakes = await CommonModel.getCarMake();
-                for (let i = 0; i < carMakes.length; i++){
-                    if(carMakes[i].make && (text.toLowerCase().indexOf(carMakes[i].make.toLowerCase()) >= 0)){
-                        mmv.make_id   = carMakes[i].make_id;
-                        mmv.make_name = carMakes[i].make;
-                        break;
-                    }
-                }
-                
-                if(mmv.make_id){
-                    carModels = await CommonModel.getCarModel(mmv.make_id);
-                    carModels = carModels.filter(carModel => carModel.model && (carModel.model.length >= 3));
-                    //sort array by model name desc
-                    carModels.sort((a, b) => b.model.length - a.model.length);
 
-                    for (let i = 0; i < carModels.length; i++){
-                        if (text.toLowerCase().indexOf(carModels[i].model.toLowerCase()) >= 0) {
-                            mmv.model_id   = carModels[i].model_id;
-                            mmv.model_name = carModels[i].model;
-                            break;
-                        }
-                    }
-                }
+            if (category && (category == config.vehicleCategory.fourWheeler || category == config.vehicleCategory.twoWheeler)) {
+                const getVehicleMake  = category == config.vehicleCategory.fourWheeler ? 'getCarMake'  : 'getBikeMake';
+                const getVehicleModel = category == config.vehicleCategory.fourWheeler ? 'getCarModel' : 'getBikeModel';
 
-            }else if(category && (category == config.vehicleCategory.twoWheeler)){
-                let bikeMakes = await CommonModel.getBikeMake();
-
-                for (let i = 0; i < bikeMakes.length; i++){
-                    if (bikeMakes[i].make && (text.toLowerCase().indexOf(bikeMakes[i].make.toLowerCase()) >= 0)) {
-                        mmv.make_id   = bikeMakes[i].make_id;
-                        mmv.make_name = bikeMakes[i].make;
+                let vehicleMakes = await CommonModel[getVehicleMake]();
+                for (let i = 0; i < vehicleMakes.length; i++) {
+                    if (vehicleMakes[i].make && text.toLowerCase().includes(vehicleMakes[i].make.toLowerCase())
+                        || (vehicleMakes[i].make_values && vehicleMakes[i].make_values.some(make => text.toLowerCase().includes(make.toLowerCase())))) {
+                        mmv.make_id   = vehicleMakes[i].make_id;
+                        mmv.make_name = vehicleMakes[i].make;
                         break;
                     }
                 }
 
-                if(mmv.make_id){
-                    bikeModels = await CommonModel.getBikeModel(mmv.make_id);
-                    bikeModels = bikeModels
-                        .map(bikeModel => {
-                            bikeModel.model = commonHelper.removeMakeNameFromModelName(bikeModel.make, bikeModel.model)
+                if (mmv.make_id) {
+                    let vehicleModels = await CommonModel[getVehicleModel](mmv.make_id);
+                    if (category == config.vehicleCategory.twoWheeler) {
+                        vehicleModels = vehicleModels.map(bikeModel => {
+                            bikeModel.model = commonHelper.removeMakeNameFromModelName(bikeModel.make, bikeModel.model);
                             return bikeModel;
-                        })
-                        .filter(bikeModel => bikeModel.model && (bikeModel.model.length >= 3));
-
+                        });
+                    }
+                    vehicleModels = vehicleModels.filter(vehicleModel => vehicleModel.model && (vehicleModel.model.length >= 3));
                     //sort array by model name desc
-                    bikeModels.sort((a, b) => b.model.length - a.model.length);
-                    
-                    for (let i = 0; i < bikeModels.length; i++){
-                        if (text.toLowerCase().indexOf(bikeModels[i].model.toLowerCase()) >= 0) {
-                            mmv.model_id = bikeModels[i].model_id;
-                            mmv.model_name = bikeModels[i].model;
+                    vehicleModels.sort((a, b) => b.model.length - a.model.length);
+
+                    for (let i = 0; i < vehicleModels.length; i++) {
+                        if (text.toLowerCase().includes(vehicleModels[i].model.toLowerCase()) 
+                            || (vehicleModels[i].model_values && vehicleModels[i].model_values.some(model => text.toLowerCase().includes(model.toLowerCase())))) {
+                            mmv.model_id   = vehicleModels[i].model_id;
+                            mmv.model_name = vehicleModels[i].model;
                             break;
                         }
                     }
