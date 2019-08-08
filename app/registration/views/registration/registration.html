@@ -458,23 +458,23 @@
             
             $("#registration_text_form").submit(function (e) {
                 e.preventDefault();
-                redirectToRegistrationText();
+                redirectToRegistration();
             });
     
             $('#filter_registration_text').click(function(){
-                redirectToRegistrationText();
+                redirectToRegistration();
             });
             
-            $('#filter_category').change(function(){
-                var filterCategory = $(this).val();
-                window.location = '/registration-text?filter_category='+filterCategory;
-            });
+            // $('#filter_category').change(function(){
+            //     var filterCategory = $(this).val();
+            //     window.location = '/registration/list?filter_category='+filterCategory;
+            // });
     
             //$('#datatable_registration_text').dataTable({"bPaginate":true, "lengthChange":false, "pageLength":20,"info":true, "aoColumnDefs": [{ 'bSortable': false, 'aTargets': [ 0,6 ] }], "order": [[ 1, "desc" ]]}); 
         });
         
-        function redirectToRegistrationText(){
-            var url = '/registration-text?';
+        function redirectToRegistration(){
+            var url = '/registration/list?';
             var filterText      = $('#filter_text').val();
             var filterCategory  = $('#filter_category').val();
             var filterStatus    = $('#filter_status').val();          
