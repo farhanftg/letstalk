@@ -332,6 +332,7 @@ Registration.processRegistration = function(registrationNumber){
             if(!registration){
                 registration = await Registration.getRegistrationFromRtoVehicle(registrationNumber);
                 let textData = await registrationTextModel.findOne({text:registration.maker_model});
+
                 if(textData){
                     if(textData.status == config.status.autoMapped || textData.status == config.status.approved){
                         registration.central_make_id            = textData.make_id?textData.make_id:'';
@@ -351,6 +352,11 @@ Registration.processRegistration = function(registrationNumber){
                     registrationText.source         = config.source.rtoVehicle;
 
                     let autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationText(registration.maker_model);
+                    
+                    if(config.autoMapRegistrationText.autoMapByMmv && !autoMappedRegistrationText.make_id && !autoMappedRegistrationText.model_id){
+                        autoMappedRegistrationText = await registrationTextModel.getAutoMappedRegistrationTextByMMV(registrationText.category , registrationText.text);
+                    }
+                    
                     if(autoMappedRegistrationText.make_id && autoMappedRegistrationText.model_id){
                         registrationText.make_id    = autoMappedRegistrationText.make_id;
                         registrationText.make_name  = autoMappedRegistrationText.make_name;
@@ -366,6 +372,7 @@ Registration.processRegistration = function(registrationNumber){
                         registration.vehicle_category   = autoMappedRegistrationText.category;
                         registration.status = config.status.autoMapped;
                     }
+                    
                     registrationTextModel.addRegistrationText(registrationText).catch(function(e){
                         console.log(e);
                     });
@@ -373,7 +380,8 @@ Registration.processRegistration = function(registrationNumber){
 
                 let data =  Registration.addRegistration(registration).catch(function(e){
                     console.log(e);
-                });         
+                });  
+                       
                 if(!registration.vehicle_category){
                     vehicleClassModel.createAsync({vehicle_class:registration.vehicle_class}).catch(function(e){
                         console.log(e);
@@ -410,6 +418,7 @@ Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
                 let getRtoCode = commonHelper.getRtoCodeByRegistrationNumber(registrationNumber);
                 let rtoDetail    = await commonModel.getRtoDetail({rto_code:getRtoCode});
                 let vehicleClass = await vehicleClassModel.findOneAsync({vehicle_class:result.vh_class, status:2});
+                //let [rtoDetail, vehicleClass] = await Promise.all([commonModel.getRtoDetail({rto_code:getRtoCode}), vehicleClassModel.findOneAsync({vehicle_class:result.vh_class, status:2})]);
                 let registration = {};
                 
                 registration.registration_number= registrationNumber;

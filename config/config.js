@@ -97,6 +97,7 @@ config.pagination = {};
 config.pagination.limit = 20;
 
 config.autoMapRegistrationText = {};
+config.autoMapRegistrationText.autoMapByMmv = true;
 config.autoMapRegistrationText.limit = 100;
 
 config.autoMapRegistrationText.autoMapByCorrectMMV = true;
