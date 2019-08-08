@@ -12,6 +12,7 @@ class ConsoleController{
 ConsoleController.getAllMMV = async function(req, res){ 
     try{
         let [carMakes, carModels, carVariants] = await Promise.all([commonModel.getCarMake(), commonModel.getCarModel(), commonModel.getCarVariant()]);
+        
         carMakes.forEach(function (carMake, index) {
             let models = new Array();
             carModels.forEach(function (carModel, index) { 
@@ -26,9 +27,10 @@ ConsoleController.getAllMMV = async function(req, res){
                         redisHelper.setJSON('car_variants_'+carModel.model_id, variants); 
                     }
                     carModel.model_values = [];
-                    let carModelArr = carModel.model.split(' ');
+                    let carModelStr = carModel.model.replace('-', ' ').replace(/\s\s+/g, ' ').trim();
+                    let carModelArr = carModelStr.split(' ');
                     if(carModelArr.length > 1){
-                        carModel.model_values = [carModelArr.join(''), carModelArr.join('-')];
+                        carModel.model_values = [carModelStr, carModelArr.join(''), carModelArr.join('-')];
                     }
                     models.push(carModel);
                 }                       
@@ -36,9 +38,17 @@ ConsoleController.getAllMMV = async function(req, res){
             if(models.length){
                 redisHelper.setJSON('car_models_'+carMake.make_id, models); 
             }
+            carMake.make_values = [];
+            let carMakeStr = carMake.make.replace('-', ' ').replace(/\s\s+/g, ' ').trim();
+            let carMakeArr = carMakeStr.split(' ');
+            if(carMakeArr.length > 1){
+                carMake.make_values = [carMakeStr, carMakeArr.join(''), carMakeArr.join('-')];
+            }
         });      
+        redisHelper.setJSON('car_makes', carMakes); 
         
         let [bikeMakes, bikeModels, bikeVariants] = await Promise.all([commonModel.getBikeMake(), commonModel.getBikeModel(), commonModel.getBikeVariant()]);
+        
         bikeMakes.forEach(function (bikeMake, index) {
             let models = new Array();
             bikeModels.forEach(function (bikeModel, index) { 
@@ -53,9 +63,10 @@ ConsoleController.getAllMMV = async function(req, res){
                         redisHelper.setJSON('bike_variants_'+bikeModel.model_id, variants); 
                     }
                     bikeModel.model_values = [];
-                    let bikeModelArr = bikeModel.model.split(' ');
+                    let bikeModelStr = bikeModel.model.replace('-', ' ').replace(/\s\s+/g, ' ').trim();
+                    let bikeModelArr = bikeModelStr.split(' ');
                     if(bikeModelArr.length > 1){
-                        bikeModel.model_values = [bikeModelArr.join(''), bikeModelArr.join('-')];
+                        bikeModel.model_values = [bikeModelStr, bikeModelArr.join(''), bikeModelArr.join('-')];
                     }
                     models.push(bikeModel);
                 }                       
@@ -63,7 +74,14 @@ ConsoleController.getAllMMV = async function(req, res){
             if(models.length){
                 redisHelper.setJSON('bike_models_'+bikeMake.make_id, models); 
             }
+            bikeMake.make_values = [];
+            let bikeMakeStr = bikeMake.make.replace('-', ' ').replace(/\s\s+/g, ' ').trim();
+            let bikeMakeArr = bikeMakeStr.split(' ');
+            if(bikeMakeArr.length > 1){
+                bikeMake.make_values = [bikeMakeStr, bikeMakeArr.join(''), bikeMakeArr.join('-')];
+            }
         });     
+        redisHelper.setJSON('bike_makes', bikeMakes); 
         
         res.send('Done');
     }catch(err){
