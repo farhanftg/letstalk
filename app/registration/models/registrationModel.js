@@ -411,10 +411,11 @@ Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
             query.auth = config.rtoVehicle.authToken;  
             let result = await commonHelper.sendPostRequest(query, options);
             if(result && result.reason == 'active'){
-                let getRtoCode = commonHelper.getRtoCodeByRegistrationNumber(registrationNumber);
-                let rtoDetail    = await commonModel.getRtoDetail({rto_code:getRtoCode});
-                let vehicleClass = await vehicleClassModel.findOneAsync({vehicle_class:result.vh_class, status:2});
-                //let [rtoDetail, vehicleClass] = await Promise.all([commonModel.getRtoDetail({rto_code:getRtoCode}), vehicleClassModel.findOneAsync({vehicle_class:result.vh_class, status:2})]);
+                let getRtoCode                = commonHelper.getRtoCodeByRegistrationNumber(registrationNumber);
+                let [rtoDetail, vehicleClass] = await Promise.all([
+                    commonModel.getRtoDetail({ rto_code: getRtoCode }),
+                    vehicleClassModel.findOneAsync({ vehicle_class: result.vh_class, status: 2 })
+                ]);
                 let registration = {};
                 
                 registration.registration_number= registrationNumber;

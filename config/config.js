@@ -96,11 +96,12 @@ config.showDefaultErrorMessage      = false;
 config.pagination = {};
 config.pagination.limit = 20;
 
-config.autoMapRegistrationText = {};
-config.autoMapRegistrationText.autoMapByMmv = true;
-config.autoMapRegistrationText.limit = 100;
-
+config.autoMapRegistrationText                     = {};
+config.autoMapRegistrationText.autoMapByMMV        = true;
+config.autoMapRegistrationText.autoMapByMappedMMV  = true;
 config.autoMapRegistrationText.autoMapByCorrectMMV = true;
+config.autoMapRegistrationText.limit               = 100;
+
 config.autoMapRegistrationText.mmv = [
     {
         name: 'i10',

@@ -1,6 +1,6 @@
 var uniqueValidator     = require('mongoose-unique-validator');
 var validationHelper    = require(HELPER_PATH+'validationHelper');
-var commonHelper        = require(HELPER_PATH+'commonHelper');
+var commonHelper        = require('../../../helpers/commonHelper');
 var registrationModel   = require('../models/registrationModel');
 var vehicleClassModel   = require('../models/vehicleClassModel');
 var CommonModel         = require('../../common/models/commonModel');
@@ -172,37 +172,45 @@ RegistrationText.getAutoMappedRegistrationText = function(text, category = false
     return new Promise( async function(resolve, reject) {
         try{
             let data = {};
-            let approvedRows = await RegistrationText.aggregateAsync([
-                { $match: {status: config.status.approved,model_name:{$ne:null}}},
-                {
-                    $project: {
-                    "make_id": 1,    
-                    "make_name": 1,
-                    "model_id": 1,    
-                    "model_name": 1,
-                    "category": 1,
-                    "length": { $strLenCP: "$model_name" }
-                    }
-                },
-                { $match: {length:{$gte:3}}},
-                { $sort: { length: -1} },
-            ]);
-            
-            for(var i=0;  i<approvedRows.length; i++){
-                let approvedRow = approvedRows[i];
-                if(approvedRow.make_id && approvedRow.model_id){
-                    var textArr = text.toLowerCase().split(' ');
-                    if((text.toLowerCase().indexOf(approvedRow.make_name.toLowerCase()) >= 0 && (approvedRow.model_name.length > 1 && text.toLowerCase().indexOf(approvedRow.model_name.toLowerCase()) >= 0)) || (approvedRow.model_name.length>=3 && textArr.indexOf(approvedRow.model_name.toLowerCase()) >=0)){                                                                  
-                        data = approvedRow;
-                        break;
-                    }           
-                }             
-            }   
-            
-            if(config.autoMapRegistrationText.autoMapByMmv && !data.make_id && !data.model_id){
+
+            if(config.autoMapRegistrationText.autoMapByMMV){
                 data = await that.getAutoMappedRegistrationTextByMMV(category, text);
             }
             
+            if (config.autoMapRegistrationText.autoMapByMappedMMV && !data.make_id && !data.model_id) {
+                let condition = { status: config.status.approved, model_name: { $ne: null } };
+                if (category) {
+                    condition.category = category;
+                } 
+                let approvedRows = await RegistrationText.aggregateAsync([
+                    { $match: condition },
+                    {
+                        $project: {
+                            "make_id": 1,
+                            "make_name": 1,
+                            "model_id": 1,
+                            "model_name": 1,
+                            "category": 1,
+                            "length": { $strLenCP: "$model_name" }
+                        }
+                    },
+                    { $match: { length: { $gte: 3 } } },
+                    { $sort: { length: -1 } },
+                ]);
+
+                for (var i = 0; i < approvedRows.length; i++) {
+                    let approvedRow = approvedRows[i];
+                    if (approvedRow.make_id && approvedRow.model_id) {
+                        if ((text.toLowerCase().indexOf(approvedRow.make_name.toLowerCase()) >= 0 
+                            && (text.toLowerCase().indexOf(approvedRow.model_name.toLowerCase()) >= 0)) 
+                            || (text.indexOf(` ${approvedRow.model_name.toLowerCase()} `) >= 0)) {
+                            data = approvedRow;
+                            break;
+                        }
+                    }
+                }
+            }
+
             if(correctMmv && config.autoMapRegistrationText.autoMapByCorrectMMV && !data.make_id && !data.model_id){               
                 for(let mmv of config.autoMapRegistrationText.mmv) {
                     if(mmv.values){
@@ -216,7 +224,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text, category = false
                         }
                     }
                 }                
-            }    
+            }
             resolve(data);
         }catch(e){
             reject(e);
