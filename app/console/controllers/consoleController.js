@@ -2,6 +2,7 @@ var registrationModel       = require('../../registration/models/registrationMod
 var registrationTextModel   = require('../../registration/models/registrationTextModel');
 var requestRegistrationModel= require('../../registration/models/requestRegistrationModel');
 var commonModel             = require('../../common/models/commonModel');
+var commonHelper            = require(HELPER_PATH+'commonHelper.js');
 var redisHelper             = require(HELPER_PATH+'redisHelper');
 
 class ConsoleController{
@@ -63,7 +64,8 @@ ConsoleController.getAllMMV = async function(req, res){
                         redisHelper.setJSON('bike_variants_'+bikeModel.model_id, variants); 
                     }
                     bikeModel.model_values = [];
-                    let bikeModelStr = bikeModel.model.replace('-', ' ').replace(/\s\s+/g, ' ').trim();
+                    let bikeModelStr = commonHelper.removeMakeNameFromModelName(bikeModel.make, bikeModel.model);
+                    bikeModelStr     = bikeModelStr.replace('-', ' ').replace(/\s\s+/g, ' ').trim();
                     let bikeModelArr = bikeModelStr.split(' ');
                     if(bikeModelArr.length > 1){
                         bikeModel.model_values = [bikeModelStr, bikeModelArr.join(''), bikeModelArr.join('-')];
