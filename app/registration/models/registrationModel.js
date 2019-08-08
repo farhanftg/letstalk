@@ -48,8 +48,7 @@ RegistrationSchema.virtual('id').get(function(){
     return this._id.toHexString();
 });
 
-RegistrationSchema.virtual('registration_date_ymd').get(function(){
-    
+RegistrationSchema.virtual('registration_date_ymd').get(function(){   
     return this.registration_date?this.registration_date.toISOString().substring(0, 10):'';
 });
 
@@ -411,29 +410,30 @@ Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
             query.auth = config.rtoVehicle.authToken;  
             let result = await commonHelper.sendPostRequest(query, options);
             if(result && result.reason == 'active'){
-                let getRtoCode                = commonHelper.getRtoCodeByRegistrationNumber(registrationNumber);
+                let rtoCode                = commonHelper.getRtoCodeByRegistrationNumber(registrationNumber);
                 let [rtoDetail, vehicleClass] = await Promise.all([
-                    commonModel.getRtoDetail({ rto_code: getRtoCode }),
-                    vehicleClassModel.findOneAsync({ vehicle_class: result.vh_class, status: 2 })
-                ]);
+                                                    commonModel.getRtoDetail({ rto_code: rtoCode }),
+                                                    vehicleClassModel.findOneAsync({ vehicle_class: result.vh_class, status: 2 })
+                                                ]);
+                                                
                 let registration = {};
+                registration.registration_number    = registrationNumber;
+                registration.maker_model            = result.vehicle_name;
+                registration.owner_name             = result.owner_name;
+                registration.registration_date      = new Date(result.regn_dt);
+                registration.registration_date_ymd  = registration.registration_date?registration.registration_date.toISOString().substring(0, 10):'';
+                registration.registration_year      = registration.registration_date.getFullYear();
+                registration.fuel_type              = result.f_type;
+                registration.chassis_number         = result.c_no;
+                registration.engine_number          = result.e_no;
+                registration.vehicle_class          = result.vh_class;
+                registration.vehicle_category       = vehicleClass && vehicleClass.vehicle_category ? vehicleClass.vehicle_category: '';
+                registration.rto_code               = rtoCode;
+                registration.rto_name               = rtoDetail[0].rtoName;
+                registration.rto_city_id            = rtoDetail[0].cityId;
+                registration.rto_city_name          = rtoDetail[0].city;
+                registration.source                 = config.source.rtoVehicle;
                 
-                registration.registration_number= registrationNumber;
-                registration.maker_model        = result.vehicle_name;
-                registration.owner_name         = result.owner_name;
-                registration.registration_date  = new Date(result.regn_dt);
-                registration.registration_year  = registration.registration_date.getFullYear();
-                registration.fuel_type          = result.f_type;
-                registration.chassis_number     = result.c_no;
-                registration.engine_number      = result.e_no;
-                registration.vehicle_class      = result.vh_class;
-                registration.vehicle_category   = vehicleClass && vehicleClass.vehicle_category ? vehicleClass.vehicle_category: '';
-                registration.rto_code           = getRtoCode;
-                registration.rto_name           = rtoDetail[0].rtoName;
-                registration.rto_city_id        = rtoDetail[0].cityId;
-                registration.rto_city_name      = rtoDetail[0].city;
-
-                registration.source             = config.source.rtoVehicle;
                 resolve(registration);
             }else{
                 throw ERROR.DEFAULT_ERROR;                        
