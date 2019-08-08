@@ -266,7 +266,12 @@ RegistrationText.getAutoMappedRegistrationTextByMMV = function (category, text) 
 
                 if(mmv.make_id){
                     bikeModels = await CommonModel.getBikeModel(mmv.make_id);
-                    bikeModels = bikeModels.filter(bikeModel => bikeModel.model && (bikeModel.model.length >= 3));
+                    bikeModels = bikeModels
+                        .map(bikeModel => {
+                            bikeModel.model = commonHelper.removeMakeNameFromModelName(bikeModel.make, bikeModel.model)
+                            return bikeModel;
+                        })
+                        .filter(bikeModel => bikeModel.model && (bikeModel.model.length >= 3));
 
                     //sort array by model name desc
                     bikeModels.sort((a, b) => b.model.length - a.model.length);
