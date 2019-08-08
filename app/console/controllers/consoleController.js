@@ -21,11 +21,16 @@ ConsoleController.getAllMMV = async function(req, res){
                         if(carModel.model_id == carVariant.model_id){
                             variants.push(carVariant);
                         }                        
-                    });
-                    models.push(carModel);
+                    });                 
                     if(variants.length){
                         redisHelper.setJSON('car_variants_'+carModel.model_id, variants); 
                     }
+                    carModel.model_values = [];
+                    let carModelArr = carModel.model.split(' ');
+                    if(carModelArr.length > 1){
+                        carModel.model_values = [carModelArr.join(''), carModelArr.join('-')];
+                    }
+                    models.push(carModel);
                 }                       
             });   
             if(models.length){
@@ -44,10 +49,15 @@ ConsoleController.getAllMMV = async function(req, res){
                             variants.push(bikeVariant);
                         }                        
                     });
-                    models.push(bikeModel);
                     if(variants.length){
                         redisHelper.setJSON('bike_variants_'+bikeModel.model_id, variants); 
                     }
+                    bikeModel.model_values = [];
+                    let bikeModelArr = bikeModel.model.split(' ');
+                    if(bikeModelArr.length > 1){
+                        bikeModel.model_values = [bikeModelArr.join(''), bikeModelArr.join('-')];
+                    }
+                    models.push(bikeModel);
                 }                       
             });   
             if(models.length){
