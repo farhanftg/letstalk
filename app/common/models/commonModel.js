@@ -128,7 +128,7 @@ CommonModel.getCarVariant = function(modelId){
             if(!variants){
                 let path    = '/api/v1/motor/getBkgMasterData';
                 let result  = await commonHelper.sendGetRequestToBrokerage(query, path);   
-                //variants    = await redisHelper.setJSON(key,result);     
+                variants    = await redisHelper.setJSON(key,result);     
                 resolve(result); 
             }else{
                 resolve(variants);
@@ -167,21 +167,27 @@ CommonModel.getBikeMake = function(req, res){
 
 CommonModel.getBikeModel = function(makeId){ 
     return new Promise(async function(resolve, reject) {
-        var query = {};
+        let query = {};
+        let key     = 'bike_models';
+        
         query.fetchData = 'tw_mmv';
         query.sortBy    = 'modelPopularity';
         query.tags      = 'make,make_id,model,model_id,model_display_name,model_popularity_rank,status';   
         query.fetchOnly =  'all_model';
-        query.makeId    = makeId;
         query.source    = config.source.autodb;
         query.subSource = config.subSource.vahanScrapper;
-
+        
+        if(makeId){
+            query.makeId = makeId;
+            key += '_'+makeId; 
+        }
+        
         try{
-            let models = await redisHelper.getJSON('bike_models_'+makeId);
+            let models = await redisHelper.getJSON(key);
             if(!models){
                 let path    = '/api/v1/motor/getBkgMasterData';
                 let result  = await commonHelper.sendGetRequestToBrokerage(query, path);   
-                models      = await redisHelper.setJSON('bike_models_'+makeId,result);     
+                models      = await redisHelper.setJSON(key, result);     
                 resolve(result);
             }else{
                 resolve(models);
@@ -194,21 +200,27 @@ CommonModel.getBikeModel = function(makeId){
 
 CommonModel.getBikeVariant = function(modelId){ 
     return new Promise(async function(resolve, reject) {
-        var query = {};
+        let query = {};
+        let key   = 'bike_variants';
+        
         query.fetchData = 'tw_mmv';
         query.sortBy    = 'modelPopularity';
         query.tags      = 'make,make_id,model,model_id,version,version_id,version_display_name,cc,status,fuel';
         query.fetchOnly = 'all_variant';
-        query.modelId    = modelId;
         query.source    = config.source.autodb;
         query.subSource = config.subSource.vahanScrapper;
+        
+        if(modelId){
+            query.modelId = modelId;
+            key += '_'+modelId; 
+        }
 
         try{
-            let variants = await redisHelper.getJSON('bike_variants_'+query.modelId);
+            let variants = await redisHelper.getJSON(key);
             if(!variants){
                 let path    = '/api/v1/motor/getBkgMasterData';
                 let result  = await commonHelper.sendGetRequestToBrokerage(query, path);   
-                variants    = await redisHelper.setJSON('bike_variants_'+query.modelId,result);     
+                variants    = await redisHelper.setJSON(key, result);     
                 resolve(result);  
             }else{
                 resolve(variants);

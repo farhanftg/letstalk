@@ -31,7 +31,30 @@ ConsoleController.getAllMMV = async function(req, res){
             if(models.length){
                 redisHelper.setJSON('car_models_'+carMake.make_id, models); 
             }
-        });       
+        });      
+        
+        let [bikeMakes, bikeModels, bikeVariants] = await Promise.all([commonModel.getBikeMake(), commonModel.getBikeModel(), commonModel.getBikeVariant()]);
+        bikeMakes.forEach(function (bikeMake, index) {
+            let models = new Array();
+            bikeModels.forEach(function (bikeModel, index) { 
+                let variants = new Array();
+                if(bikeMake.make_id == bikeModel.make_id){
+                    bikeVariants.forEach(function (bikeVariant, index) {  
+                        if(bikeModel.model_id == bikeVariant.model_id){
+                            variants.push(bikeVariant);
+                        }                        
+                    });
+                    models.push(bikeModel);
+                    if(variants.length){
+                        redisHelper.setJSON('bike_variants_'+bikeModel.model_id, variants); 
+                    }
+                }                       
+            });   
+            if(models.length){
+                redisHelper.setJSON('bike_models_'+bikeMake.make_id, models); 
+            }
+        });     
+        
         res.send('Done');
     }catch(err){
         console.log(err);
