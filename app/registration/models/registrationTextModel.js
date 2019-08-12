@@ -220,7 +220,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text, category = false
                             if(value && text.toLowerCase().includes(value.toLowerCase())){
                                 let valueRegex   = new RegExp(' '+value+' ', "ig");
                                 text    = text.replace(valueRegex, ' '+mmv.name+' ');
-                                data    = await that.getAutoMappedRegistrationText(text, false, false);
+                                data    = await that.getAutoMappedRegistrationText(text, category, false);
                                 break;
                             }
                         }
