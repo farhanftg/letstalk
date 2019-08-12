@@ -108,12 +108,32 @@ config.autoMapRegistrationText.mmv = [
         values:['i 10', 'i-10']
     },
     {
+        name: 'Grand i10',
+        values:['Grandi10', 'Grand i 10','Grand i-10']
+    },
+    {
         name: 'i20',
         values:['i 20', 'i-20']
     },
     {
         name: 'Wagon R',
         values:['WagonR', 'Wagon-R', 'WaganR', 'Wagan-R']
+    },
+    {
+        name: 'Classic 350',
+        values:['Classic350', 'Classic-350']
+    },
+    {
+        name: 'Classic 500',
+        values:['Classic500', 'Classic-500']
+    },
+    {
+        name: 'XUV 300',
+        values:['XUV300', 'XUV-300']
+    },
+    {
+        name: 'XUV 500',
+        values:['XUV500', 'XUV-500']
     }
 ];
 
