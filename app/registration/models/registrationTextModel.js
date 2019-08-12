@@ -177,7 +177,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text, category = false
                 data = await that.getAutoMappedRegistrationTextByMMV(category, text);
             }
             
-            if (config.autoMapRegistrationText.autoMapByMappedMMV && !data.make_id && !data.model_id) {
+            if (config.autoMapRegistrationText.autoMapByMappedMMV && !data.model_id) {
                 let condition = { status: config.status.approved, model_name: { $ne: null } };
                 if (category) {
                     condition.category = category;
@@ -213,7 +213,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text, category = false
                 }
             }
 
-            if(correctMmv && config.autoMapRegistrationText.autoMapByCorrectMMV && !data.make_id && !data.model_id){               
+            if(correctMmv && config.autoMapRegistrationText.autoMapByCorrectMMV && !data.model_id){               
                 for(let mmv of config.autoMapRegistrationText.mmv) {
                     if(mmv.values){
                         for (let value of mmv.values) {
