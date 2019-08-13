@@ -218,9 +218,16 @@ RegistrationText.getAutoMappedRegistrationText = function(text, category = false
                     if(mmv.values){
                         for (let value of mmv.values) {
                             if(value && text.toLowerCase().includes(value.toLowerCase())){
-                                let valueRegex   = new RegExp(' '+value+' ', "ig");
-                                text    = text.replace(valueRegex, ' '+mmv.name+' ');
-                                data    = await that.getAutoMappedRegistrationText(text, category, false);
+                                let match = ` ${value} `;
+                                if (text.toLowerCase().startsWith(value.toLowerCase())) {
+                                    match = `${value} `;
+                                }
+                                if (text.toLowerCase().endsWith(value.toLowerCase())) {
+                                    match = ` ${value}`;
+                                }
+                                let valueRegex = new RegExp(match, "ig");
+                                    text       = text.replace(valueRegex, ` ${mmv.name} `);
+                                    data       = await that.getAutoMappedRegistrationText(text, category, false);
                                 break;
                             }
                         }
