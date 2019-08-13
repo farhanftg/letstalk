@@ -92,6 +92,21 @@ ConsoleController.getAllMMV = async function(req, res){
     }
 }
 
+ConsoleController.getAllRTO = async function (req, res) {
+    try {
+        let rtoDetails = await commonModel.getRtoDetail();
+        rtoDetails.forEach(rtoDetail => {
+            let key    = `rto_${rtoDetail.rtoCode}`;
+            let result = [rtoDetail];
+            redisHelper.setJSON(key, result);
+        });
+        res.send("Done");
+    } catch (err) {
+        console.log(err);
+        res.send("Error");
+    }
+};
+
 ConsoleController.autoMapRegistrationText = async function(req, res){ 
     try{
         let limit = req.query && req.query.limit?req.query.limit:config.autoMapRegistrationText.limit;

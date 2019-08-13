@@ -5,6 +5,10 @@ router.get('/get-all-mmv', function(req, res){
     consoleController.getAllMMV(req, res);
 });
 
+router.get('/get-all-rto', function (req, res) {
+    consoleController.getAllRTO(req, res);
+});
+
 router.get('/auto-map-registration-text', function(req, res){
     consoleController.autoMapRegistrationText(req, res);
 });
