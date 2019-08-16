@@ -104,12 +104,12 @@ config.autoMapRegistrationText.limit               = 100;
 
 config.autoMapRegistrationText.mmv = [
     {
-        name: 'i10',
-        values:['i 10', 'i-10']
+        name: 'Grand i10',
+        values:['Grandi10', 'Grand i 10','Grand i-10', 'Grand-i-10', 'Grand-i 10', 'Grand-i10']
     },
     {
-        name: 'Grand i10',
-        values:['Grandi10', 'Grand i 10','Grand i-10']
+        name: 'i10',
+        values:['i 10', 'i-10']
     },
     {
         name: 'i20',
@@ -128,12 +128,20 @@ config.autoMapRegistrationText.mmv = [
         values:['Classic500', 'Classic-500']
     },
     {
-        name: 'XUV 300',
-        values:['XUV300', 'XUV-300']
+        name: 'XUV300',
+        values:['XUV 300', 'XUV-300']
     },
     {
-        name: 'XUV 500',
-        values:['XUV500', 'XUV-500']
+        name: 'XUV500',
+        values:['XUV 500', 'XUV-500']
+    },
+    {
+        name: 'SX4 S Cross',
+        values: ['S Cross', 'S-Cross', 'SCross']
+    },
+    {
+        name: 'RediGO',
+        values: ['Redi Go', 'Redi-Go']
     }
 ];
 

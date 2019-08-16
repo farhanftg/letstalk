@@ -171,6 +171,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text, category = false
     let that = this;
     return new Promise( async function(resolve, reject) {
         try{
+            text = commonHelper.removeMultipleSpace(text).trim();
             let data = {};
 
             if(config.autoMapRegistrationText.autoMapByMMV){
@@ -218,9 +219,16 @@ RegistrationText.getAutoMappedRegistrationText = function(text, category = false
                     if(mmv.values){
                         for (let value of mmv.values) {
                             if(value && text.toLowerCase().includes(value.toLowerCase())){
-                                let valueRegex   = new RegExp(' '+value+' ', "ig");
-                                text    = text.replace(valueRegex, ' '+mmv.name+' ');
-                                data    = await that.getAutoMappedRegistrationText(text, category, false);
+                                let match = ` ${value} `;
+                                if (text.toLowerCase().startsWith(value.toLowerCase())) {
+                                    match = `${value} `;
+                                }
+                                if (text.toLowerCase().endsWith(value.toLowerCase())) {
+                                    match = ` ${value}`;
+                                }
+                                let valueRegex = new RegExp(match, "ig");
+                                    text       = text.replace(valueRegex, ` ${mmv.name} `);
+                                    data       = await that.getAutoMappedRegistrationText(text, category, false);
                                 break;
                             }
                         }
@@ -244,6 +252,7 @@ RegistrationText.getAutoMappedRegistrationTextByMMV = function (category, text) 
                 const getVehicleModel = category == config.vehicleCategory.fourWheeler ? 'getCarModel' : 'getBikeModel';
 
                 let vehicleMakes = await CommonModel[getVehicleMake]();
+                vehicleMakes.sort((a, b) => b.make.length - a.make.length);
                 for (let i = 0; i < vehicleMakes.length; i++) {
                     if (vehicleMakes[i].make && text.toLowerCase().includes(vehicleMakes[i].make.toLowerCase())
                         || (vehicleMakes[i].make_values && vehicleMakes[i].make_values.some(make => text.toLowerCase().includes(make.toLowerCase())))) {
