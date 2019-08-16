@@ -171,6 +171,7 @@ RegistrationText.getAutoMappedRegistrationText = function(text, category = false
     let that = this;
     return new Promise( async function(resolve, reject) {
         try{
+            text = commonHelper.removeMultipleSpace(text).trim();
             let data = {};
 
             if(config.autoMapRegistrationText.autoMapByMMV){

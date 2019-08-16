@@ -105,7 +105,7 @@ config.autoMapRegistrationText.limit               = 100;
 config.autoMapRegistrationText.mmv = [
     {
         name: 'Grand i10',
-        values:['Grandi10', 'Grand i 10','Grand i-10', 'Grand-i-10']
+        values:['Grandi10', 'Grand i 10','Grand i-10', 'Grand-i-10', 'Grand-i 10', 'Grand-i10']
     },
     {
         name: 'i10',
