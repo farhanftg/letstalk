@@ -24,7 +24,7 @@ CommonModel.getCity = function(query){
     });
 }
 
-CommonModel.getRtoDetail = function(query){ 
+CommonModel.getRtoDetail = function(query = {}){ 
     return new Promise( async function(resolve, reject) {
         let rtoCode = '';
         let key = 'rto';

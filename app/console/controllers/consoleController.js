@@ -84,6 +84,7 @@ ConsoleController.getAllMMV = async function(req, res){
             }
         });     
         redisHelper.setJSON('bike_makes', bikeMakes); 
+        console.log('All MMV Done');
         
         res.send('Done');
     }catch(err){
@@ -92,10 +93,28 @@ ConsoleController.getAllMMV = async function(req, res){
     }
 }
 
+ConsoleController.getAllRTO = async function (req, res) {
+    try {
+        let rtoDetails = await commonModel.getRtoDetail();
+        rtoDetails.forEach(rtoDetail => {
+            let key    = `rto_${rtoDetail.rtoCode}`;
+            let result = [rtoDetail];
+            redisHelper.setJSON(key, result);
+        });
+        
+        console.log('Rto Done');
+        res.send("Done");
+    } catch (err) {
+        console.log(err);
+        res.send("Error");
+    }
+};
+
 ConsoleController.autoMapRegistrationText = async function(req, res){ 
     try{
-        let limit = req.query && req.query.limit?req.query.limit:config.autoMapRegistrationText.limit;
+        let limit = req.query && req.query.limit?parseInt(req.query.limit):config.autoMapRegistrationText.limit;
         let count = await registrationTextModel.autoMapRegistrationText(limit);
+        console.log('Auto Mapped Registration Text : '+count);
         res.send('Auto Mapped Registration Text : '+count);
     }catch(err){
         console.log(err);
@@ -121,6 +140,7 @@ ConsoleController.getRegistrationFromRegistrationRequest = async function(req, r
                     })
             });
         }
+        console.log('Done');
         res.send('Done');
     }catch(err){
         console.log(err);
