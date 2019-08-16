@@ -47,31 +47,14 @@ CommonController.getCity = async function(req, res){
 }
 
 CommonController.getRtoDetail = async function(req, res){
-    let query = {};
-    let rtoCode = '';
-    let key = 'rto';
     req.elk.module      = 'Common';
     req.elk.sub_module  = 'getRtoDetail'; 
 
-    query.source    = config.source.autodb;
-    query.subSource = config.subSource.vahanScrapper;
-    if(req.query.rto_code){
-        rtoCode = req.query.rto_code;
-        key += '_'+rtoCode;
-    }
-    try{
-        let rtoDetail = await redisHelper.getJSON(key);
-        if(!rtoDetail){
-            let path = '/api/v1/motor/rtoMasterDetail/'+rtoCode;
-            let result = await commonHelper.sendGetRequestToBrokerage(query, path);
-            rtoDetail = await redisHelper.setJSON(key,result);     
-            this.sendResponse(req, res, 200, false, result, false);                      
-        }else{
-            req.cached = true;
-            this.sendResponse(req, res, 200, false, rtoDetail, false);
-        }
+    try{ 
+        let result = await commonModel.getRtoDetail(req.query);
+        this.sendSuccessResponse(req, res, result);    
     }catch(e){
-        this.sendResponse(req, res, 400, false, false, e);
+        this.sendErrorResponse(req, res, e);
     }
 }
     
@@ -160,6 +143,8 @@ CommonController.sendRequestToBrokerage = async function(req, res){
 }
 
 CommonController.getCarMake = async function(req, res){ 
+    req.elk.module      = 'Common';
+    req.elk.sub_module  = 'getCarMake'; 
     try{ 
         let result = await commonModel.getCarMake();
         this.sendSuccessResponse(req, res, result);    
@@ -169,7 +154,9 @@ CommonController.getCarMake = async function(req, res){
 }
 
 CommonController.getCarModel = async function(req, res){ 
-    var errors = new Array();
+    let errors = new Array();
+    req.elk.module      = 'Common';
+    req.elk.sub_module  = 'getCarModel'; 
     if(!req.query.make_id){
         error = this.formatError('ERR10008', 'make_id');
         errors.push(error);
@@ -187,7 +174,10 @@ CommonController.getCarModel = async function(req, res){
 }
 
 CommonController.getCarVariant = async function(req, res){ 
-    var errors = new Array();
+    let errors = new Array();
+    req.elk.module      = 'Common';
+    req.elk.sub_module  = 'getCarVariant'; 
+    
     if(!req.query.model_id){
         error = this.formatError('ERR10009', 'model_id');
         errors.push(error);
@@ -204,7 +194,10 @@ CommonController.getCarVariant = async function(req, res){
     }
 }
 
-CommonController.getBikeMake = async function(req, res){    
+CommonController.getBikeMake = async function(req, res){ 
+    req.elk.module      = 'Common';
+    req.elk.sub_module  = 'getBikeMake'; 
+    
     try{
         let result = await commonModel.getBikeMake();
         this.sendSuccessResponse(req, res, result);    
@@ -214,7 +207,10 @@ CommonController.getBikeMake = async function(req, res){
 }
 
 CommonController.getBikeModel = async function(req, res){ 
-    var errors = new Array();
+    let errors = new Array();
+    req.elk.module      = 'Common';
+    req.elk.sub_module  = 'getBikeModel'; 
+    
     if(!req.query.make_id){
         error = this.formatError('ERR10008', 'make_id');
         errors.push(error);
@@ -232,7 +228,10 @@ CommonController.getBikeModel = async function(req, res){
 }
 
 CommonController.getBikeVariant = async function(req, res){ 
-    var errors = new Array();
+    let errors = new Array();
+    req.elk.module      = 'Common';
+    req.elk.sub_module  = 'getBikeVariant'; 
+    
     if(!req.query.model_id){
         error = this.formatError('ERR10009', 'model_id');
         errors.push(error);
