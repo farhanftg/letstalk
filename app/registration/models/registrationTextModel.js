@@ -252,6 +252,7 @@ RegistrationText.getAutoMappedRegistrationTextByMMV = function (category, text) 
                 const getVehicleModel = category == config.vehicleCategory.fourWheeler ? 'getCarModel' : 'getBikeModel';
 
                 let vehicleMakes = await CommonModel[getVehicleMake]();
+                vehicleMakes.sort((a, b) => b.make.length - a.make.length);
                 for (let i = 0; i < vehicleMakes.length; i++) {
                     if (vehicleMakes[i].make && text.toLowerCase().includes(vehicleMakes[i].make.toLowerCase())
                         || (vehicleMakes[i].make_values && vehicleMakes[i].make_values.some(make => text.toLowerCase().includes(make.toLowerCase())))) {
