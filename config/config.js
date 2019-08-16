@@ -142,6 +142,14 @@ config.autoMapRegistrationText.mmv = [
     {
         name: 'RediGO',
         values: ['Redi Go', 'Redi-Go']
+    },
+    {
+        name: 'Swift Dzire Tour',
+        values: ['Dzire Tour', 'Dzire-Tour']
+    },
+    {
+        name: 'Swift Dzire',
+        values: ['Dzire']
     }
 ];
 

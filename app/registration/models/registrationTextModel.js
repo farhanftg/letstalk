@@ -221,10 +221,10 @@ RegistrationText.getAutoMappedRegistrationText = function(text, category = false
                             if(value && text.toLowerCase().includes(value.toLowerCase())){
                                 let match = ` ${value} `;
                                 if (text.toLowerCase().startsWith(value.toLowerCase())) {
-                                    match = `${value} `;
+                                    match = match.substring(1);
                                 }
                                 if (text.toLowerCase().endsWith(value.toLowerCase())) {
-                                    match = ` ${value}`;
+                                    match = match.substring(0, match.length - 1);
                                 }
                                 let valueRegex = new RegExp(match, "ig");
                                     text       = text.replace(valueRegex, ` ${mmv.name} `);
