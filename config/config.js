@@ -117,7 +117,7 @@ config.autoMapRegistrationText.mmv = [
     },
     {
         name: 'Wagon R',
-        values:['WagonR', 'Wagon-R', 'WaganR', 'Wagan-R']
+        values:['WagonR', 'Wagon-R', 'WaganR', 'Wagan-R', 'Wag-R']
     },
     {
         name: 'Classic 350',
@@ -142,6 +142,18 @@ config.autoMapRegistrationText.mmv = [
     {
         name: 'RediGO',
         values: ['Redi Go', 'Redi-Go']
+    },
+    {
+        name: 'Swift Dzire Tour',
+        values: ['Dzire Tour', 'Dzire-Tour', 'DzireTour']
+    },
+    {
+        name: 'Swift Dzire',
+        values: ['Dzire']
+    },
+    {
+        name: 'Vitara Brezza',
+        values: ['Vitara Breeza', 'Vitara-Breeza', 'VitaraBreeza']
     }
 ];
 
