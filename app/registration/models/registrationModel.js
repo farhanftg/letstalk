@@ -393,16 +393,23 @@ Registration.processRegistration = function(registrationNumber){
 Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
 
     return new Promise(async function(resolve, reject){
-        let query = {};
-        if(registrationNumber){
-            query.r1 = new Array();
-            let r2 = registrationNumber.match(/\d{4}$/);
-            let r1 = registrationNumber.substring(0, r2['index']); 
-
-            query.r1.push(r1);
-            query.r2 = r2[0];
-        }
         try{     
+            let query = {};
+            if(registrationNumber){
+                query.r1 = new Array();
+                let r2 = registrationNumber.match(/\d{4}$/);
+                if(r2){
+                    let r1 = registrationNumber.substring(0, r2['index']); 
+
+                    query.r1.push(r1);
+                    query.r2 = r2[0];
+                }else{
+                    throw ERROR.REGISTRATION_NUMBER_NOT_VALID;   
+                }
+            }else{
+                throw ERROR.REGISTRATION_NUMBER_REQUIRED;   
+            }
+        
             var options = {
                         host    : config.rtoVehicle.host,
                         path    : '/batman.php'

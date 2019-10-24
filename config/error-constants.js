@@ -13,6 +13,7 @@ module.exports = {
     MODEL_ID_REQUIRED : 'Model Id is required',
     VERSION_ID_REQUIRED : 'Version Id is required',
     REGISTRATION_NUMBER_REQUIRED : 'Registration number is required',
+    REGISTRATION_NUMBER_NOT_VALID : 'Registration number is not valid',
     VEHICLE_CATEGORY_REQUIRED : 'Vehicle Category is required',
     VEHICLE_CATEGORY_NOT_VALID : 'Vehicle Category is not valid',
     RTO_CODE_REQUIRED : 'Rto Code is required',
