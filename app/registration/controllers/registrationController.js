@@ -171,7 +171,7 @@ RegistrationController.getRegistration = async function(req, res){
                 }
             }
             if(registration.status == 2 || registration.status == 3){
-                registration = registrationModel.formatRegistrationDataForAutoDB(registration);
+                registration = registrationModel.formatRegistrationDataForAutoDB(registration, req.query.sub_source);
                 if(req.query.vehicle_type && (req.query.vehicle_type.toLowerCase() != registration.vehicle_category.toLowerCase())){
                     throw ERROR.REGISTRATION_NOT_FOUND;
                 }

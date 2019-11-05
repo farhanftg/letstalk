@@ -230,7 +230,7 @@ Registration.formatAndSendRegistrationToAutoDB = function(registration){
     }); 
 }
 
-Registration.formatRegistrationDataForAutoDB= function(data){  
+Registration.formatRegistrationDataForAutoDB= function(data, subSource){  
     if(data){              
         let registration = {};       
         registration.registration_number        = data.registration_number?data.registration_number.toUpperCase():'';
@@ -258,6 +258,10 @@ Registration.formatRegistrationDataForAutoDB= function(data){
         registration.rto_name                   = data.rto_name?data.rto_name:'';
         registration.rto_city_id                = data.rto_city_id?data.rto_city_id:'';
         registration.rto_city_name              = data.rto_city_name?data.rto_city_name:''; 
+        if(!config.showMaskedDataForSubsource.includes(subSource)){
+            registration.chassis_number             = '';
+            registration.engine_number              = '';
+        }
         return registration;
     }
     return;

@@ -77,6 +77,7 @@ config.aws.s3.enabled   = true;
 config.aws.s3.bucketName= 'girnarsoft-autodb'; 
 
 config.onDemandAllowedSubsource = ['JpOffice', 'GgnOffice'];
+config.showMaskedDataForSubsource = ['JpOffice', 'GgnOffice'];
 
 config.requests = [
     {
