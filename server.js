@@ -170,6 +170,7 @@ app.use('/v1', isAuthenticated, api);
 app.use('/console', isAuthenticated, cons);
 app.use('/', isAuthenticated, web);
 
+config.port = process.env.PORT || config.port;
 http.listen(config.port, config.host, function(){
     var message = config.message.portMsg + config.port;
     console.log(message);
