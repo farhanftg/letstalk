@@ -176,7 +176,7 @@ global.NODE_MODULE_PATH = BASE_DIR+'/node_modules/';
 global.ELK_FILE_PATH    = BASE_DIR+'/logs/vahan_scrapper.json';
 
 config.mysql = {};
-config.mysql.host = 'sg3plcpnl0183.prod.sin3.secureserver.net:2083';
+config.mysql.host = 'sg3plcpnl0183.prod.sin3.secureserver.net';
 config.mysql.user = 'letstalk'
 config.mysql.password = 'letstalk';
 config.mysql.database = 'letstalk';
