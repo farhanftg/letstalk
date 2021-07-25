@@ -155,6 +155,7 @@ RegistrationController.getRegistration = async function(req, res){
     }
     try{
         if(!errors.length){
+            
             let registration = await registrationModel.findOne({registration_number:req.query.registration_number});
             if(!registration){
                 if(!config.onDemandAllowedSubsource.includes(req.query.sub_source)){
@@ -175,6 +176,9 @@ RegistrationController.getRegistration = async function(req, res){
                 if(req.query.vehicle_type && (req.query.vehicle_type.toLowerCase() != registration.vehicle_category.toLowerCase())){
                     throw ERROR.REGISTRATION_NOT_FOUND;
                 }
+                let parantId  = await commonModel.getParantModelId(registration);
+                registration.parant_model_id = parantId;
+
                 this.sendResponse(req, res, 200, false, registration, false);
             }else{
                 throw ERROR.REGISTRATION_DETAILS_NOT_VERIFIED;

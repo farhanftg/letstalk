@@ -454,4 +454,5 @@ Registration.getRegistrationFromRtoVehicle = function(registrationNumber){
         }
     });
 }
+
 module.exports = Registration;

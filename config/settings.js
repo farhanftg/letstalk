@@ -5,11 +5,11 @@ config.hostName     = 'localhost:3000';
 config.port = 3000;
 
 config.mongodb = {};
-config.mongodb.uri       = 'mongodb://localhost:27017/vahan';
+config.mongodb.uri       = 'mongodb://localhost:27017/lms';
 config.mongodb.host      = 'localhost:27017';
 config.mongodb.user      = '';
 config.mongodb.password  = '';
-config.mongodb.database  = 'vahan';
+config.mongodb.database  = 'lms';
 
 config.autodb = {};
 config.autodb.protocol  = 'https';
@@ -46,12 +46,12 @@ config.requests = [
 ];
 
 config.report.timeoutError  = false;
-config.report.timeoutErrorTo= ['anand.gupta@girnarsoft.com'];
+config.report.timeoutErrorTo = ['farhanhashmi96@gmail.com'];
 
-config.report.byPassLogErrorTo = ['anand.gupta@girnarsoft.com'];
+config.report.byPassLogErrorTo = ['farhanhashmi96@gmail.com'];
 
 config.report.proposalDataError   = true;
-config.report.proposalDataErrorTo = ['anand.gupta@girnarsoft.com'];
+config.report.proposalDataErrorTo = ['farhanhashmi96@gmail.com'];
 
 config.byPassLog = [];
 

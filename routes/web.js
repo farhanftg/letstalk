@@ -3,7 +3,7 @@ var path    = require('path');
 var multer  = require('multer')
 var router  = express.Router();
 
-var awsHelper = require(HELPER_PATH+'awsHelper');
+var awsHelper = require('../helpers/awsHelper');
 
 // Require controller modules
 var commonController            = require('../app/common/controllers/commonController');

@@ -27,11 +27,11 @@ config.report.from      = 'ucchatbot@gaadi.com';
 config.report.to        = 'anand.gupta@girnarsoft.com';
 
 config.report.timeoutError      = true;
-config.report.timeoutErrorTo    = ['anand.gupta@girnarsoft.com', 'sanjay.singh@girnarsoft.com'];
+config.report.timeoutErrorTo    = ['farhanhashmi96@gmail.com'];
 config.report.timeoutErrorTemplateName = 'B2C_API_TIMEOUT_ERROR_INS';
 
 config.report.byPassLogError      = false;
-config.report.byPassLogErrorTo    = ['anand.gupta@girnarsoft.com', 'sanjay.singh@girnarsoft.com'];
+config.report.byPassLogErrorTo = ['farhanhashmi96@gmail.com'];
 config.report.byPassLogErrorTemplateName = 'B2C_API_BYPASS_LOG_ERROR_INS';
 
 config.format = {};
@@ -163,13 +163,29 @@ config.registrationNumberMaxLength = 15;
 config.recordPerPage = 20;
 config.corsAllowedOrigin = [/localhost:3000$/, /\.gaadi\.com$/, /\.insurancedekho\.com$/];
 
+config.stripe = {};
+config.stripe.secretkey = 'sk_test_51JDgqHSBkbMVSCXHWKt1U6UWuMfXq4mkprrBdQHeNTV5SaQ8GQH6r5wey143ewiLrAvVuQNJF9jDAMKHAP1IWhIW00VBudjboc';
+
 global.BASE_DIR         = path.join(__dirname,'../');
 global.UPLOAD_DIR       = 'uploads';
 global.CONFIG_PATH      = BASE_DIR+'/config/';
-global.HELPER_PATH      = BASE_DIR+'/helpers/';
+global.HELPER_PATH      = BASE_DIR + '/helpers/';
 global.UPLOAD_PATH      = BASE_DIR+'/'+UPLOAD_DIR+'/'
 global.LOG_PATH         = BASE_DIR+'/logs/';
 global.NODE_MODULE_PATH = BASE_DIR+'/node_modules/';
 global.ELK_FILE_PATH    = BASE_DIR+'/logs/vahan_scrapper.json';
+
+config.mysql = {};
+config.mysql.host = 'localhost';
+config.mysql.user = 'root'
+config.mysql.password = 'root';
+config.mysql.database = 'lms';
+
+config.mysqlTable = {};
+config.mysqlTable.users = 'users'
+config.mysqlTable.cards = 'cards';
+
+config.jwt = {};
+config.jwt.tokenKey = 'jagdayutuastdyut';
 
 module.exports = config;

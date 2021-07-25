@@ -113,7 +113,7 @@ CommonModel.getCarVariant = function(modelId){
         
         query.fetchData = 'all_variant';
         query.sortBy    = 'modelPopularity';
-        query.tags      = 'make,make_id,model,model_id,version,version_id,version_display_name,cc,status,fuel';
+        query.tags      = 'make,make_id,model,model_id,version,version_id,version_display_name,cc,status,fuel,parent_id';
         query.source    = config.source.autodb;
         query.subSource = config.subSource.vahanScrapper;
         
@@ -205,7 +205,7 @@ CommonModel.getBikeVariant = function(modelId){
         
         query.fetchData = 'tw_mmv';
         query.sortBy    = 'modelPopularity';
-        query.tags      = 'make,make_id,model,model_id,version,version_id,version_display_name,cc,status,fuel';
+        query.tags      = 'make,make_id,model,model_id,version,version_id,version_display_name,cc,status,fuel,parent_id';
         query.fetchOnly = 'all_variant';
         query.source    = config.source.autodb;
         query.subSource = config.subSource.vahanScrapper;
@@ -225,6 +225,34 @@ CommonModel.getBikeVariant = function(modelId){
             }else{
                 resolve(variants);
             }
+        }catch(e){
+            reject(e);
+        }
+    });
+}
+
+CommonModel.getParantModelId = function (mmv) {
+    return new Promise(async (resolve, reject) => {
+        try{
+            let variants = null;
+
+            if(mmv.vehicle_category == config.vehicleType.car){
+                variants = await this.getCarVariant(mmv.model_id);
+            }
+
+            if(mmv.vehicle_category == config.vehicleCategory.bike){
+                variants = await this.getBikeVariant(mmv.model_id);
+            }
+            
+            let parantId = 0;
+            for(const value of variants){
+                if(value.model_id == variants.model_id){
+                    parantId = variants.parant_id;
+                    break;
+                }
+            }
+
+            resolve(parantId);
         }catch(e){
             reject(e);
         }
