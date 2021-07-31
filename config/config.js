@@ -176,10 +176,10 @@ global.NODE_MODULE_PATH = BASE_DIR+'/node_modules/';
 global.ELK_FILE_PATH    = BASE_DIR+'/logs/vahan_scrapper.json';
 
 config.mysql = {};
-config.mysql.host = 'ec2-52-1-20-236.compute-1.amazonaws.com';
-config.mysql.user = 'rtzzxjnflzobwu'
-config.mysql.password = '8277debe05300f289b33f2ec7cb1e9982ad717bc722791fc7fba706f68b9828a';
-config.mysql.database = 'dertka4o19859i';
+config.mysql.host = 'us-cdbr-east-04.cleardb.com';
+config.mysql.user = 'b67aac4bcf79da'
+config.mysql.password = '6400e61a';
+config.mysql.database = 'heroku_33fbf3f160b8c46';
 
 config.mysqlTable = {};
 config.mysqlTable.users = 'users'
