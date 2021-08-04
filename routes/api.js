@@ -58,16 +58,26 @@ router.post('/payment/save-card', verifyToken ,function (req, res) {
     paymentController.saveCard(req, res);
 });
 
+router.post('/payment/transfer', verifyToken, function (req, res) {
+    paymentController.transferAmount(req, res);
+})
+
 router.post('/user', function (req, res) {
     usersController.register(req, res);
+});
+
+router.get('/user', function (req, res) {
+    usersController.userList(req, res);
+});
+
+router.get('/user/validate-call', verifyToken, function (req, res) {
+    usersController.validateCall(req, res);
 });
 
 router.post('/user/login', function (req, res) {
     usersController.login(req, res);
 });
 
-router.post('/payment/transfer', verifyToken , function (req, res) {
-    paymentController.transferAmount(req, res);
-})
+
 
 module.exports = router;

@@ -4,8 +4,11 @@ const commonHelper = require('../../../../helpers/commonHelper'),
     fs = require('fs'),
     moment = require('moment');
 
+const MINUTES_LIMIT = 5;
+
 class UsersService {
-    constructor() {}
+    constructor() {
+    }
 }
 
 UsersService.login = function (params) {
@@ -32,6 +35,38 @@ UsersService.register = function (params) {
             }
             resolve(data);
         }catch(err){
+            reject(err);
+        }
+    });
+}
+
+UsersService.validateCall = function (userId) {
+    let that = this;
+    return new Promise(async function (resolve, reject) {
+        try {
+
+            let data = await UsersModel.user(userId);
+            
+            if (data && data.id) {
+                if (data.amount < (MINUTES_LIMIT * data.per_minuts)){
+                    throw `Minimum balance of 5 minutes (INR ${(MINUTES_LIMIT * data.per_minuts)}) is required to start call with ${data.name}`;
+                }
+            }
+            resolve(data);
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
+UsersService.userList = function () {
+    let that = this;
+    return new Promise(async function (resolve, reject) {
+        try {
+
+            let data = await UsersModel.userList();
+            resolve(data);
+        } catch (err) {
             reject(err);
         }
     });

@@ -61,4 +61,29 @@ UsersController.register = async function (req, res) {
     }
 }
 
+UsersController.validateCall = async function (req, res) {
+    var query = {};
+    var errors = new Array();
+    let that = this;
+    try{
+        let userId = req.user.user_id;
+        let data = await UsersService.validateCall(userId);
+        that.sendSuccessResponse(req, res, data);
+    }catch(err){
+        that.sendErrorResponse(req, res, err)
+    }
+}
+
+UsersController.userList = async function (req, res) {
+    var query = {};
+    var errors = new Array();
+    let that = this;
+    try {
+        let data = await UsersService.userList();
+        that.sendSuccessResponse(req, res, data);
+    } catch (err) {
+        that.sendErrorResponse(req, res, err)
+    }
+}
+
 module.exports = UsersController;

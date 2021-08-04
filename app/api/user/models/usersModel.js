@@ -108,4 +108,16 @@ UsersModel.createStripeCustomer = function (query) {
     });
 }
 
+UsersModel.userList = function () {
+    let that = this;
+    return new Promise(async function (resolve, reject) {
+        try {
+            let data = await that.find(` is_deleted = 0 `, config.mysqlTable.users);
+            resolve(data);
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
 module.exports = UsersModel;

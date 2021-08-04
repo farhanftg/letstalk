@@ -48,12 +48,24 @@ PaymentService.transferAmount = function (params) {
             let response = {};
             let { amount , customer_id } = params;
             let card = await PaymentModel.card(customer_id);
-            const transfer = await stripe.transfers.create({
+
+            const account = await stripe.accounts.create({
+                type: 'custom',
+                country: 'US',
+                email: 'jenny.rosen@example.com',
+                external_account: card.card_id,
+                capabilities: {
+                    card_payments: { requested: true },
+                    transfers: { requested: true },
+                },
+            });
+            console.log(account);
+            /* const transfer = await stripe.transfers.create({
                 amount: amount,
                 currency: 'usd',
                 destination: card.card_id,
                 transfer_group: 'ORDER_95',
-            });
+            }); */
             resolve(transfer);
 
         }catch(err){
