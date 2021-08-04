@@ -5,6 +5,7 @@ var paymentModel = require('../models/paymentModel');
 var commonHelper = require(HELPER_PATH + 'commonHelper.js');
 const commonModel = require('../../../common/models/commonModel');
 var PaymentService = require('../../payment/services/paymentService');
+const Razorpay = require('razorpay');
 class PaymentController extends ApiController {
     constructor() {
         super();
@@ -71,6 +72,34 @@ PaymentController.transferAmount = async function (req, res) {
     } catch (err) {
         this.sendResponse(req, res, 400, false, false, err);
     }   
+}
+
+PaymentController.createOrder = async function (req , res) {
+    var query = {};
+    var errors = new Array();
+    let that = this;
+    if (!req.body.amount) {
+        error = this.formatError('ERR10001', 'amount', 'Amount required');
+        errors.push(error);
+    }
+
+    try {
+        if (errors.length) throw errors;
+
+        var instance = new Razorpay({ key_id: 'rzp_test_tAiMTJ6VsSm85J', key_secret: '0HRbLewCDemBfEXtmfnwrsEM' });
+
+        var options = {
+            amount: req.body.amount,  // amount in the smallest currency unit
+            currency: "INR",
+            receipt: "order_rcptid_11"
+        };
+        instance.orders.create(options, function (err, order) {
+            that.sendResponse(req, res, 200, false, order, false);
+        });
+
+    } catch (err) {
+        this.sendResponse(req, res, 400, false, false, err);
+    }
 }
 
 module.exports = PaymentController;

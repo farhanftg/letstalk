@@ -60,6 +60,10 @@ router.post('/payment/save-card', verifyToken ,function (req, res) {
 
 router.post('/payment/transfer', verifyToken, function (req, res) {
     paymentController.transferAmount(req, res);
+});
+
+router.post('/payment/order', verifyToken, function (req, res) {
+    paymentController.createOrder(req, res);
 })
 
 router.post('/user', function (req, res) {
