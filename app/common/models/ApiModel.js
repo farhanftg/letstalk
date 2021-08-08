@@ -142,6 +142,7 @@ ApiModel.update =  function(condition, data, table = false){
             });
             query = ApiModel.trimSelect(query);
             query+= 'WHERE '+ApiModel.trimCondition(condition);
+            
             let result = await mysqldb.queryAsync(query);
             if(result && result.affectedRows){
                 resolve(result.affectedRows);

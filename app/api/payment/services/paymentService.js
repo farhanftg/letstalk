@@ -40,7 +40,17 @@ PaymentService.saveCard = function (params) {
         }
     });
 }
-
+PaymentService.creditRecharge = function (amount, userId) {
+    let that = this;
+    return new Promise(async function (resolve, reject) {
+        try {
+            let user = await PaymentModel.creditRecharge(amount , userId);
+            resolve(user);
+        } catch (err){
+            reject(err);
+        }
+    });
+}
 PaymentService.transferAmount = function (params) {
     let that = this;
     return new Promise(async function (resolve, reject) {

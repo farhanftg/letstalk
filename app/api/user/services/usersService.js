@@ -40,19 +40,19 @@ UsersService.register = function (params) {
     });
 }
 
-UsersService.validateCall = function (userId) {
+UsersService.validateCall = function (userId, celebrityId) {
     let that = this;
     return new Promise(async function (resolve, reject) {
         try {
 
-            let data = await UsersModel.user(userId);
-            
-            if (data && data.id) {
-                if (data.amount < (MINUTES_LIMIT * data.per_minuts)){
-                    throw `Minimum balance of 5 minutes (INR ${(MINUTES_LIMIT * data.per_minuts)}) is required to start call with ${data.name}`;
+            let celebrity = await UsersModel.user(celebrityId);
+            let user = await UsersModel.user(userId);
+            if (celebrity && celebrity.id) {
+                if (user.amount < (MINUTES_LIMIT * celebrity.per_minuts)){
+                    throw `Minimum balance of 5 minutes (INR ${(MINUTES_LIMIT * celebrity.per_minuts)}) is required to start call with ${celebrity.name}`;
                 }
             }
-            resolve(data);
+            resolve(celebrity);
         } catch (err) {
             reject(err);
         }
@@ -65,6 +65,19 @@ UsersService.userList = function () {
         try {
 
             let data = await UsersModel.userList();
+            resolve(data);
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
+UsersService.userDetail = function (userId) {
+    let that = this;
+    return new Promise(async function (resolve, reject) {
+        try {
+
+            let data = await UsersModel.user(userId);
             resolve(data);
         } catch (err) {
             reject(err);

@@ -34,4 +34,16 @@ PaymentModel.card = function (id) {
     });
 }
 
+PaymentModel.creditRecharge = function (amount , userId) {
+    let that = this;
+    return new Promise(async function (resolve, reject) {
+        try {
+            let data = await that.executeQuery(`UPDATE users SET amount= amount+${amount} WHERE id = ${userId}` , false)
+            resolve(data);
+        } catch (err) {
+            reject(err);
+        }
+    });
+}
+
 module.exports = PaymentModel;

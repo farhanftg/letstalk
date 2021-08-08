@@ -66,8 +66,13 @@ UsersController.validateCall = async function (req, res) {
     var errors = new Array();
     let that = this;
     try{
+        if (!req.query.celebrity_id) {
+            error = this.formatError('ERR10001', 'celebrity_id', 'Celebrity id is required');
+            errors.push(error);
+        }
+
         let userId = req.user.user_id;
-        let data = await UsersService.validateCall(userId);
+        let data = await UsersService.validateCall(userId, req.query.celebrity_id);
         that.sendSuccessResponse(req, res, data);
     }catch(err){
         that.sendErrorResponse(req, res, err)
@@ -86,4 +91,15 @@ UsersController.userList = async function (req, res) {
     }
 }
 
+UsersController.userDetail = async function (req, res) {
+    var query = {};
+    var errors = new Array();
+    let that = this;
+    try {
+        let data = await UsersService.userDetail(req.user.user_id);
+        that.sendSuccessResponse(req, res, data);
+    } catch (err) {
+        that.sendErrorResponse(req, res, err)
+    }
+}
 module.exports = UsersController;

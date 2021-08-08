@@ -102,4 +102,23 @@ PaymentController.createOrder = async function (req , res) {
     }
 }
 
+PaymentController.creditRecharge = async function (req , res) {
+    var query = {};
+    var errors = new Array();
+    let that = this;
+    if (!req.body.amount) {
+        error = this.formatError('ERR10001', 'amount', 'Amount required');
+        errors.push(error);
+    }
+
+    try {
+        if (errors.length) throw errors;
+        let response = await PaymentService.creditRecharge(req.body.amount , req.user.user_id);
+        that.sendResponse(req, res, 200, false, response, false);
+
+    } catch (err) {
+        this.sendResponse(req, res, 400, false, false, err);
+    }
+}
+
 module.exports = PaymentController;

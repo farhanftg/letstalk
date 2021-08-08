@@ -64,6 +64,10 @@ router.post('/payment/transfer', verifyToken, function (req, res) {
 
 router.post('/payment/order', verifyToken, function (req, res) {
     paymentController.createOrder(req, res);
+});
+
+router.post('/payment/credit-recharge', verifyToken, function (req, res) {
+    paymentController.creditRecharge(req, res);
 })
 
 router.post('/user', function (req, res) {
@@ -72,6 +76,10 @@ router.post('/user', function (req, res) {
 
 router.get('/user', function (req, res) {
     usersController.userList(req, res);
+});
+
+router.get('/user/user-detail', verifyToken, function (req, res) {
+    usersController.userDetail(req, res);
 });
 
 router.get('/user/validate-call', verifyToken, function (req, res) {
